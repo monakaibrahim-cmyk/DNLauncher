@@ -38,21 +38,22 @@ jobs:
         uses: lukka/run-vcpkg@v11
         with:
           vcpkgJsonGlob: vcpkg.json
+          vcpkgGitCommitId: 1460b31b08c42cc2e9ac2c79f45ec8707e2675e2
 
       - name: Cache vcpkg binary packages
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/.vcpkg-binary-cache
-          key: vcpkg-x64-windows-${{ hashFiles('vcpkg.json') }}
+          key: vcpkg-${{ matrix.platform }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'triplets/**', 'vcpkg/triplets/**') }}
           restore-keys: |
-            vcpkg-x64-windows-
+            vcpkg-${{ matrix.platform }}-
 
       - name: Install Dependencies
         shell: pwsh
         env:
-          VCPKG_DEFAULT_TRIPLET: x64-windows
+          VCPKG_DEFAULT_TRIPLET: ${{ matrix.platform == 'Win32' && 'x86-windows' || 'x64-windows' }}
           VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}/.vcpkg-binary-cache,readwrite
-        run: vcpkg install --triplet x64-windows
+        run: vcpkg install --triplet $env:VCPKG_DEFAULT_TRIPLET
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2

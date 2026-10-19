@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "name": "entry",
+      "address": "0047594b",
+      "namespace": null
+    }
+  ],
+  "offset": 0,
+  "limit": 100,
+  "total": 1,
+  "has_more": false
+}

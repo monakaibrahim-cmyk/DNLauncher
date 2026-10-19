@@ -1,0 +1,18 @@
+// Address: 0x00483366
+// Name: _EH4_CallFilterFunc
+// Category: MFC_CRT
+
+
+/* Library Function - Single Match
+    @_EH4_CallFilterFunc@8
+   
+   Library: Visual Studio 2005 Release
+   __fastcall _EH4_CallFilterFunc,8 */
+
+void __fastcall _EH4_CallFilterFunc(undefined *param_1)
+
+{
+  (*(code *)param_1)();
+  return;
+}
+

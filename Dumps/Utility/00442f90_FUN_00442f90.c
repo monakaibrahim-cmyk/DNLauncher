@@ -1,0 +1,43 @@
+// Address: 0x00442f90
+// Name: FUN_00442f90
+// Category: Utility
+
+
+void FUN_00442f90(void)
+
+{
+  int iVar1;
+  int iVar2;
+  int *piVar3;
+  int unaff_EBX;
+  int iVar4;
+  int *piVar5;
+  
+  iVar1 = *(int *)(unaff_EBX + 0x1a8);
+  iVar4 = 0;
+  if (0 < *(int *)(unaff_EBX + 100)) {
+    piVar5 = (int *)(iVar1 + 0x34);
+    do {
+      iVar2 = 0;
+      if (0 < iVar4) {
+        piVar3 = (int *)(iVar1 + 0x20);
+        do {
+          if (piVar5[-5] == *piVar3) {
+            piVar3 = *(int **)(iVar1 + 0x34 + iVar2 * 4);
+            if (piVar3 != (int *)0x0) goto LAB_00442fcf;
+            break;
+          }
+          iVar2 = iVar2 + 1;
+          piVar3 = piVar3 + 1;
+        } while (iVar2 < iVar4);
+      }
+      piVar3 = FUN_00442f10(piVar5[-5]);
+LAB_00442fcf:
+      *piVar5 = (int)piVar3;
+      iVar4 = iVar4 + 1;
+      piVar5 = piVar5 + 1;
+    } while (iVar4 < *(int *)(unaff_EBX + 100));
+  }
+  return;
+}
+

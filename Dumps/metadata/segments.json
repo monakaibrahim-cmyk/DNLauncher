@@ -1,0 +1,56 @@
+{
+  "items": [
+    {
+      "name": "Headers",
+      "start": "00400000",
+      "end": "00400fff",
+      "size": 4096,
+      "permissions": "r--",
+      "initialized": true
+    },
+    {
+      "name": ".text",
+      "start": "00401000",
+      "end": "0049bfff",
+      "size": 634880,
+      "permissions": "r-x",
+      "initialized": true
+    },
+    {
+      "name": ".rdata",
+      "start": "0049c000",
+      "end": "004c1fff",
+      "size": 155648,
+      "permissions": "r--",
+      "initialized": true
+    },
+    {
+      "name": ".data",
+      "start": "004c2000",
+      "end": "004cd39b",
+      "size": 45980,
+      "permissions": "rw-",
+      "initialized": true
+    },
+    {
+      "name": ".rsrc",
+      "start": "004ce000",
+      "end": "005abfff",
+      "size": 909312,
+      "permissions": "r--",
+      "initialized": true
+    },
+    {
+      "name": "tdb",
+      "start": "ffdff000",
+      "end": "ffdfffff",
+      "size": 4096,
+      "permissions": "rw-",
+      "initialized": true
+    }
+  ],
+  "offset": 0,
+  "limit": 100,
+  "total": 6,
+  "has_more": false
+}

@@ -1,0 +1,508 @@
+{
+  "items": [
+    {
+      "name": "LocalReAlloc",
+      "address": "EXTERNAL:00000001",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "TlsFree",
+      "address": "EXTERNAL:00000002",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "SetErrorMode",
+      "address": "EXTERNAL:00000003",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "FileTimeToLocalFileTime",
+      "address": "EXTERNAL:00000004",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetFileTime",
+      "address": "EXTERNAL:00000005",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "lstrlenA",
+      "address": "EXTERNAL:00000006",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GlobalFlags",
+      "address": "EXTERNAL:00000007",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "HeapFree",
+      "address": "EXTERNAL:00000008",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "HeapAlloc",
+      "address": "EXTERNAL:00000009",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetProcessHeap",
+      "address": "EXTERNAL:0000000a",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetStartupInfoW",
+      "address": "EXTERNAL:0000000b",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "UnhandledExceptionFilter",
+      "address": "EXTERNAL:0000000c",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "SetUnhandledExceptionFilter",
+      "address": "EXTERNAL:0000000d",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "IsDebuggerPresent",
+      "address": "EXTERNAL:0000000e",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "HeapReAlloc",
+      "address": "EXTERNAL:0000000f",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetSystemTimeAsFileTime",
+      "address": "EXTERNAL:00000010",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "RtlUnwind",
+      "address": "EXTERNAL:00000011",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "ExitProcess",
+      "address": "EXTERNAL:00000012",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "WriteConsoleW",
+      "address": "EXTERNAL:00000013",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetFileType",
+      "address": "EXTERNAL:00000014",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetStdHandle",
+      "address": "EXTERNAL:00000015",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "VirtualProtect",
+      "address": "EXTERNAL:00000016",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "VirtualAlloc",
+      "address": "EXTERNAL:00000017",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetSystemInfo",
+      "address": "EXTERNAL:00000018",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "HeapSize",
+      "address": "EXTERNAL:00000019",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "FreeEnvironmentStringsA",
+      "address": "EXTERNAL:0000001a",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetEnvironmentStrings",
+      "address": "EXTERNAL:0000001b",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "TlsSetValue",
+      "address": "EXTERNAL:0000001c",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetEnvironmentStringsW",
+      "address": "EXTERNAL:0000001d",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetCommandLineA",
+      "address": "EXTERNAL:0000001e",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetCommandLineW",
+      "address": "EXTERNAL:0000001f",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "SetHandleCount",
+      "address": "EXTERNAL:00000020",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetStartupInfoA",
+      "address": "EXTERNAL:00000021",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "HeapDestroy",
+      "address": "EXTERNAL:00000022",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "HeapCreate",
+      "address": "EXTERNAL:00000023",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "VirtualFree",
+      "address": "EXTERNAL:00000024",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "QueryPerformanceCounter",
+      "address": "EXTERNAL:00000025",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetCPInfo",
+      "address": "EXTERNAL:00000026",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetACP",
+      "address": "EXTERNAL:00000027",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetOEMCP",
+      "address": "EXTERNAL:00000028",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "IsValidCodePage",
+      "address": "EXTERNAL:00000029",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetTimeZoneInformation",
+      "address": "EXTERNAL:0000002a",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "LCMapStringA",
+      "address": "EXTERNAL:0000002b",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "LCMapStringW",
+      "address": "EXTERNAL:0000002c",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetConsoleCP",
+      "address": "EXTERNAL:0000002d",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetConsoleMode",
+      "address": "EXTERNAL:0000002e",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetStringTypeA",
+      "address": "EXTERNAL:0000002f",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetStringTypeW",
+      "address": "EXTERNAL:00000030",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetLocaleInfoA",
+      "address": "EXTERNAL:00000031",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "SetStdHandle",
+      "address": "EXTERNAL:00000032",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "WriteConsoleA",
+      "address": "EXTERNAL:00000033",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetConsoleOutputCP",
+      "address": "EXTERNAL:00000034",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "SetEnvironmentVariableA",
+      "address": "EXTERNAL:00000035",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "TlsAlloc",
+      "address": "EXTERNAL:00000036",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "InitializeCriticalSection",
+      "address": "EXTERNAL:00000037",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GlobalHandle",
+      "address": "EXTERNAL:00000038",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GlobalReAlloc",
+      "address": "EXTERNAL:00000039",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "TlsGetValue",
+      "address": "EXTERNAL:0000003a",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "LocalAlloc",
+      "address": "EXTERNAL:0000003b",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "InterlockedIncrement",
+      "address": "EXTERNAL:0000003c",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "WritePrivateProfileStringW",
+      "address": "EXTERNAL:0000003d",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetCurrentThread",
+      "address": "EXTERNAL:0000003e",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "ConvertDefaultLocale",
+      "address": "EXTERNAL:0000003f",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "EnumResourceLanguagesW",
+      "address": "EXTERNAL:00000040",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "lstrcmpA",
+      "address": "EXTERNAL:00000041",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetLocaleInfoW",
+      "address": "EXTERNAL:00000042",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "LoadLibraryExW",
+      "address": "EXTERNAL:00000043",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "CompareStringA",
+      "address": "EXTERNAL:00000044",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "InterlockedExchange",
+      "address": "EXTERNAL:00000045",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetVersion",
+      "address": "EXTERNAL:00000046",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GlobalGetAtomNameW",
+      "address": "EXTERNAL:00000047",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetModuleHandleA",
+      "address": "EXTERNAL:00000048",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetCurrentThreadId",
+      "address": "EXTERNAL:00000049",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GlobalAddAtomW",
+      "address": "EXTERNAL:0000004a",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GlobalFindAtomW",
+      "address": "EXTERNAL:0000004b",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GlobalDeleteAtom",
+      "address": "EXTERNAL:0000004c",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "CompareStringW",
+      "address": "EXTERNAL:0000004d",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "LoadLibraryA",
+      "address": "EXTERNAL:0000004e",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "lstrcmpW",
+      "address": "EXTERNAL:0000004f",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "FreeLibrary",
+      "address": "EXTERNAL:00000050",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "InterlockedDecrement",
+      "address": "EXTERNAL:00000051",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetFullPathNameW",
+      "address": "EXTERNAL:00000052",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetVolumeInformationW",
+      "address": "EXTERNAL:00000053",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "DuplicateHandle",
+      "address": "EXTERNAL:00000054",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "SetEndOfFile",
+      "address": "EXTERNAL:00000055",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "UnlockFile",
+      "address": "EXTERNAL:00000056",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "LockFile",
+      "address": "EXTERNAL:00000057",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "FlushFileBuffers",
+      "address": "EXTERNAL:00000058",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetThreadLocale",
+      "address": "EXTERNAL:00000059",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GlobalFree",
+      "address": "EXTERNAL:0000005a",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "FormatMessageW",
+      "address": "EXTERNAL:0000005b",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "LocalFree",
+      "address": "EXTERNAL:0000005c",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "MulDiv",
+      "address": "EXTERNAL:0000005d",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "SetFilePointer",
+      "address": "EXTERNAL:0000005e",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "CreateFileA",
+      "address": "EXTERNAL:0000005f",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "SetFileAttributesA",
+      "address": "EXTERNAL:00000060",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "VirtualQuery",
+      "address": "EXTERNAL:00000061",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetVersionExA",
+      "address": "EXTERNAL:00000062",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "GetFileAttributesA",
+      "address": "EXTERNAL:00000063",
+      "namespace": "KERNEL32.DLL"
+    },
+    {
+      "name": "CreateDirectoryA",
+      "address": "EXTERNAL:00000064",
+      "namespace": "KERNEL32.DLL"
+    }
+  ],
+  "offset": 0,
+  "limit": 100,
+  "total": 459,
+  "has_more": true
+}

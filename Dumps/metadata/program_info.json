@@ -1,0 +1,22 @@
+{
+  "name": "DNLauncher.exe",
+  "project_path": "/DNLauncher/DNLauncher.exe",
+  "executable_path": "/DNLauncher/DNLauncher.exe",
+  "executable_format": "Portable Executable (PE)",
+  "language_id": "x86:LE:32:default",
+  "compiler_spec": "windows",
+  "processor": "x86",
+  "endian": "little",
+  "pointer_size": 4,
+  "image_base": "00400000",
+  "min_address": "00400000",
+  "max_address": "ffdfffff",
+  "memory_size": 1754012,
+  "function_count": 4312,
+  "external_function_count": 458,
+  "entry_points": [
+    "0047594b"
+  ],
+  "md5": "fcd7a67bed93c67cd58da237614f823d",
+  "sha256": "ace33b4168126f3927eadd58db6b0674860e9ffb56787c1ccfabcd7a4c999c43"
+}

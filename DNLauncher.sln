@@ -1,0 +1,57 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Launcher", "Client\Launcher\Launcher.vcxproj", "{6C83CD05-18EB-4217-AFBC-DCBE875D0368}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utility", "Common\Utility\Utility.vcxproj", "{89343DCF-FB2E-4A86-83BF-9AD3DCA0062B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EtFileSystem", "Common\EtFileSystem\EtFileSystem.vcxproj", "{A33FA286-FDA9-4C6D-A7EE-D3DE5F62F5AD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxmlSTL", "Common\tinyxml\tinyxmlSTL.vcxproj", "{BE23CF77-921D-4747-A02A-038DB1E487E2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "Common\zlib\zlib.vcxproj", "{ECAA74A5-5200-4BD9-A3EE-072999A59873}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WiseLog", "Client\WiseLog\WiseLog.vcxproj", "{ADD54EDD-6A92-48F6-8BAB-7EE0670EC55F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DnAutoUpdate", "Client\Launcher\DnAutoUpdate\DnAutoUpdate.vcxproj", "{F2B4231C-5F01-46E3-B396-A34C9B3099E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6C83CD05-18EB-4217-AFBC-DCBE875D0368}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6C83CD05-18EB-4217-AFBC-DCBE875D0368}.Debug|Win32.Build.0 = Debug|Win32
+		{6C83CD05-18EB-4217-AFBC-DCBE875D0368}.Release|Win32.ActiveCfg = Release|Win32
+		{6C83CD05-18EB-4217-AFBC-DCBE875D0368}.Release|Win32.Build.0 = Release|Win32
+		{89343DCF-FB2E-4A86-83BF-9AD3DCA0062B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{89343DCF-FB2E-4A86-83BF-9AD3DCA0062B}.Debug|Win32.Build.0 = Debug|Win32
+		{89343DCF-FB2E-4A86-83BF-9AD3DCA0062B}.Release|Win32.ActiveCfg = Release|Win32
+		{89343DCF-FB2E-4A86-83BF-9AD3DCA0062B}.Release|Win32.Build.0 = Release|Win32
+		{A33FA286-FDA9-4C6D-A7EE-D3DE5F62F5AD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A33FA286-FDA9-4C6D-A7EE-D3DE5F62F5AD}.Debug|Win32.Build.0 = Debug|Win32
+		{A33FA286-FDA9-4C6D-A7EE-D3DE5F62F5AD}.Release|Win32.ActiveCfg = Release|Win32
+		{A33FA286-FDA9-4C6D-A7EE-D3DE5F62F5AD}.Release|Win32.Build.0 = Release|Win32
+		{BE23CF77-921D-4747-A02A-038DB1E487E2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BE23CF77-921D-4747-A02A-038DB1E487E2}.Debug|Win32.Build.0 = Debug|Win32
+		{BE23CF77-921D-4747-A02A-038DB1E487E2}.Release|Win32.ActiveCfg = Release|Win32
+		{BE23CF77-921D-4747-A02A-038DB1E487E2}.Release|Win32.Build.0 = Release|Win32
+		{ECAA74A5-5200-4BD9-A3EE-072999A59873}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ECAA74A5-5200-4BD9-A3EE-072999A59873}.Debug|Win32.Build.0 = Debug|Win32
+		{ECAA74A5-5200-4BD9-A3EE-072999A59873}.Release|Win32.ActiveCfg = Release|Win32
+		{ECAA74A5-5200-4BD9-A3EE-072999A59873}.Release|Win32.Build.0 = Release|Win32
+		{ADD54EDD-6A92-48F6-8BAB-7EE0670EC55F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ADD54EDD-6A92-48F6-8BAB-7EE0670EC55F}.Debug|Win32.Build.0 = Debug|Win32
+		{ADD54EDD-6A92-48F6-8BAB-7EE0670EC55F}.Release|Win32.ActiveCfg = Release|Win32
+		{ADD54EDD-6A92-48F6-8BAB-7EE0670EC55F}.Release|Win32.Build.0 = Release|Win32
+		{F2B4231C-5F01-46E3-B396-A34C9B3099E3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F2B4231C-5F01-46E3-B396-A34C9B3099E3}.Debug|Win32.Build.0 = Debug|Win32
+		{F2B4231C-5F01-46E3-B396-A34C9B3099E3}.Release|Win32.ActiveCfg = Release|Win32
+		{F2B4231C-5F01-46E3-B396-A34C9B3099E3}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

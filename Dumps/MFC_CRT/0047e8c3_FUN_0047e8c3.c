@@ -1,0 +1,42 @@
+// Address: 0x0047e8c3
+// Name: FUN_0047e8c3
+// Category: MFC_CRT
+
+
+/* WARNING: Function: __SEH_prolog4 replaced with injection: SEH_prolog4 */
+/* WARNING: Function: __SEH_epilog4 replaced with injection: EH_epilog3 */
+
+void __cdecl FUN_0047e8c3(int param_1,int param_2)
+
+{
+  HMODULE hModule;
+  int iVar1;
+  FARPROC pFVar2;
+  
+  hModule = GetModuleHandleA("KERNEL32.DLL");
+  *(undefined **)(param_1 + 0x5c) = &DAT_004c3ce8;
+  *(undefined4 *)(param_1 + 0x14) = 1;
+  if (hModule != (HMODULE)0x0) {
+    iVar1 = FUN_0047e6fa();
+    if (iVar1 != 0) {
+      pFVar2 = GetProcAddress(hModule,"EncodePointer");
+      *(FARPROC *)(param_1 + 0x1f8) = pFVar2;
+      pFVar2 = GetProcAddress(hModule,"DecodePointer");
+      *(FARPROC *)(param_1 + 0x1fc) = pFVar2;
+    }
+  }
+  *(undefined4 *)(param_1 + 0x70) = 1;
+  *(undefined1 *)(param_1 + 200) = 0x43;
+  *(undefined1 *)(param_1 + 0x14b) = 0x43;
+  *(undefined **)(param_1 + 0x68) = &DAT_004c3ef0;
+  InterlockedIncrement((LONG *)&DAT_004c3ef0);
+  __lock(0xc);
+  *(int *)(param_1 + 0x6c) = param_2;
+  if (param_2 == 0) {
+    *(undefined **)(param_1 + 0x6c) = PTR_DAT_004c44f8;
+  }
+  ___addlocaleref(*(LONG **)(param_1 + 0x6c));
+  FUN_0047e979();
+  return;
+}
+

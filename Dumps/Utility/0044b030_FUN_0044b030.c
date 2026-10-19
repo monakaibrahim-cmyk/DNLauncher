@@ -1,0 +1,189 @@
+// Address: 0x0044b030
+// Name: FUN_0044b030
+// Category: Utility
+
+
+void __cdecl FUN_0044b030(int *param_1,byte *param_2,int param_3,int param_4,byte param_5)
+
+{
+  byte bVar1;
+  char cVar2;
+  undefined2 uVar3;
+  uint uVar4;
+  uint uVar5;
+  byte *pbVar6;
+  uint uVar7;
+  int iVar8;
+  uint uVar9;
+  int local_8;
+  
+  bVar1 = *(byte *)((int)param_1 + 9);
+  iVar8 = *param_1;
+  if (((bVar1 < 9) && (param_3 != 0)) || ((bVar1 == 0x10 && (param_4 != 0)))) {
+    switch((char)param_1[2]) {
+    case '\0':
+      if ((bVar1 == 2) && (iVar8 != 0)) {
+        local_8 = (iVar8 - 1U >> 2) + 1;
+        pbVar6 = param_2;
+        do {
+          uVar4 = (uint)*pbVar6;
+          uVar7 = uVar4 & 0xc;
+          uVar5 = uVar4 & 3;
+          uVar9 = uVar4 & 0x30;
+          uVar4 = uVar4 & 0xc0;
+          *pbVar6 = (byte)((byte)(*(byte *)(((uVar7 * 4 | uVar7) * 4 | (int)uVar7 >> 2 | uVar7) +
+                                           param_3) & 0xcf |
+                                 *(byte *)((((uVar5 * 4 | uVar5) * 4 | uVar5) * 4 | uVar5) + param_3
+                                          ) >> 2) >> 2 |
+                          *(byte *)(((int)((int)uVar9 >> 2 | uVar9) >> 2 | uVar9 * 4 | uVar9) +
+                                   param_3) & 0xc3) >> 2 |
+                    *(byte *)(((int)((int)((int)uVar4 >> 2 | uVar4) >> 2 | uVar4) >> 2 | uVar4) +
+                             param_3) & 0xc0;
+          pbVar6 = pbVar6 + 1;
+          local_8 = local_8 + -1;
+        } while (local_8 != 0);
+      }
+      cVar2 = *(char *)((int)param_1 + 9);
+      if (cVar2 == '\x04') {
+        if (iVar8 != 0) {
+          iVar8 = (iVar8 - 1U >> 1) + 1;
+          do {
+            uVar5 = *param_2 & 0xf0;
+            uVar4 = *param_2 & 0xf;
+            *param_2 = *(byte *)(((int)uVar5 >> 4 | uVar5) + param_3) & 0xf0 |
+                       *(byte *)((uVar4 << 4 | uVar4) + param_3) >> 4;
+            param_2 = param_2 + 1;
+            iVar8 = iVar8 + -1;
+          } while (iVar8 != 0);
+          return;
+        }
+      }
+      else if (cVar2 == '\b') {
+        if (iVar8 != 0) {
+          do {
+            *param_2 = *(byte *)((uint)*param_2 + param_3);
+            param_2 = param_2 + 1;
+            iVar8 = iVar8 + -1;
+          } while (iVar8 != 0);
+          return;
+        }
+      }
+      else if (cVar2 == '\x10') {
+        for (; iVar8 != 0; iVar8 = iVar8 + -1) {
+          uVar3 = *(undefined2 *)
+                   (*(int *)(param_4 + (uint)(param_2[1] >> (param_5 & 0x1f)) * 4) +
+                   (uint)*param_2 * 2);
+          *param_2 = (byte)((ushort)uVar3 >> 8);
+          param_2[1] = (byte)uVar3;
+          param_2 = param_2 + 2;
+        }
+      }
+      break;
+    case '\x01':
+    case '\x03':
+    case '\x05':
+      break;
+    case '\x02':
+      if (bVar1 == 8) {
+        if (iVar8 != 0) {
+          do {
+            *param_2 = *(byte *)((uint)*param_2 + param_3);
+            param_2[1] = *(byte *)((uint)param_2[1] + param_3);
+            param_2[2] = *(byte *)((uint)param_2[2] + param_3);
+            param_2 = param_2 + 3;
+            iVar8 = iVar8 + -1;
+          } while (iVar8 != 0);
+          return;
+        }
+      }
+      else if (iVar8 != 0) {
+        do {
+          uVar3 = *(undefined2 *)
+                   (*(int *)(param_4 + (uint)(param_2[1] >> (param_5 & 0x1f)) * 4) +
+                   (uint)*param_2 * 2);
+          param_2[1] = (byte)uVar3;
+          *param_2 = (byte)((ushort)uVar3 >> 8);
+          uVar3 = *(undefined2 *)
+                   (*(int *)(param_4 + (uint)(param_2[3] >> (param_5 & 0x1f)) * 4) +
+                   (uint)param_2[2] * 2);
+          param_2[3] = (byte)uVar3;
+          param_2[2] = (byte)((ushort)uVar3 >> 8);
+          uVar3 = *(undefined2 *)
+                   (*(int *)(param_4 + (uint)(param_2[5] >> (param_5 & 0x1f)) * 4) +
+                   (uint)param_2[4] * 2);
+          param_2[4] = (byte)((ushort)uVar3 >> 8);
+          param_2[5] = (byte)uVar3;
+          param_2 = param_2 + 6;
+          iVar8 = iVar8 + -1;
+        } while (iVar8 != 0);
+        return;
+      }
+      break;
+    case '\x04':
+      if (bVar1 == 8) {
+        if (iVar8 != 0) {
+          do {
+            *param_2 = *(byte *)((uint)*param_2 + param_3);
+            param_2 = param_2 + 2;
+            iVar8 = iVar8 + -1;
+          } while (iVar8 != 0);
+          return;
+        }
+      }
+      else if (iVar8 != 0) {
+        do {
+          uVar3 = *(undefined2 *)
+                   (*(int *)(param_4 + (uint)(param_2[1] >> (param_5 & 0x1f)) * 4) +
+                   (uint)*param_2 * 2);
+          *param_2 = (byte)((ushort)uVar3 >> 8);
+          param_2[1] = (byte)uVar3;
+          param_2 = param_2 + 4;
+          iVar8 = iVar8 + -1;
+        } while (iVar8 != 0);
+        return;
+      }
+      break;
+    case '\x06':
+      if (bVar1 == 8) {
+        if (iVar8 != 0) {
+          do {
+            *param_2 = *(byte *)((uint)*param_2 + param_3);
+            param_2[1] = *(byte *)((uint)param_2[1] + param_3);
+            param_2[2] = *(byte *)((uint)param_2[2] + param_3);
+            param_2 = param_2 + 4;
+            iVar8 = iVar8 + -1;
+          } while (iVar8 != 0);
+          return;
+        }
+      }
+      else if (iVar8 != 0) {
+        do {
+          uVar3 = *(undefined2 *)
+                   (*(int *)(param_4 + (uint)(param_2[1] >> (param_5 & 0x1f)) * 4) +
+                   (uint)*param_2 * 2);
+          param_2[1] = (byte)uVar3;
+          *param_2 = (byte)((ushort)uVar3 >> 8);
+          uVar3 = *(undefined2 *)
+                   (*(int *)(param_4 + (uint)(param_2[3] >> (param_5 & 0x1f)) * 4) +
+                   (uint)param_2[2] * 2);
+          param_2[3] = (byte)uVar3;
+          param_2[2] = (byte)((ushort)uVar3 >> 8);
+          uVar3 = *(undefined2 *)
+                   (*(int *)(param_4 + (uint)(param_2[5] >> (param_5 & 0x1f)) * 4) +
+                   (uint)param_2[4] * 2);
+          param_2[4] = (byte)((ushort)uVar3 >> 8);
+          param_2[5] = (byte)uVar3;
+          param_2 = param_2 + 8;
+          iVar8 = iVar8 + -1;
+        } while (iVar8 != 0);
+        return;
+      }
+      break;
+    default:
+      goto switchD_0044b072_default;
+    }
+  }
+switchD_0044b072_default:
+  return;
+}
+

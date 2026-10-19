@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup Label="Configuration">
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ProjectRootDir>$(MSBuildThisFileDirectory)</ProjectRootDir>
+    <!-- Direct all intermediate build garbage to folder Build in project root -->
+    <IntDir>$(ProjectRootDir)Build\Intermediate\$(MSBuildProjectName)\$(Configuration)\</IntDir>
+    <!-- Direct static library outputs to Build\Lib in project root -->
+    <OutDir Condition="'$(ConfigurationType)'!='Application'">$(ProjectRootDir)Build\Lib\$(Configuration)\</OutDir>
+    <!-- Application output goes to Output\ and Build\ -->
+    <OutDir Condition="'$(ConfigurationType)'=='Application'">$(ProjectRootDir)Output\$(Configuration)\</OutDir>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS;_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectRootDir)Build\Lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

@@ -1,0 +1,20 @@
+// Address: 0x0048ae20
+// Name: __ValidateImageBase
+// Category: MFC_CRT
+
+
+/* Library Function - Single Match
+    __ValidateImageBase
+   
+   Library: Visual Studio 2005 Release */
+
+BOOL __cdecl __ValidateImageBase(PBYTE pImageBase)
+
+{
+  if ((*(short *)pImageBase == 0x5a4d) &&
+     (*(int *)(pImageBase + *(int *)(pImageBase + 0x3c)) == 0x4550)) {
+    return (uint)((short)*(int *)((int)(pImageBase + *(int *)(pImageBase + 0x3c)) + 0x18) == 0x10b);
+  }
+  return 0;
+}
+

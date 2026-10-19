@@ -1,0 +1,94 @@
+name: Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+
+concurrency:
+  group: test-build-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build (${{ matrix.platform }})
+    environment: Test
+    runs-on: windows-2022
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [Win32, x64]
+
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build solution
+        id: build
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $logFile = "build-${{ matrix.platform }}.log"
+
+          # Capture MSBuild output while preserving the actual exit code.
+          & msbuild.exe DNLauncher.sln `
+            /t:Build `
+            /p:Configuration=Release `
+            /p:Platform=${{ matrix.platform }} `
+            /m `
+            /nologo `
+            /verbosity:minimal `
+            /fl `
+            "/flp:logfile=$logFile;verbosity=normal"
+
+          $exitCode = $LASTEXITCODE
+
+          if ($exitCode -ne 0) {
+            Write-Error "MSBuild failed for ${{ matrix.platform }} with exit code $exitCode."
+            exit $exitCode
+          }
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log-${{ matrix.platform }}
+          path: build-${{ matrix.platform }}.log
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Notify Discord on build failure
+        if: failure() && github.event_name != 'pull_request'
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          if ([string]::IsNullOrWhiteSpace($env:DISCORD_WEBHOOK_URL)) {
+            Write-Host 'Discord webhook is not configured; skipping log upload.'
+            exit 0
+          }
+
+          $logPath = "build-$env:PLATFORM.log"
+          if (-not (Test-Path $logPath -PathType Leaf)) {
+            throw "Build log was not generated: $logPath"
+          }
+
+          Invoke-RestMethod `
+            -Uri $env:DISCORD_WEBHOOK_URL `
+            -Method Post `
+            -Form @{ 'files[0]' = Get-Item $logPath }

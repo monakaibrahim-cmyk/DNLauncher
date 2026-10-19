@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Extern">
+      <UniqueIdentifier>{f4139886-c4bf-42a8-bf6e-660c156ca2c9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="base64.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnControlData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnFIrstPatchDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnFirstPatchInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnHtmlView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnLauncher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnLauncherDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnOptionData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnOptionDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnPatchInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnPatchThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnServiceModule.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DnUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MD5Text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceInit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Extern\LogWnd.cpp">
+      <Filter>Extern</Filter>
+    </ClCompile>
+    <ClCompile Include="Extern\ColorStatic.cpp">
+      <Filter>Extern</Filter>
+    </ClCompile>
+    <ClCompile Include="Extern\SkinProgress.cpp">
+      <Filter>Extern</Filter>
+    </ClCompile>
+    <ClCompile Include="Extern\xSkinButton.cpp">
+      <Filter>Extern</Filter>
+    </ClCompile>
+    <ClCompile Include="Extern\MD5Checksum.cpp">
+      <Filter>Extern</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="base64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnControlData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnDefine_Launcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnFIrstPatchDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnFirstPatchInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnHtmlView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnLauncher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnLauncherDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnOptionData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnOptionDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnPatchInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnPatchThread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnServiceModule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DnUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MD5Text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceInit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Extern\LogWnd.h">
+      <Filter>Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="Extern\SHFolderDialog.h">
+      <Filter>Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="Extern\Color.h">
+      <Filter>Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="Extern\ColorStatic.h">
+      <Filter>Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="Extern\SkinProgress.h">
+      <Filter>Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="Extern\xSkinButton.h">
+      <Filter>Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="Extern\MD5Checksum.h">
+      <Filter>Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="Extern\MD5ChecksumDefines.h">
+      <Filter>Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="Extern\CxImage\ximage.h">
+      <Filter>Extern</Filter>
+    </ClInclude>
+    <ClInclude Include="Extern\RTPatch\patchwin.h">
+      <Filter>Extern</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Launcher.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

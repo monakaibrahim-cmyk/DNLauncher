@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <!-- Enforce all intermediate build garbage to folder Build in project root -->
+    <IntDir>$(MSBuildThisFileDirectory)Build\Intermediate\$(MSBuildProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(ConfigurationType)'!='Application'">$(MSBuildThisFileDirectory)Build\Lib\$(Configuration)\</OutDir>
+  </PropertyGroup>
+
+  <!-- Copy application outputs to Build folder as well -->
+  <ItemDefinitionGroup Condition="'$(ConfigurationType)'=='Application'">
+    <PostBuildEvent>
+      <Command>xcopy /Y /I "$(OutDir)$(TargetName)$(TargetExt)" "$(MSBuildThisFileDirectory)Build\$(Configuration)\" &amp; if exist "$(OutDir)$(TargetName).pdb" xcopy /Y /I "$(OutDir)$(TargetName).pdb" "$(MSBuildThisFileDirectory)Build\$(Configuration)\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+</Project>

@@ -1,0 +1,407 @@
+// Microsoft Visual C++ generated resource script.
+#include "resource.h"
+#define APSTUDIO_READONLY_SYMBOLS
+#include "afxres.h"
+#undef APSTUDIO_READONLY_SYMBOLS
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+
+// Icon
+IDR_MAINFRAME           ICON                    "res\\DnLauncher.ico"
+
+// Bitmap
+30994                   BITMAP                  "res\\Bitmap\\30994.bmp"
+30996                   BITMAP                  "res\\Bitmap\\30996.bmp"
+5018                    BITMAP                  "res\\Bitmap\\5018.bmp"
+5019                    BITMAP                  "res\\Bitmap\\5019.bmp"
+
+// PNG
+15000                   PNG                     "res\\PNG\\15000.png"
+5000                    PNG                     "res\\PNG\\5000.png"
+
+// JPG
+1067                    JPG                     "res\\JPG\\1067.jpg"
+1068                    JPG                     "res\\JPG\\1068.jpg"
+1069                    JPG                     "res\\JPG\\1069.jpg"
+1070                    JPG                     "res\\JPG\\1070.jpg"
+5001                    JPG                     "res\\JPG\\5001.jpg"
+5002                    JPG                     "res\\JPG\\5002.jpg"
+5003                    JPG                     "res\\JPG\\5003.jpg"
+5004                    JPG                     "res\\JPG\\5004.jpg"
+5005                    JPG                     "res\\JPG\\5005.jpg"
+5006                    JPG                     "res\\JPG\\5006.jpg"
+5007                    JPG                     "res\\JPG\\5007.jpg"
+5008                    JPG                     "res\\JPG\\5008.jpg"
+5009                    JPG                     "res\\JPG\\5009.jpg"
+5010                    JPG                     "res\\JPG\\5010.jpg"
+5011                    JPG                     "res\\JPG\\5011.jpg"
+5012                    JPG                     "res\\JPG\\5012.jpg"
+5013                    JPG                     "res\\JPG\\5013.jpg"
+5014                    JPG                     "res\\JPG\\5014.jpg"
+5015                    JPG                     "res\\JPG\\5015.jpg"
+5020                    JPG                     "res\\JPG\\5020.jpg"
+5021                    JPG                     "res\\JPG\\5021.jpg"
+5022                    JPG                     "res\\JPG\\5022.jpg"
+5023                    JPG                     "res\\JPG\\5023.jpg"
+5024                    JPG                     "res\\JPG\\5024.jpg"
+5025                    JPG                     "res\\JPG\\5025.jpg"
+5026                    JPG                     "res\\JPG\\5026.jpg"
+5027                    JPG                     "res\\JPG\\5027.jpg"
+5028                    JPG                     "res\\JPG\\5028.jpg"
+5029                    JPG                     "res\\JPG\\5029.jpg"
+5030                    JPG                     "res\\JPG\\5030.jpg"
+5031                    JPG                     "res\\JPG\\5031.jpg"
+5034                    JPG                     "res\\JPG\\5034.jpg"
+5035                    JPG                     "res\\JPG\\5035.jpg"
+5036                    JPG                     "res\\JPG\\5036.jpg"
+15001                   JPG                     "res\\JPG\\15001.jpg"
+15002                   JPG                     "res\\JPG\\15002.jpg"
+15003                   JPG                     "res\\JPG\\15003.jpg"
+15004                   JPG                     "res\\JPG\\15004.jpg"
+15005                   JPG                     "res\\JPG\\15005.jpg"
+15006                   JPG                     "res\\JPG\\15006.jpg"
+15007                   JPG                     "res\\JPG\\15007.jpg"
+15008                   JPG                     "res\\JPG\\15008.jpg"
+15009                   JPG                     "res\\JPG\\15009.jpg"
+15010                   JPG                     "res\\JPG\\15010.jpg"
+15011                   JPG                     "res\\JPG\\15011.jpg"
+15012                   JPG                     "res\\JPG\\15012.jpg"
+15013                   JPG                     "res\\JPG\\15013.jpg"
+15014                   JPG                     "res\\JPG\\15014.jpg"
+15015                   JPG                     "res\\JPG\\15015.jpg"
+15020                   JPG                     "res\\JPG\\15020.jpg"
+15021                   JPG                     "res\\JPG\\15021.jpg"
+15022                   JPG                     "res\\JPG\\15022.jpg"
+15023                   JPG                     "res\\JPG\\15023.jpg"
+15024                   JPG                     "res\\JPG\\15024.jpg"
+15025                   JPG                     "res\\JPG\\15025.jpg"
+
+// XML
+17000                   XML                     "res\\XML\\17000.xml"
+17001                   XML                     "res\\XML\\17001.xml"
+17002                   XML                     "res\\XML\\17002.xml"
+
+
+// Dialogs
+IDD_DNLAUNCHER_DIALOG DIALOGEX 0, 0, 320, 200
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+FONT 9, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Cancel",IDC_BTN_CANCEL,256,16,50,14
+    PUSHBUTTON      "Start",IDC_BTN_GAMESTART,256,41,50,14
+    PUSHBUTTON      "Option",IDC_BTN_OPTION,256,66,50,14
+    PUSHBUTTON      "Close",IDC_BTN_CLOSE,256,91,50,14
+    PUSHBUTTON      "Minimum",IDC_BTN_MINIMUM,256,116,50,14
+    LTEXT           "Version",IDC_STATIC_VERSION,7,7,70,8,WS_EX_TRANSPARENT
+    LTEXT           "File Name",IDC_FILE_NAME,7,25,70,8,WS_EX_TRANSPARENT
+    LTEXT           "File Size",IDC_FILE_SIZE,7,43,70,8,WS_EX_TRANSPARENT
+    LTEXT           "Time Left",IDC_TIME_LEFT,7,61,70,8,WS_EX_TRANSPARENT
+    LTEXT           "File Count",IDC_FILE_COUNT,7,79,70,8,WS_EX_TRANSPARENT
+    LTEXT           "Download Percentage",IDC_DOWNLOAD_PERCENTAGE,7,97,70,8,WS_EX_TRANSPARENT
+    LTEXT           "Download State",IDC_DOWNLOAD_STATE,7,115,70,8,WS_EX_TRANSPARENT
+    LTEXT           "Direct Start",IDC_DIRECT_START,7,133,70,8,WS_EX_TRANSPARENT
+    CONTROL         "Static Progress Download",IDC_STATIC_PROGRESS_DOWNLOAD,"Static",SS_BLACKFRAME,7,151,80,8
+    CONTROL         "Static Progress Count",IDC_STATIC_PROGRESS_COUNT,"Static",SS_BLACKFRAME,7,169,68,8
+    CONTROL         "Direct Game Start",IDC_CHECK_DIRECT_GAMESTART,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,234,141,72,10
+    LTEXT           "Static File Name",IDC_STATIC_FILENAME,7,25,70,8,WS_EX_TRANSPARENT
+    LTEXT           "Static File Size",IDC_STATIC_FILESIZE,7,43,70,8,WS_EX_TRANSPARENT
+    LTEXT           "Static Time Left",IDC_STATIC_TIMELEFT,7,61,70,8,WS_EX_TRANSPARENT
+    LTEXT           "Static Current Info",IDC_STATIC_CURRENTINFO,7,61,70,8,WS_EX_TRANSPARENT
+    LTEXT           "HomePage Link",IDC_STATIC_HOMEPAGELINK,234,171,70,8,SS_NOTIFY | WS_EX_TRANSPARENT
+    LTEXT           "Total File",IDC_STATIC_TOTALFILE,214,171,70,8,SS_NOTIFY | WS_EX_TRANSPARENT
+    LTEXT           "Current File",IDC_STATIC_CURRENTFILE,224,171,70,8,SS_NOTIFY | WS_EX_TRANSPARENT
+    RTEXT           "Select Language",IDC_STATIC_SELECT_LANGUAGE,7,61,70,8,WS_EX_TRANSPARENT
+    PUSHBUTTON      "ENG",IDC_BTN_ENG,256,116,50,14
+    PUSHBUTTON      "VNM",IDC_BTN_VNM,256,116,50,14
+    PUSHBUTTON      "DX9",IDC_BTN_DX9,197,42,50,14
+    PUSHBUTTON      "DX11",IDC_BTN_DX11,197,63,50,14
+END
+
+IDD_DIALOG1 DIALOGEX 0, 0, 186, 93
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,24,50,14
+END
+
+IDD_OPTION_DIALOG DIALOGEX 0, 0, 184, 134
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    COMBOBOX        IDC_GRAPHICQ_COMBO,83,54,83,23,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    COMBOBOX        IDC_RESOLUTION_COMBO,83,13,83,16,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    RTEXT           "WindowMode",IDC_OPTION_WINDOW_MODE,16,35,58,14,0,WS_EX_ACCEPTFILES
+    RTEXT           "Graphic Quality",IDC_OPTION_GRAPHIC_QUALITY,16,56,64,11,0,WS_EX_ACCEPTFILES
+    RTEXT           "Resolution",IDC_OPTION_RESOLUTION,16,15,64,9,0,WS_EX_ACCEPTFILES
+    PUSHBUTTON      "Ok",IDC_OPTION_BUTTON_OK,34,107,56,17,BS_BITMAP
+    PUSHBUTTON      "Cancel",IDC_OPTION_BUTTON_CANCEL,97,107,54,17,BS_BITMAP
+    RTEXT           "Texture Quality",IDC_OPTION_TEXTURE_QUALITY,16,76,64,11,0,WS_EX_ACCEPTFILES
+    COMBOBOX        IDC_TEXTUREQ_COMBO,83,74,83,23,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+    GROUPBOX        "Option",IDC_OPTION_GAME_OPTION,8,0,167,129
+    CONTROL         "",IDC_VSYNC_CHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,91,10,13,WS_EX_ACCEPTFILES
+    LTEXT           "VSync",IDC_OPTION_VSYNC_MODE,31,93,53,14
+    COMBOBOX        IDC_WINDOWMODE_COMBO,83,33,83,16,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
+END
+
+IDD_DLG_EXPLORER DIALOGEX 0, 0, 477, 385
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_CLIENTEDGE
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+END
+
+IDD_DIALOG_FIRSTPATCH DIALOGEX 0, 0, 395, 97
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "Dragon Nest Launcher"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Progress bar",IDC_STATIC_FIRSTPATCH_PROGRESS,34,57,328,16
+    CTEXT           "Dragon Nest First Patch",IDC_STATIC_FIRSTPATCH_TEXT,80,17,214,24
+END
+
+// String Table
+STRINGTABLE
+BEGIN
+    1000     "DragonNest Launcher"
+    1001     "Launcher initialization failed.(E:%d)"
+    1002     "Client is already running."
+    1003     "Your current version of DirectX(%s) is outdated.\n\nPlease install the latest version of DirectX for stable game play."
+    1004     "Unable to load patch config list."
+    1005     "Verifying patch version…"
+    1006     "Failed to verify patch version."
+    1007     "Downloading patch data…"
+    1008     "Failed to download patch data."
+    1009     "Checking patch data…"
+    1010     "Failed to check patch data."
+    1011     "Installing patch data…"
+    1012     "Failed to install patch data."
+    1013     "Client data error. Please reinstall the Game Client."
+    1014     "Patch process completed."
+    1015     "Patch process failed."
+    1016     "Patch process cancelled."
+    1017     "Failed to remove files. Please restart the game launcher."
+    1018     "Failed to copy files."
+    1019     "Unable to load Patch Status List."
+    1020     "Launcher patch failed."
+    1021     "Do you want to cancel the patch process?"
+    1022     "Low"
+    1023     "Average"
+    1024     "High"
+    1025     "Highest"
+    1026     "File Name"
+    1027     "%d hr %d min %d sec"
+    1028     "%d min %d sec"
+    1029     "%d sec"
+    1030     "Time remaining"
+    1031     "File Size"
+    1032     "Dragon Nest"
+    1033     "Window Mode"
+    1034     "Game Options"
+    1035     "Resolution"
+    1036     "Apply"
+    1037     "Cancel"
+    1038     "Graphics Quality"
+    1039     "Start game after patching."
+    1040     "Path is added in Registry."
+    1041     "Path is modified in Registry."
+    1042     "The program is already running."
+    1043     "Exit the launcher?"
+    1044     "You currently do not have enough RAM.\nYou are recommended to have at least 1GB of available RAM for optimal gameplay.\nAny lesser than that may render your game unstable."
+    1045     "Texture Quality"
+    1046     "V-Sync"
+    1047     "DragonNest Launcher Initialize"
+    1048     "Do you really want to exit the game?"
+    1049     "Current Selected Server : "
+    1050     "Click on ""Select Server"" to change server."
+    1052     "Do you really want update?"
+    1053     "Please select your server."
+    1054     "Status"
+    1055     "Official Website"
+    1056     "Progress"
+    1057     "Installation"
+    1058     "Total"
+    1059     "Current"
+    1060     "Choose your language:"
+    1061     "Fullscreen"
+    1062     "Window"
+    1063     "Borderless Window"
+    11000    "DragonNest Launcher"
+    11001    "Lỗi khởi động launcher.(E:%d)"
+    11002    "Game đang chạy."
+    11003    "Phiên bản DirectX(%s) của hệ thống hiện tại đã quá cũ.\n\nHãy cài phiên bản mới hơn phù hợp với trò chơi."
+    11004    "Không thể mở danh sách cấu hình cập nhật."
+    11005    "Đang xác nhận phiên bản cập nhật…"
+    11006    "Lỗi trong việc tải cập nhật."
+    11007    "Đang tải dữ liệu cập nhật…"
+    11008    "Lỗi trong việc tải dữ liệu cập nhật."
+    11009    "Đang kiểm tra dữ liệu cập nhật…"
+    11010    "Lỗi trong khi kiểm tra dữ liệu cập nhật."
+    11011    "Đang cài đặt dữ liệu cập nhật…"
+    11012    "Lỗi trong việc cài đặt dữ liệu."
+    11013    "Dữ liệu bị lỗi. Hãy cài đặt lại game."
+    11014    "Quá trình cập nhật hoàn tất."
+    11015    "Quá trình cập nhật bị lỗi."
+    11016    "Đã dừng quá trình cập nhật."
+    11017    "Lỗi trong việc xóa dữ liệu. Hãy khởi động lại game launcher."
+    11018    "Lỗi trong việc copy dữ liệu."
+    11019    "Không thể mở danh sách tình trạng bản cập nhật."
+    11020    "Lỗi cập nhật launcher."
+    11021    "Bạn có muốn dừng việc cập nhật?"
+    11022    "Thấp"
+    11023    "Trung bình"
+    11024    "Cao"
+    11025    "Cao nhất"
+    11026    "Tên tập tin"
+    11027    "Thời gian còn lại: %d Giờ %d Phút %d Giây"
+    11028    "Thời gian còn lại: %d Phút %d Giây"
+    11029    "Thời gian còn lại: %d Giây"
+    11030    "Thời gian còn lại"
+    11031    "Dung lượng tập tin"
+    11032    "Dragon Nest"
+    11033    "Chế độ cửa sổ"
+    11034    "Tùy chọn"
+    11035    "Độ phân giải"
+    11036    "Áp dụng"
+    11037    "Bỏ"
+    11038    "Chất lương đồ họa"
+    11039    "Ngay lập tức khởi động game sau khi hoàn thành cập nhật"
+    11040    "Bản cập nhật đã được thêm vào Registry."
+    11041    "Bản cập nhật đã được thay đổi trong Registry."
+    11042    "Chương trình đang chạy."
+    11043    "Bạn có muốn thoát khỏi launcher?"
+    11044    "Máy tính của bạn hiện tại không đủ RAM.\nBạn nên có ít nhất 1Gb RAM để đáp ứng với trò chơi.\nKhông thể khởi động với cấu hình thấp hơn."
+    11045    "Chất lượng kiến trúc"
+    11046    "V-Sync"
+    11047    "DragonNest Launcher Initialize"
+    11048    "Bạn có muốn thoát khỏi game không?"
+    11049    "Máy chủ được chọn hiện tại:"
+    11050    "Nhấp chuột vào “Chọn máy chủ” để đổi máy chủ."
+    11052    "Bạn có muốn cấp nhật?"
+    11053    "Hãy chọn máy chủ của bạn."
+    11054    "Tình trạng"
+    11055    "Về trang chủ"
+    11056    "Tiến trình"
+    11057    "Cài đặt"
+    11058    "Tổng"
+    11059    "Hiện tại"
+    11060    "Hãy chọn ngôn ngữ:"
+    61440    "Open"
+    61441    "Save As"
+    61442    "All Files (*.*)"
+    61443    "Untitled"
+    61446    "an unnamed file"
+    61457    "&Hide"
+    61472    "No error message is available."
+    61473    "An unsupported operation was attempted."
+    61474    "A required resource was unavailable."
+    61475    "Out of memory."
+    61476    "An unknown error has occurred."
+    61477    "An invalid argument was encountered."
+    61696    "Invalid filename."
+    61697    "Failed to open document."
+    61698    "Failed to save document."
+    61699    "Save changes to %1?"
+    61700    "Failed to create empty document."
+    61701    "The file is too large to open."
+    61702    "Could not start print job."
+    61703    "Failed to launch help."
+    61704    "Internal application error."
+    61705    "Command failed."
+    61706    "Insufficient memory to perform operation."
+    61707    "System registry entries have been removed and the INI file (if any) was deleted."
+    61708    "Not all of the system registry entries (or INI file) were removed."
+    61709    "This program requires the file %s, which was not found on this system."
+    61710    "This program is linked to the missing export %s in the file %s. This machine may have an incompatible version of %s."
+    61712    "Please enter an integer."
+    61713    "Please enter a number."
+    61714    "Please enter an integer between %1 and %2."
+    61715    "Please enter a number between %1 and %2."
+    61716    "Please enter no more than %1 characters."
+    61717    "Please select a button."
+    61718    "Please enter an integer between 0 and 255."
+    61719    "Please enter a positive integer."
+    61720    "Please enter a date and/or time."
+    61721    "Please enter a currency."
+    61722    "Please enter a GUID."
+    61723    "Please enter a time."
+    61724    "Please enter a date."
+    61728    "Unexpected file format."
+    61729    "%1\nCannot find this file.\nPlease verify that the correct path and file name are given."
+    61730    "Destination disk drive is full."
+    61731    "Unable to read from %1, it is opened by someone else."
+    61732    "Unable to write to %1, it is read-only or opened by someone else."
+    61733    "An unexpected error occurred while reading %1."
+    61734    "An unexpected error occurred while writing %1."
+    61744    "%1: %2\nContinue running script?"
+    61745    "Dispatch exception: %1"
+    61836    "Unable to read write-only property."
+    61837    "Unable to write read-only property."
+    61840    "Unable to load mail system support."
+    61841    "Mail system DLL is invalid."
+    61842    "Send Mail failed to send message."
+    61856    "No error occurred."
+    61857    "An unknown error occurred while accessing %1."
+    61858    "%1 was not found."
+    61859    "%1 contains an invalid path."
+    61860    "%1 could not be opened because there are too many open files."
+    61861    "Access to %1 was denied."
+    61862    "An invalid file handle was associated with %1."
+    61863    "%1 could not be removed because it is the current directory."
+    61864    "%1 could not be created because the directory is full."
+    61865    "Seek failed on %1"
+    61866    "A hardware I/O error was reported while accessing %1."
+    61867    "A sharing violation occurred while accessing %1."
+    61868    "A locking violation occurred while accessing %1."
+    61869    "Disk full while accessing %1."
+    61870    "An attempt was made to access %1 past its end."
+    61872    "No error occurred."
+    61873    "An unknown error occurred while accessing %1."
+    61874    "An attempt was made to write to the reading %1."
+    61875    "An attempt was made to access %1 past its end."
+    61876    "An attempt was made to read from the writing %1."
+    61877    "%1 has a bad format."
+    61878    "%1 contained an unexpected object."
+    61879    "%1 contains an incorrect schema."
+    61888    "pixels"
+    62177    "Uncheck"
+    62178    "Check"
+    62179    "Mixed"
+END
+
+
+// Version Info
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "Eyedentity Games Inc."
+            VALUE "FileDescription", "DragonNest Launcher"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "DnLauncher.exe"
+            VALUE "LegalCopyright", "Copyright (c) Eyedentity Games Inc. All rights reserved."
+            VALUE "OriginalFilename", "DnLauncher.exe"
+            VALUE "ProductName", "DragonNest"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END

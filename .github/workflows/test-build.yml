@@ -19,7 +19,7 @@ jobs:
   build:
     name: Build (${{ matrix.platform }})
     environment: Test
-    runs-on: windows-2022
+    runs-on: windows-latest
     timeout-minutes: 30
     strategy:
       fail-fast: false
@@ -33,10 +33,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Install v145 Build Tools
-        run: |
-          choco install visualstudio2026buildtools --package-parameters "--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.ATLMFC --passive --norestart" -y
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2

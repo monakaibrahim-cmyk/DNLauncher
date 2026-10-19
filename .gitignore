@@ -435,3 +435,6 @@ FodyWeavers.xsd
 
 # Executables
 *.exe
+
+# vcpkg
+vcpkg_installed/

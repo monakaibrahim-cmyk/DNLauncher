@@ -4,6 +4,14 @@
     <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
 
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows-static</VcpkgTriplet>
+    <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows-static</VcpkgTriplet>
+    <VcpkgAutoLink>false</VcpkgAutoLink>
+  </PropertyGroup>
+
   <PropertyGroup>
     <ProjectRootDir>$(MSBuildThisFileDirectory)</ProjectRootDir>
     <!-- Direct all intermediate build garbage to folder Build in project root, separated by Platform and Configuration -->

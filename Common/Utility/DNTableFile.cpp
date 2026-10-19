@@ -3,7 +3,7 @@
 #include "DNTableFile.h"
 #include "Stream.h"
 #include "SundriesFunc.h"
-#include "./boost/algorithm/string.hpp"
+#include <boost/algorithm/string.hpp>
 
 CDNTableFile::CDNTableFile()
 : m_nFieldCount(0), m_iDataCount(0), m_pmStringItemID(NULL), m_pmIntItemID(NULL), m_pmFloatItemID(NULL), m_bDontUseItemIDData( false )

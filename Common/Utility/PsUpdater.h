@@ -11,7 +11,7 @@
 #include <ATLCONV.H>		// A2T()
 #include "HTTPCLIENT.H"
 #include "CONSOLEOUTPUT.H"
-#include "./BOOST/SHARED_PTR.HPP"
+#include <boost/shared_ptr.hpp>
 #include "Log.h"		// Temporary shared log for testing
 
 #pragma comment(lib, "MPR.LIB")		// WNetAddConnection2, WNetCancelConnection2

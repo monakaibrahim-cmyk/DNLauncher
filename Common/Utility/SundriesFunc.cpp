@@ -3,7 +3,7 @@
 #include "Stream.h"
 #include <stdarg.h>
 #include <Windows.h>
-#include <./boost/algorithm/string.hpp>
+#include <boost/algorithm/string.hpp>
 
 #ifdef _DEBUG
 #define new new(_NORMAL_BLOCK,__FILE__,__LINE__)

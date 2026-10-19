@@ -12,7 +12,7 @@ private:
 		if ( m_checked )
 			return true;
 
-		// 파일이 존재하지 않으면 생성한다.
+		// Create file if it does not exist.
 		if( GetFileAttributesA(m_fileName.c_str()) == INVALID_FILE_ATTRIBUTES)
 		{
 			FILE *fp = fopen(m_fileName.c_str(), "ab");
@@ -47,13 +47,13 @@ public:
 		m_fileName = fileName;
 	}
 
-	// Ini 파일에서 int 값을 읽어온다.
+	// Read int value from INI file.
 	int Read(const char* app, const char* key, int defaultValue)
 	{
 		return GetPrivateProfileIntA(app, key, defaultValue, m_fileName.c_str());
 	}
 
-	// Ini 파일에서 문자열 값을 읽어온다.
+	// Read string value from INI file.
 	std::string Read(const char* app, const char* key, const char* defaultValue)
 	{
 		char buf[2048] = {0,} ;
@@ -61,7 +61,7 @@ public:
 		return std::string(buf);
 	}
 
-	// Ini 파일에 int 값을 쓴다.
+	// Write int value to INI file.
 	bool Write(const char* app, const char* key, int v)
 	{
 
@@ -73,7 +73,7 @@ public:
 		return WritePrivateProfileStringA(app, key, buf, m_fileName.c_str()) ? true : false;
 	}
 
-	// Ini 파일에 문자열 값을 쓴다.
+	// Write string value to INI file.
 	bool Write(const char* app, const char* key, const char* v)
 	{
 		if(!CheckFile())
@@ -82,8 +82,8 @@ public:
 		return WritePrivateProfileStringA(app, key, v, m_fileName.c_str()) ? true : false;
 	}
 
-	// Ini 파일에 기록한 내용을 파일에 실제로 쓴다
-	// 기록을 한 경우 반드시 호출해 준다.
+	// Flush cached INI contents to disk
+	// Must be called after writing.
 	bool Flush()
 	{
 		if(!CheckFile())

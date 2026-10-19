@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 
 #ifdef _DEBUG
 template <bool T> struct ASSERT_STRUCT {};
@@ -25,15 +26,15 @@ struct __alignment_static_test {char _;int __;double ___;}; \
 #define _S _fnLoadString
 CString _fnLoadString( UINT id );
 
-BOOL ClientDeleteFile( LPCTSTR strFileName );					// 클라이언트에서 해당 파일 삭제하기
-BOOL KillProcess( LPCTSTR strProcessName );						// 프로세스 죽이기
-BOOL FindProcessName( LPCTSTR strProcessName );					// 해당 이름의 프로세스가 있는지 확인하기
-HRGN CreateRgnFromFile( HBITMAP hBmp, COLORREF color );			// 비트맵에서 Region 구하기
+BOOL ClientDeleteFile( LPCTSTR strFileName );					// Delete file from client directory.
+BOOL KillProcess( LPCTSTR strProcessName );						// Terminate process by name.
+BOOL FindProcessName( LPCTSTR strProcessName );					// Check if a process with this name is running.
+HRGN CreateRgnFromFile( HBITMAP hBmp, COLORREF color );			// Create region from bitmap mask.
 
 BOOL RunProcess( LPCTSTR strProcessName );
-BOOL KillMyProcess( LPCTSTR strEXEName );						// 자기자신의 프로세스만을 종료시킨다.
+BOOL KillMyProcess( LPCTSTR strEXEName );						// Terminate existing instance of this process.
 
-// DirectX 버전 구하기
+// Retrieve DirectX version
 HRESULT GetDXVersion( DWORD* pdwDirectXVersion, TCHAR* strDirectXVersion, int cchDirectXVersion );
 HRESULT GetDirectXVersionViaDxDiag( DWORD* pdwDirectXVersionMajor, DWORD* pdwDirectXVersionMinor, TCHAR* pcDirectXVersionLetter );
 HRESULT GetDirectXVersionViaFileVersions( DWORD* pdwDirectXVersionMajor, DWORD* pdwDirectXVersionMinor, TCHAR* pcDirectXVersionLetter );

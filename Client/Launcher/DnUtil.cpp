@@ -69,7 +69,7 @@ BOOL ClientDeleteFile( LPCTSTR strFileName )
 
 BOOL KillProcess( LPCTSTR strProcessName )
 {
-	LogWnd::TraceLog( _T( "★	KillProcess") );
+	LogWnd::TraceLog( _T("KillProcess") );
 
 	WCHAR ExeName[1024] = {0,};
 	wsprintf( ExeName , L"%s" , strProcessName );
@@ -866,7 +866,7 @@ void EnumDisplayMode( std::vector<POINT>& vecDisplayMode )
 	for( i=0; i<nCount; i++ )
 	{
 		pD3D->EnumAdapterModes( 0, D3DFMT_X8R8G8B8, i, &DisplayMode );
-		if( ( DisplayMode.Height / ( float )DisplayMode.Width ) > 0.5f && ( DisplayMode.Width >= 1024 && DisplayMode.Height >= 720 ) )	// 16 : 9 보다 더 작은 비율 해상도는 제외한다.
+		if( ( DisplayMode.Height / ( float )DisplayMode.Width ) > 0.5f && ( DisplayMode.Width >= 1024 && DisplayMode.Height >= 720 ) )	// Only select 16:9 or supported resolutions >= 1024x720
 		{
 			POINT Resol;
 			Resol.x = DisplayMode.Width;
@@ -886,7 +886,7 @@ HRESULT DownloadToFile( LPCTSTR strDownloadUrl, LPCTSTR strSaveFilePath )
 {
 	HINTERNET hInternetSession;
 	HINTERNET hHttpConnection;
-	// 세션 열기
+	// Open Internet Session
 	LogWnd::TraceLog( L"Open Internet Session" );
 	hInternetSession = InternetOpen( NULL, INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0 );
 
@@ -896,7 +896,7 @@ HRESULT DownloadToFile( LPCTSTR strDownloadUrl, LPCTSTR strSaveFilePath )
 		return S_FALSE;
 	}
 
-	// Http 열기
+	// Open Http Connection
 	LogWnd::TraceLog( L"Open Http Connection" );
 	CString strAddHeader;
 	strAddHeader.Format( L"Cache-Control:no-cache\nPragma:no-cache" );
@@ -1003,7 +1003,7 @@ BOOL IsExistFile( LPCTSTR strDownloadUrl )
 {
 	HINTERNET hInternetSession;
 	HINTERNET hHttpConnection;
-	// 세션 열기
+	// Open Internet Session
 	LogWnd::TraceLog( L"Open Internet Session" );
 	hInternetSession = InternetOpen( NULL, INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0 );
 
@@ -1013,7 +1013,7 @@ BOOL IsExistFile( LPCTSTR strDownloadUrl )
 		return FALSE;
 	}
 
-	// Http 열기
+	// Open Http Connection
 	LogWnd::TraceLog( L"Open Http Connection" );
 	CString strAddHeader;
 	strAddHeader.Format( L"Cache-Control:no-cache\nPragma:no-cache" );
@@ -1045,7 +1045,7 @@ BOOL KillMyProcess( LPCTSTR strEXEName )
 	_tcsupr_s(ExeName);
 	HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
-	if( (int)hSnapShot != -1 )
+	if( hSnapShot != INVALID_HANDLE_VALUE )
 	{
 		PROCESSENTRY32 pe32;
 		pe32.dwSize = sizeof(PROCESSENTRY32);
@@ -1099,12 +1099,12 @@ BOOL RunProcess(LPCTSTR strProcessName)
 	if (bRun)
 	{
 		//KillProcess2(_T(DNLAUNCHER_NAME));
-		//ClientDeleteFile(_T(DNLAUNCHER_NAME_TMP)); // tmp를 지우고,
-		//MoveFile(_T(DNLAUNCHER_NAME_NEW), _T(DNLAUNCHER_NAME)); // new를 exe로 변경.
+		//ClientDeleteFile(_T(DNLAUNCHER_NAME_TMP)); // Delete temporary launcher file
+		//MoveFile(_T(DNLAUNCHER_NAME_NEW), _T(DNLAUNCHER_NAME)); // Move new file to launcher file
 	}
 	else
 	{
-		//MessageBox(NULL, "Process 생성에 실패 했습니다", "경고", MB_OK);
+		//MessageBox(NULL, "Process execution failed", "Error", MB_OK);
 	}
 
 	CloseHandle( pi.hProcess );

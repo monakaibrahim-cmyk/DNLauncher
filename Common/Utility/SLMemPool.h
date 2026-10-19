@@ -1,5 +1,5 @@
 // Note : Simple List Memory Pool -_-;;;;
-//		나중에 인터페이스쪽에서 사용하기 위해 추가.
+//		Added for future interface usage.
 //
 #pragma once
 
@@ -30,13 +30,13 @@ public:
 	~CSLMemPool();
 
 public:
-	// Note : 메모리를 할당한다.
-	//		풀에 있다면 풀에 있는 메모리를 반환하고 아니면 new한다.
+	// Note : Allocate memory.
+	//		Return from pool if available, otherwise new.
 	TYPE* Allocate();
-	// Note : 메모리풀에 반환한다. 객체는 이전 값을 가진다.
-	//		풀에 반환하기 전 또는 후에 초기화를 하고 사용해야 한다.
+	// Note : Return to memory pool. Object retains prior values.
+	//		Must initialize before or after returning to pool.
 	void Deallocate( TYPE* ptr );
-	// Note : 메모리풀에 반환한다. 단 객체를 생성자로 초기화 후 반환.
+	// Note : Return to memory pool after reinitializing object with constructor.
 	void DeallocateEx( TYPE* ptr );
 
 public:

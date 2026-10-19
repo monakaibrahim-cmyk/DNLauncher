@@ -1,28 +1,28 @@
 //
-//	DnPatchInfo.h	ġ    Ŭ
+//	DnPatchInfo.h : Patch configuration, versioning, and endpoint manager
 //
 
 #pragma once
 
 struct stLoginServerSet
 {
-	CString	m_strLoginUrl;	// α  ּ Ip
-	WORD	m_wLoginPort;	// α  Port
+	CString	m_strLoginUrl;	// Login server IP address
+	WORD	m_wLoginPort;	// Login server port
 };
 
 struct stPartitionListSet
 {
-	CString m_strGuidepageUrl;	// ó ̵  ּ
-	CString m_strHomepageUrl;	// Ȩ ּ
-	CString m_strPartitionName;	// Ƽ ̸
-	CString m_strVersionUrl;	// PatchInfoServer.cfg  ּ
-	CString m_strPatchUrl;		// ġ  CDN ּ
-	CString m_strStateTestUrl;	// Ƽ  üũϱ   ּ
-	WORD	m_wPartitionId;		// Ƽ Id
-	WORD	m_wNew;				// ű Ƽ ǥ Flag
-	WORD	m_wOpen;			//     ÷
+	CString m_strGuidepageUrl;	// Launcher web view guide page URL
+	CString m_strHomepageUrl;	// Official homepage URL
+	CString m_strPartitionName;	// Partition / realm name
+	CString m_strVersionUrl;	// PatchInfoServer.cfg endpoint URL
+	CString m_strPatchUrl;		// Patch CDN base download URL
+	CString m_strStateTestUrl;	// Server status test endpoint URL
+	WORD	m_wPartitionId;		// Partition ID
+	WORD	m_wNew;				// New partition flag
+	WORD	m_wOpen;			// Open partition status flag
 	
-	std::vector<stLoginServerSet> m_vecLoginServerList;	// αμ Ʈ 
+	std::vector<stLoginServerSet> m_vecLoginServerList;	// Login server address list
 
 	stPartitionListSet() : m_wPartitionId( 0 ), m_wNew( 0 ), m_wOpen( 1 ) {}
 	~stPartitionListSet() { m_vecLoginServerList.clear(); }
@@ -30,15 +30,15 @@ struct stPartitionListSet
 
 struct stChannelListSet
 {
-	CString m_strChannelName;	// ä ̸
-	std::vector<stPartitionListSet> m_vecPartitionList;	// Ƽ  Ʈ
+	CString m_strChannelName;	// Channel / regional realm name
+	std::vector<stPartitionListSet> m_vecPartitionList;	// Partition list
 
 	~stChannelListSet() { m_vecPartitionList.clear(); }
 };
 
 
 //////////////////////////////////////////////////////////////////////////
-// PatchConfigList.xml  
+// PatchConfigList.xml hierarchy
 // Channel
 //		L Partition
 //				L LoginIpList
@@ -55,10 +55,10 @@ public:
 	HRESULT			Init();
 	void			SetClientPath( CString strClientPath );
 	CString			GetClientPath()		{ return m_strClientPath; }
-	BOOL			SetPatchInfo();		// ġ 
+	BOOL			SetPatchInfo();		// Apply active patch configuration
 	BOOL			IsSetPatchInfo()	{ return m_bSetPatchInfo; }
-	void			LoadClientVersion();// Ŭ̾Ʈ   б
-	void			LoadServerVersion();//    б
+	void			LoadClientVersion();// Read client Version.cfg
+	void			LoadServerVersion();// Read server PatchInfoServer.cfg
 
 	void			SetClientVersion( int nClientVersion ) { m_nClientVersion = nClientVersion; }
 	void			SetServerVersion( int nServerVersion ) { m_nServerVersion = nServerVersion; }
@@ -90,28 +90,26 @@ public:
 	void	SetLocaleGuidePage();
 #endif // _USE_MULTILANGUAGE
 	int		GetLanguageOffset() { return m_nLanguageOffset; }
-	BOOL	SetParameter();							// Ķ 
+	BOOL	SetParameter();							// Format client launch command line
 
 private:
-	HRESULT DownLoadPatchConfigList();		// PatchConfigList.xml ٿε
-	HRESULT ParsingPatchConfigList();		// PatchConfigList.xml Ľ
-	void	LoadPatchVersionInfo();					// ġ  б
+	HRESULT DownLoadPatchConfigList();		// Download PatchConfigList.xml
+	HRESULT ParsingPatchConfigList();		// Parse PatchConfigList.xml
+	void	LoadPatchVersionInfo();			// Load server and client version info
 	void	SetPartitionList(	stChannelListSet& channellistset, WORD dwNew, WORD wPartitionId, WORD wOpen, CString strGuidepageUrl, CString strHomepageUrl, 
 								CString strPartitionName, CString strVersionUrl, CString strPatchUrl, CString strStateTestUrl, std::vector<stLoginServerSet>& vecLoginServerList );
 
-	void	ResetPatchInfo();						// ġ ʱȭ
-	BOOL	SetBasePatchInfo();						// ⺻ ġ 
-	BOOL	SetFirstPatchInfo();					// FIrstPatch  
-	int		LoadVersion( CString& szFilePath );		// Ͽ   б
+	void	ResetPatchInfo();						// Reset patch info state
+	BOOL	SetBasePatchInfo();						// Set default base patch configuration
+	BOOL	SetFirstPatchInfo();					// Set FirstPatch configuration
+	int		LoadVersion( CString& szFilePath );		// Read version integer from file
 	int		LoadVersion( CString& szFilePath, CString szTypeName );
-	BOOL	ReadConfig();								// ÿ config б
+	BOOL	ReadConfig();							// Read Config.ini options
 	void	ParseCommandLineDev( LPCTSTR szCommandLine );
 
 public:
 	bool	LoadVersionData();
 
-	
-	
 #ifdef _USE_SINGLE_CLIENT
 	void LoadClientVersionFromResourceFile();
 #else // _USE_SINGLE_CLIENT
@@ -121,36 +119,35 @@ public:
 private:
 	BOOL							m_bSetPatchInfo;
 	std::vector<stChannelListSet>	m_vecChannelList;
-	std::vector<int>				m_vecSkipVersion; //ŵ 
+	std::vector<int>				m_vecSkipVersion; // Versions to skip
 
-	// õ Ƽ ġ 
-	CString m_strGuidepageUrl;	// ó ̵  ּ
-	CString m_strHomepageUrl;	// Ȩ ּ
-	CString m_strPartitionName;	// Ƽ ̸
-	CString m_strVersionUrl;	// PatchInfoServer.cfg  ּ
-	CString m_strPatchUrl;		// ġ  CDN ּ
+	// Active Partition Endpoints
+	CString m_strGuidepageUrl;	// Launcher web view guide page URL
+	CString m_strHomepageUrl;	// Official homepage URL
+	CString m_strPartitionName;	// Active partition name
+	CString m_strVersionUrl;	// PatchInfoServer.cfg URL endpoint
+	CString m_strPatchUrl;		// Patch CDN base download URL
 
-	std::vector<stLoginServerSet> m_vecLoginServerList;	// αμ Ʈ 
+	std::vector<stLoginServerSet> m_vecLoginServerList;	// Login server address list
 
-	int		m_nClientVersion;			//  Ŭ̾Ʈ 
-	int		m_nServerVersion;			//   
-
+	int		m_nClientVersion;			// Current client version
+	int		m_nServerVersion;			// Latest server version
 
 #ifdef _USE_AUTOUPDATE
-	int		m_nNextVersion;		//  Ʈ   ġ 
+	int		m_nNextVersion;		// Next incremental patch version
 #endif // _USE_AUTOUPDATE
 
-	int		m_nLanguageOffset;	// Resource.h  Offset
-	WORD	m_wOpen;			// Ƽ  ÷
+	int		m_nLanguageOffset;	// Resource.h language offset (0 = English, 10000 = Vietnamese)
+	WORD	m_wOpen;			// Partition open status flag
 
-	CString m_strClientPath;	// Ŭ̾Ʈ ġ 
-	CString m_strIPList;		// Ķ ѱ   α IP  (ex : 192.168.0.1;192.168.0.2;...)
-	CString m_strPortList;		// Ķ ѱ   α Port  (ex : 4006;4007;...)
-	CString m_strOptionParam;	// ɼ Ķ
-	CString m_strTotalParam;	// ü Ķ (Ŭ̾Ʈ   ޵Ǵ Ķ)
+	CString m_strClientPath;	// Client directory path
+	CString m_strIPList;		// Semicolon-delimited IP list (e.g. 192.168.0.1;192.168.0.2;...)
+	CString m_strPortList;		// Semicolon-delimited port list (e.g. 14301;14301;...)
+	CString m_strOptionParam;	// Launcher option parameters (/ip:... /port:... /Lver:... /use_packing)
+	CString m_strTotalParam;	// Full command line passed to client executable
 
 #ifdef _USE_MULTILANGUAGE
-	CString m_strLanguageParam;	// ٱ   (Ŭ̾Ʈ   ޵Ǵ Ķ)
+	CString m_strLanguageParam;	// Multilanguage parameter passed to client (/lang:...)
 #endif // _USE_MULTILANGUAGE
 };
 

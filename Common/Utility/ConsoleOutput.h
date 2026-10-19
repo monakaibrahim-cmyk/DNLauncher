@@ -5,11 +5,11 @@
 	PRGM : B4nFter
 
 	FILE : CONSOLEOUTPUT.H
-	DESC : Console 출력(전용) 클래스
+	DESC : Dedicated console output class
 	INIT BUILT DATE : 2001. 06. 16
 	LAST BUILT DATE : 2006. 01. 05
 
-	Copyrightⓒ 2002~2007 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2007 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -43,7 +43,7 @@
 // TYPE : CLASS
 // NAME : CConsoleOutput
 //*---------------------------------------------------------------
-// DESC : 콘솔 출력 클래스
+// DESC : Console output class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CConsoleOutput
@@ -90,8 +90,8 @@ private:
 	HANDLE m_hConsoleOutput;
 	HWND m_hConsoleWindow;
 
-	EF_FGCOLOR m_eConsoleFgColor;	// 콘솔의 전면색
-	EF_BGCOLOR m_eConsoleBgColor;	// 콘솔의 후면색
+	EF_FGCOLOR m_eConsoleFgColor;	// Console foreground color
+	EF_BGCOLOR m_eConsoleBgColor;	// Console background color
 
 	TCHAR m_szConsoleTitle[MAX_CONSOLE_OT_TITLE_CHAR*sizeof(TCHAR)];
 
@@ -119,7 +119,7 @@ public:
 // TYPE : FUNCTION
 // NAME : CConsoleOutput::CConsoleOutput
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -144,7 +144,7 @@ CConsoleOutput::CConsoleOutput()
 // TYPE : FUNCTION
 // NAME : CConsoleOutput::~CConsoleOutput
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -161,9 +161,9 @@ CConsoleOutput::~CConsoleOutput()
 // TYPE : FUNCTION
 // NAME : CConsoleOutput::Initialize
 //*---------------------------------------------------------------
-// DESC : 객체자원 초기화
+// DESC : Initialize object resources
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CConsoleOutput::Initialize(LPCTSTR lpszConsoleTitle)
@@ -186,10 +186,10 @@ BOOL CConsoleOutput::Initialize(LPCTSTR lpszConsoleTitle)
 		return FALSE;
 	}
 
-	// 콘솔 윈도우핸들을 얻음
+	// Get console window handle
 	m_hConsoleWindow = ::GetConsoleWindow();
 
-	// 콘솔 제목 지정
+	// Set console title
 	if (lpszConsoleTitle) {
 		::SetConsoleTitle(lpszConsoleTitle);
 	}
@@ -202,9 +202,9 @@ BOOL CConsoleOutput::Initialize(LPCTSTR lpszConsoleTitle)
 // TYPE : FUNCTION
 // NAME : CConsoleOutput::Finalize
 //*---------------------------------------------------------------
-// DESC : 객체자원 해제
+// DESC : Release object resources
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CConsoleOutput::Finalize()
@@ -228,8 +228,8 @@ BOOL CConsoleOutput::Finalize()
 // TYPE : FUNCTION
 // NAME : CConsoleUserInterface::Write
 //*---------------------------------------------------------------
-// DESC : 콘솔화면에 텍스트 출력
-// PARM :	1 . lpszFormat - 콘솔화면에 출력할 텍스트의 포맷
+// DESC : Print formatted text to console
+// PARM :	1 . lpszFormat - Format string for console output
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -242,7 +242,7 @@ VOID CConsoleOutput::Write(LPCTSTR lpszFormat, ...)
 	ScopeLock<CSyncLock> aLockAuto(&m_Lock);
 
 	va_start(szArgs, lpszFormat);
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	iTextCount = _vsntprintf_s(m_szBuffer, COUNT_OF(m_szBuffer), lpszFormat, szArgs);
 #else	// #if	(_MSC_VER >= 1400)
 	#pragma warning (disable:4995)
@@ -260,7 +260,7 @@ VOID CConsoleOutput::Write(LPCTSTR lpszFormat, ...)
 // NAME : CConsoleOutput::ShowWindow
 //*---------------------------------------------------------------
 // DESC : show or hide console window
-// PARM :	1 . bShow - TRUE - 성공 / FALSE - 실패
+// PARM :	1 . bShow - TRUE to show, FALSE to hide
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -284,7 +284,7 @@ VOID CConsoleOutput::ShowWindow(BOOL bShow)
 VOID CConsoleOutput::SetConsoleTitle(LPCTSTR lpszConsoleTitle)
 {
 	if (lpszConsoleTitle != NULL && lstrcmp(lpszConsoleTitle, _T('\0'))) {
-		// lstrcpyn() 은 TCHAR를 처리하므로 유니코드에서 글자1개는 2바이트이다.
+		// lstrcpyn() handles TCHAR; each Unicode character is 2 bytes.
 		STRNCPY(m_szConsoleTitle, _countof(m_szConsoleTitle), lpszConsoleTitle);
 //		_tcsncpy(m_szConsoleTitle, lpszConsoleTitle, COUNT_OF(m_szConsoleTitle));
 		::SetConsoleTitle(m_szConsoleTitle);

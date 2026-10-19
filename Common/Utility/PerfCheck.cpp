@@ -29,7 +29,7 @@ typedef struct tagPERFDATA
 	LARGE_INTEGER	prevCounter;
 	DWORD	nCountHits;
 
-	// offset 용
+	// For offset
 	double fFpsTotalCounter;
 	DWORD dwFpsCountHits;
 	double fAveFpsTotalCounter;
@@ -91,7 +91,7 @@ public:
 		{
 			LPPERFDATA lpPerf = *it;
 			
-			// 기본적인 프로파일링 결과
+			// Basic profiling results
 			sprintf(buf, "%-25s    %6d,          %6.4lf,          %6.4lf,          %6.4lf \n", lpPerf->strName.c_str(), lpPerf->nCountHits,
 				lpPerf->fMaxCounter / fFreq,
 				(lpPerf->fMinCounter == 100000000. ) ? ( 0. ) : ( lpPerf->fMinCounter / fFreq ),
@@ -100,9 +100,9 @@ public:
 
 			Func(buf);
 
-			// 틱당 계산 결과
+			// Per-tick calculation results
 			if( lpPerf->dwAveFpsCountHits > 0 ) {
-				sprintf(buf, "    └Frame Per Result -> Call : ( %6d ),      Ave : ( %6.4lf )\n", lpPerf->dwAveFpsCountHits,
+				sprintf(buf, "    +-- Frame Per Result -> Call : ( %6d ),      Ave : ( %6.4lf )\n", lpPerf->dwAveFpsCountHits,
 					lpPerf->fAveFpsTotalCounter / fFreq );
 				Func(buf);
 			}

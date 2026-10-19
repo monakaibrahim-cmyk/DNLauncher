@@ -28,18 +28,18 @@ public:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	BOOL InitLauncher();			// 런처 초기화
-	BOOL InitFail();				// 초기화 실패시 에러메세지 및 로그 기록
-	BOOL CheckDirectXVersion();		// DirectX 버전 체크
-	void DeleteOldLogFile();		// 오래된 로그파일 삭제
-	void UseLogFile();				// 로그파일 사용 할 경우 초기화
-	void UseLogWindow();			// 로그윈도우 사용 할 경우 초기화
-	BOOL RemoveUsedFile();			// 런처 구동 시 사용 했던 파일 및 런처 업데이트 시 생성된 tmp 파일 삭제
-	void ParseCommandLine();		// 커맨드 라인 파싱
+	BOOL InitLauncher();			// Initialize launcher
+	BOOL InitFail();				// Handle initialization failure and show error message
+	BOOL CheckDirectXVersion();		// Check DirectX version
+	void DeleteOldLogFile();		// Delete outdated log files
+	void UseLogFile();				// Initialize file logging
+	void UseLogWindow();			// Initialize window logging
+	BOOL RemoveUsedFile();			// Clean up temporary update files from previous run
+	void ParseCommandLine();		// Parse command line arguments
 	
 #ifdef _FIRST_PATCH
-	BOOL InitFirstPatchThread();	// FirstPatch 스레드 생성.
-	void TerminateFirstPatchThread();	// FirstPatch 스레드 종료.
+	BOOL InitFirstPatchThread();	// Initialize FirstPatch thread
+	void TerminateFirstPatchThread();	// Terminate FirstPatch thread
 #endif
 
 #ifdef _USE_MULTILANGUAGE

@@ -59,7 +59,7 @@ bool CPsUpdater::Open()
 {
 	DN_ASSERT(!IsOpen(),	"Already Opened!");
 
-	// 플랜 스냅샷 업데이트 경로 정보 파일 읽음
+	// Read plan snapshot update path info file
 	{
 		TCHAR aIniFile[MAX_PATH] = { _T('\0'), };
 		{
@@ -71,20 +71,20 @@ bool CPsUpdater::Open()
 
 			DWORD aRetVal1 = ::GetModuleFileName(NULL, aLocalPath, _countof(aLocalPath));
 			if (!aRetVal1) {
-				// 오류 발생
+				// Error occurred
 				return false;
 			}
 
 			errno_t aRetVal2 = _tsplitpath_s(aLocalPath, aDrvName, _countof(aDrvName), aDirName, _countof(aDirName), aFileName, _countof(aFileName), aExecName, _countof(aExecName));
 			if (aRetVal2) {
-				// 오류 발생
+				// Error occurred
 				return false;
 			}
 
 			_sntprintf_s(aIniFile, _countof(aIniFile), _T("%s%s%s"), aDrvName, aDirName, DF_PSUD_URLINIFILE);
 
 			if (_taccess_s(CVarArg<MAX_PATH>(_T("%s"), aIniFile), 0)) {
-				// 파일 없음
+				// File not found
 				return false;
 			}
 		}
@@ -159,7 +159,7 @@ bool CPsUpdater::LoadVersion()
 
 	DN_ASSERT(IsOpen(),	"Not Opened!");
 
-	// 로컬 폴더에 버전 파일 존재여부 체크 (TRUE : 업데이트 체크 시작 / FALSE : 넘어감)
+	// Check if local version file exists (TRUE: start update check / FALSE: skip)
 	TCHAR aCurPsVersion[DF_PSUD_VERSIONSIZE] = { _T('\0'), };
 	UINT64 aCurPsVersionNo = 0;
 	{
@@ -173,20 +173,20 @@ bool CPsUpdater::LoadVersion()
 
 			DWORD aRetVal1 = ::GetModuleFileName(NULL, aLocalPath, _countof(aLocalPath));
 			if (!aRetVal1) {
-				// 오류 발생
+				// Error occurred
 				return false;
 			}
 
 			errno_t aRetVal2 = _tsplitpath_s(aLocalPath, aDrvName, _countof(aDrvName), aDirName, _countof(aDirName), aFileName, _countof(aFileName), aExecName, _countof(aExecName));
 			if (aRetVal2) {
-				// 오류 발생
+				// Error occurred
 				return false;
 			}
 
 			_sntprintf_s(aVersionFile, _countof(aVersionFile), _T("%s%s%s"), aDrvName, aDirName, m_PsVersionFileName);
 
 			if (_taccess_s(CVarArg<MAX_PATH>(_T("%s"), aVersionFile), 0)) {
-				// 파일 없음
+				// File not found
 				return false;
 			}
 		}
@@ -209,11 +209,11 @@ bool CPsUpdater::LoadVersion()
 				aBufferSize = sizeof(aBuffer) - sizeof(TCHAR);
 				aRetVal = aPsVersionFile.Read(static_cast<LPVOID>(aBuffer), aBufferSize);
 				if (ERROR_HANDLE_EOF == aRetVal) {
-					// 읽기 종료
+					// End of read
 					break;
 				}
 				if (NOERROR != aRetVal) {
-					// 오류 발생
+					// Error occurred
 					return false;
 				}
 
@@ -234,21 +234,21 @@ bool CPsUpdater::LoadVersion()
 
 			bool aRetVal = ParseVersion(T2CA(aStringSet.Get(0)), aYear, aMonth, aDay, aBuildNo);
 			if (!aRetVal) {
-				// 오류 발생
+				// Error occurred
 				return false;
 			}
 
 			aCurPsVersionNo = MAKELONGLONG(MAKELONG(aBuildNo, aDay), MAKELONG(aMonth, aYear));
 		}
 
-		// 버전 문자열에 불필요한 문자들 제거
+		// Strip unwanted characters from version string
 		{
 			USES_CONVERSION;
 
 			INT aStartPtr = 0;
 			CStringSet aToken = aStringSet.Tokenize(_T("\n\r"), aStartPtr);
 			if (aToken.IsEmpty()) {
-				// 오류 발생
+				// Error occurred
 				return false;
 			}
 
@@ -273,7 +273,7 @@ bool CPsUpdater::DoCheck()
 
 //	DN_ASSERT(0 != m_CurPsVersion,	"Invalid!");
 
-	// 버전 파일이 존재한다면 원격지 버전 경로에서 플랜 스냅샷 버전 체크
+	// If version file exists, query remote version path
 	TCHAR aNewPsVersion[DF_PSUD_VERSIONSIZE] = { _T('\0'), };
 	UINT64 aNewPsVersionNo = 0;
 	{
@@ -294,16 +294,16 @@ bool CPsUpdater::DoCheck()
 		{
 			INT iRetVal = 1;
 			while (0 < iRetVal) {
-//				::memset(aBuffer, 0, sizeof(aBuffer));	// 추후에 ::InternetReadFile() 의 읽은 바이트 수 참조하도록 수정 필요
+//				::memset(aBuffer, 0, sizeof(aBuffer));	// Note: Update to track actual bytes read from InternetReadFile()
 
 				iRetVal = aHttpClient.RecvResponse(aBuffer, DF_PSUD_TMPBUFFSIZE);
 				if (0 <= iRetVal) {
-					// iRetVal - 0:완료 / 1:더받을수있음
+					// iRetVal - 0: complete / 1: more data pending
 					(*reinterpret_cast<LPTSTR>(&aBuffer[DF_PSUD_TMPBUFFSIZE])) = _T('\0');
 				}
 			}
 			if (iRetVal < 0) {
-				// 오류 발생
+				// Error occurred
 				return false;
 			}
 
@@ -313,19 +313,19 @@ bool CPsUpdater::DoCheck()
 
 				bool aLocalRetVal = ParseVersion(reinterpret_cast<LPCSTR>(aBuffer), aYear, aMonth, aDay, aBuildNo);
 				if (!aLocalRetVal) {
-					// 오류 발생
+					// Error occurred
 					return false;
 				}
 
 				aNewPsVersionNo = MAKELONGLONG(MAKELONG(aBuildNo, aDay), MAKELONG(aMonth, aYear));
 			}
 
-			// 이전 버전과 신규 버전 비교
+			// Compare previous version with new version
 			if (m_CurPsVersionNo == aNewPsVersionNo) {
 				return false;
 			}
 
-			// 버전 문자열에 불필요한 문자들 제거
+			// Strip unwanted characters from version string
 			{
 				USES_CONVERSION;
 
@@ -334,7 +334,7 @@ bool CPsUpdater::DoCheck()
 				INT aStartPtr = 0;
 				CStringSet aToken = aStringSet.Tokenize(_T("\n\r"), aStartPtr);
 				if (aToken.IsEmpty()) {
-					// 오류 발생
+					// Error occurred
 					return false;
 				}
 
@@ -342,7 +342,7 @@ bool CPsUpdater::DoCheck()
 			}
 		}
 		else {
-			// 오류 발생
+			// Error occurred
 			return false;
 		}
 	}
@@ -371,28 +371,28 @@ void CPsUpdater::DoUpdate(eNotifyType pNotifyType)
 	TCHAR aDrvName[MAX_PATH] = { _T('\0'), };
 	TCHAR aDirName[MAX_PATH] = { _T('\0'), };
 
-	// 사용자 알림 메시지
+	// User notification message
 	switch(pNotifyType) {
-	case eNotifyTypeUpdate:		// 업데이트
+	case eNotifyTypeUpdate:		// Update
 		{
-			// P.S.> 프로세스 시작 시 기타 자원들 (*.DLL 등등) 로드 전이라면 업데이트 가능
+			// Can update directly before dependent modules (*.DLL) are loaded
 
 			::MessageBox(
 				HWND_DESKTOP, 
-				CVarArg<MAX_PATH>(_T("다음과 같은 버전의 플랜 스냅샷이 발행되었습니다.\n\n버전 : %s\n\n'확인' 버튼을 누르시면 해당 플랜 스냅샷 업데이트가 시작되며 이후 리소스 폴더도 별도로 업데이트 해주시기 바랍니다."), m_NewPsVersion),
-				_T("플랜 스냅샷 업데이트 안내"), 
+				CVarArg<MAX_PATH>(_T("A plan snapshot of the following version has been released.\n\nVersion : %s\n\nClick 'OK' to start updating this plan snapshot. Please also update the resource folder separately afterwards."), m_NewPsVersion),
+				_T("Plan Snapshot Update Notice"), 
 				MB_ICONINFORMATION | MB_DEFBUTTON1
 				);
 		}
 		break;
-	case eNotifyTypeCheck:		// 버전체크
+	case eNotifyTypeCheck:		// Version check
 		{
-			// P.S.> 프로세스 실행 중 기타 자원들 (*.DLL 등등) 로드 이후라면 재시작 해서 업데이트 받는 것이 안전
+			// Safe to restart before updating after modules (*.DLL) are loaded
 
 			::MessageBox(
 				HWND_DESKTOP, 
-				CVarArg<MAX_PATH>(_T("다음과 같은 버전의 플랜 스냅샷이 발행되었습니다.\n\n버전 : %s\n\n'확인' 버튼을 누르신 후 프로세스가 종료되면 재시작 해주시기 바랍니다."), m_NewPsVersion),
-				_T("플랜 스냅샷 업데이트 안내"), 
+				CVarArg<MAX_PATH>(_T("A plan snapshot of the following version has been released.\n\nVersion : %s\n\nClick 'OK', and restart the process once it terminates."), m_NewPsVersion),
+				_T("Plan Snapshot Update Notice"), 
 				MB_ICONINFORMATION | MB_DEFBUTTON1
 				);
 		}
@@ -402,17 +402,17 @@ void CPsUpdater::DoUpdate(eNotifyType pNotifyType)
 //		DN_RETURN_NONE;
 	}
 
-	// 플랜 스냅샷 버전이 서로 달라서 패치가 필요하다면 현재 실행파일 이름 변경
+	// If plan snapshot versions differ and patching is required, rename current executable
 	{
 		DWORD aRetVal1 = ::GetModuleFileName(NULL, aLocalPath, _countof(aLocalPath));
 		if (!aRetVal1) {
-			// 오류 발생
+			// Error occurred
 			return;
 		}
 
 		errno_t aRetVal2 = _tsplitpath_s(aLocalPath, aDrvName, _countof(aDrvName), aDirName, _countof(aDirName), aFileName, _countof(aFileName), aExecName, _countof(aExecName));
 		if (aRetVal2) {
-			// 오류 발생
+			// Error occurred
 			return;
 		}
 
@@ -426,7 +426,7 @@ void CPsUpdater::DoUpdate(eNotifyType pNotifyType)
 		CFileSet::Rename(aSrcFile, aTgtFile);
 	}
 
-	// 네트워크 상의 플랜 스냅삿 호스트에 대한 접근 권한 획득
+	// Acquire network access permissions to plan snapshot host
 	{
 		NETRESOURCE	stNetResource;
 
@@ -443,13 +443,13 @@ void CPsUpdater::DoUpdate(eNotifyType pNotifyType)
 		DWORD aRetVal = ::WNetAddConnection2(&stNetResource, m_PsDownloadPassword, m_PsDownloadAccountId, CONNECT_UPDATE_PROFILE);
 
 		if (NO_ERROR != aRetVal) {
-			// 오류 발생
+			// Error occurred
 //			return;
 		}
 	}
 
 /*
-	// 플랜 스냅샷의 파일들을 'xcopy' 명령을 이용하여 로컬 폴더로 전체 복사
+	// Copy all plan snapshot files to local folder using 'xcopy'
 	{
 		TCHAR aSrcPath[MAX_PATH] = { _T('\0'), };
 		TCHAR aTgtPath[MAX_PATH] = { _T('\0'), };
@@ -462,7 +462,7 @@ void CPsUpdater::DoUpdate(eNotifyType pNotifyType)
 
 			UINT aRetVal1 = ::GetSystemDirectory(aExecPath, _countof(aExecPath));
 			if (!aRetVal1) {
-				// 오류 발생
+				// Error occurred
 				return;
 			}
 
@@ -479,7 +479,7 @@ void CPsUpdater::DoUpdate(eNotifyType pNotifyType)
 			BOOL aRetVal = ::CreateProcess(NULL, aExecPath, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &aStartupInfo, &aProcessInformation);
 //			BOOL aRetVal = ::CreateProcess(NULL, aExecPath, NULL, NULL, FALSE, 0, NULL, NULL, &aStartupInfo, &aProcessInformation);
 			if (!aRetVal) {
-				// 오류 발생
+				// Error occurred
 				return;
 			}
 
@@ -495,12 +495,12 @@ void CPsUpdater::DoUpdate(eNotifyType pNotifyType)
 	{
 		BOOL aRetVal = static_cast<CConsoleOutput*>(aConsoleOutput.get())->Initialize(NULL);
 		if (!aRetVal) {
-			// 오류 발생
+			// Error occurred
 			
 		}
 	}
 
-	// 플랜 스냅샷의 파일 목록을 확인하여 로컬 폴더로 복사
+	// Check file list of plan snapshot and copy to local folder
 	TP_COPYFAILLIST aCopyFailList;
 	{
 
@@ -510,14 +510,14 @@ void CPsUpdater::DoUpdate(eNotifyType pNotifyType)
 		DWORD aRetVal = CopyNewFile(aCopyFailList, aConsoleOutput, CVarArg<MAX_PATH>(_T("%s"), aPsDownloadFullUrl), NULL);
 
 		if (NOERROR != aRetVal) {
-			// 오류 발생
+			// Error occurred
 			
 		}
 	}
 	if (!aCopyFailList.empty()) {
-		// 오류 발생
+		// Error occurred
 
-		_tstring aMsg = _T("플랜 스냅샷 업데이트 중 아래의 파일(들)의 복사에 실패하였습니다.\n\n'확인' 버튼을 누르시면 해당 버전의 플랜 스냅샷 폴더가 열리니 수동으로 복사하신 후 리소스 폴더도 별도로 업데이트 해주시기 바랍니다.\n\n");
+		_tstring aMsg = _T("Failed to copy the following file(s) during plan snapshot update.\n\nClick 'OK' to open the plan snapshot folder for this version so you can copy manually, then please also update the resource folder separately afterwards.\n\n");
 		TP_COPYFAILLIST_CTR aIt = aCopyFailList.begin();
 		for (; aCopyFailList.end() != aIt ; ++aIt) {
 			aMsg += (_T("[") + (*(aIt)) + _T("]\n"));
@@ -526,11 +526,11 @@ void CPsUpdater::DoUpdate(eNotifyType pNotifyType)
 		::MessageBox(
 			HWND_DESKTOP, 
 			aMsg.c_str(), 
-			_T("플랜 스냅샷 업데이트 실패"), 
+			_T("Plan Snapshot Update Failed"), 
 			MB_ICONWARNING | MB_DEFBUTTON1
 			);
 
-		// 플랜 스냅샷 폴더 개방
+		// Open plan snapshot folder
 		{
 			TCHAR aEnvVar[32767] = { _T('\0'), };
 			GetEnvironmentVariable(_T("ProgramFiles"), aEnvVar, _countof(aEnvVar));
@@ -549,7 +549,7 @@ void CPsUpdater::DoUpdate(eNotifyType pNotifyType)
 					::RegCloseKey(hKey);
 				}
 				else {
-					// 오류 발생
+					// Error occurred
 					return;
 				}
 			}
@@ -560,19 +560,19 @@ void CPsUpdater::DoUpdate(eNotifyType pNotifyType)
 
 			HINSTANCE aRetVal = ::ShellExecute(HWND_DESKTOP, _T("open"), aIEPath, aPsDownloadFullUrl, NULL, SW_SHOWNORMAL);
 			if (32 >= PtrToInt(aRetVal)) {
-				// 오류 발생
+				// Error occurred
 				return;
 			}
 		}
 	}
 
-	// 네트워크 상의 플랜 스냅삿 호스트에 대한 접근 권한 해제
+	// Release network access permissions to plan snapshot host
 	{
 
 		DWORD aRetVal = ::WNetCancelConnection2(m_PsDownloadRootUrl, CONNECT_UPDATE_PROFILE, TRUE);
 
 		if (NO_ERROR != aRetVal) {
-			// 오류 발생
+			// Error occurred
 //			return;
 		}
 	}
@@ -634,13 +634,13 @@ DWORD CPsUpdater::DeleteOldFile(LPCTSTR pLocalPath)
 	if (!pLocalPath) {
 		DWORD aRetVal1 = ::GetModuleFileName(NULL, aLocalPath, _countof(aLocalPath));
 		if (!aRetVal1) {
-			// 오류 발생
+			// Error occurred
 			return(HASERROR+0);
 		}
 
 		errno_t aRetVal2 = _tsplitpath_s(aLocalPath, aDrvName, _countof(aDrvName), aDirName, _countof(aDirName), NULL, 0, NULL, 0);
 		if (aRetVal2) {
-			// 오류 발생
+			// Error occurred
 			return(HASERROR+0);
 		}
 
@@ -656,23 +656,23 @@ DWORD CPsUpdater::DeleteOldFile(LPCTSTR pLocalPath)
 		DWORD aRetVal1 = aDirectory.Begin(CVarArg<MAX_PATH>(_T("%s*.*"), aLocalPath));
 //		DWORD aRetVal1 = aDirectory.Begin(CVarArg<MAX_PATH>(_T("%s%s*.*"), aLocalPath, DF_PSUD_DELFILEPREP));
 		if (NOERROR != aRetVal1) {
-			// 오류 발생
+			// Error occurred
 			return(aRetVal1);
 		}
 
 		while(NOERROR == aRetVal1) {
 			if (aDirectory.IsDirectory()) {
-				// 디렉토리
+				// Directory
 
 				if (_T('.') != aDirectory.GetFindData().cFileName[0]) {
 					DWORD aRetVal2 = DeleteOldFile(CVarArg<MAX_PATH>(_T("%s%s"), aLocalPath, aDirectory.GetFindData().cFileName));
 					if (NOERROR != aRetVal2) {
-//						return aRetVal2;	// P.S.> 삭제 시 오류가 발생한 파일은 넘어가고 지울 수 있는 만큼 최대한 지움
+//						return aRetVal2;	// Note: Skip locked files and delete as many files as possible
 					}
 				}
 			}
 			else {
-				// 파일
+				// File
 
 				if (_tcsstr(aDirectory.GetFindData().cFileName, DF_PSUD_DELFILEPREP)) {
 					CFileSet::Remove(CVarArg<MAX_PATH>(_T("%s%s"), aLocalPath, aDirectory.GetFindData().cFileName));
@@ -681,7 +681,7 @@ DWORD CPsUpdater::DeleteOldFile(LPCTSTR pLocalPath)
 
 			aRetVal1 = aDirectory.Next();
 			if (NOERROR != aRetVal1 && ERROR_NO_MORE_FILES != aRetVal1) {
-				// 오류 발생
+				// Error occurred
 				aDirectory.End();
 				return(aRetVal1);
 			}
@@ -711,13 +711,13 @@ DWORD CPsUpdater::CopyNewFile(TP_COPYFAILLIST& pCopyFailList, TP_CONSOLEOUTPUT& 
 	if (!pLocalPath) {
 		DWORD aRetVal1 = ::GetModuleFileName(NULL, aLocalPath, _countof(aLocalPath));
 		if (!aRetVal1) {
-			// 오류 발생
+			// Error occurred
 			return(HASERROR+0);
 		}
 
 		errno_t aRetVal2 = _tsplitpath_s(aLocalPath, aDrvName, _countof(aDrvName), aDirName, _countof(aDirName), NULL, 0, NULL, 0);
 		if (aRetVal2) {
-			// 오류 발생
+			// Error occurred
 			return(HASERROR+0);
 		}
 
@@ -728,18 +728,18 @@ DWORD CPsUpdater::CopyNewFile(TP_COPYFAILLIST& pCopyFailList, TP_CONSOLEOUTPUT& 
 	}
 	::PathAddBackslash(aLocalPath);
 
-	// 원격지 파일 목록 순회
+	// Iterate remote file list
 	{
 		CDirectory aDirectory;
 		DWORD aRetVal1 = aDirectory.Begin(CVarArg<MAX_PATH>(_T("%s*.*"), aRemotePath));
 		if (NOERROR != aRetVal1) {
-			// 오류 발생
+			// Error occurred
 			return(aRetVal1);
 		}
 
 		while(NOERROR == aRetVal1) {
 			if (aDirectory.IsDirectory()) {
-				// 디렉토리
+				// Directory
 
 				if (_T('.') != aDirectory.GetFindData().cFileName[0]) {
 					DWORD aRetVal2 = CopyNewFile(pCopyFailList, pConsoleOutput, CVarArg<MAX_PATH>(_T("%s%s"), aRemotePath, aDirectory.GetFindData().cFileName), CVarArg<MAX_PATH>(_T("%s%s"), aLocalPath, aDirectory.GetFindData().cFileName));
@@ -749,11 +749,11 @@ DWORD CPsUpdater::CopyNewFile(TP_COPYFAILLIST& pCopyFailList, TP_CONSOLEOUTPUT& 
 				}
 			}
 			else {
-				// 파일
+				// File
 
 				BOOL aRetVal2 = TRUE;
 
-				// 로컬 파일 확인 및 이름 변경 (DF_PSUD_VERSIONFILE 제외)
+				// Verify local file and rename (excluding DF_PSUD_VERSIONFILE)
 				if (!_tcsicmp(aDirectory.GetFindData().cFileName, m_PsVersionFileName)) {
 					aRetVal2 = FALSE;
 				}
@@ -761,7 +761,7 @@ DWORD CPsUpdater::CopyNewFile(TP_COPYFAILLIST& pCopyFailList, TP_CONSOLEOUTPUT& 
 				if (aRetVal2 &&
 					!_taccess_s(CVarArg<MAX_PATH>(_T("%s%s"), aLocalPath, aDirectory.GetFindData().cFileName), 0))
 				{
-					// 파일 있음
+					// File exists
 
 					aRetVal2 = CFileSet::Rename(CVarArg<MAX_PATH>(_T("%s%s"), aLocalPath, aDirectory.GetFindData().cFileName), CVarArg<MAX_PATH>(_T("%s%s_%s"), aLocalPath, DF_PSUD_DELFILEPREP, aDirectory.GetFindData().cFileName));
 					if (!aRetVal2) {
@@ -769,12 +769,12 @@ DWORD CPsUpdater::CopyNewFile(TP_COPYFAILLIST& pCopyFailList, TP_CONSOLEOUTPUT& 
 					}
 				}
 
-				// 원격지 파일 복사
+				// Copy remote file
 				{
 					aRetVal2 = CFileSet::Copy(CVarArg<MAX_PATH>(_T("%s%s"), aRemotePath, aDirectory.GetFindData().cFileName), CVarArg<MAX_PATH>(_T("%s%s"), aLocalPath, aDirectory.GetFindData().cFileName), FALSE);
 					if (!aRetVal2) {
 						pCopyFailList.push_back(aDirectory.GetFindData().cFileName);
-//						return(HASERROR+0);		// P.S.> 복사 시 오류가 발생하면 사용자에게 해당 사실을 알리고 수동 복사할 수 있도록 지원해야 함 !!!
+//						return(HASERROR+0);		// Note: If copy fails, notify user for manual file copying
 
 						static_cast<CConsoleOutput*>(pConsoleOutput.get())->Write(CVarArg<MAX_PATH>(_T("Copy (Fail) : %s%s\n"), aLocalPath, aDirectory.GetFindData().cFileName));
 					}
@@ -786,7 +786,7 @@ DWORD CPsUpdater::CopyNewFile(TP_COPYFAILLIST& pCopyFailList, TP_CONSOLEOUTPUT& 
 
 			aRetVal1 = aDirectory.Next();
 			if (NOERROR != aRetVal1 && ERROR_NO_MORE_FILES != aRetVal1) {
-				// 오류 발생
+				// Error occurred
 				aDirectory.End();
 				return(aRetVal1);
 			}
@@ -801,27 +801,27 @@ DWORD CPsUpdater::CopyNewFile(TP_COPYFAILLIST& pCopyFailList, TP_CONSOLEOUTPUT& 
 void CPsUpdater::AsyncUpdate() 
 {
 
-	// 기존파일 삭제
+	// Delete existing file
 	this->DeleteOldFile();
 
 
-	// 업데이팅 여부 확인
+	// Check whether updating is required
 	if (m_IsUpdate) 
 		return;
 	
 	if (!Open()) {
 #if !defined(_WORK)
-		g_Log.Log(LogType::_ERROR, L"업데이트 준비에 실패했습니다.\n");
+		g_Log.Log(LogType::_ERROR, L"Failed to prepare update.\n");
 #endif
 		return;
 	}
 
 	if (!LoadVersion()) {
-		g_Log.Log(LogType::_ERROR, L"업데이트중 버젼읽기에 실패하였습니다. \n");
+		g_Log.Log(LogType::_ERROR, L"Failed to read version during update.\n");
 		return;
 	}
 
-	// 인터넷 관련함수 호출(비동기)
+	// Invoke Internet API asynchronously
 	ExecInternetFunc();
 
 }
@@ -829,13 +829,13 @@ void CPsUpdater::AsyncUpdate()
 
 void CPsUpdater::ExecInternetFunc()
 {
-	// 해당 Url 만들기
+	// Build update URL
 	TCHAR aPsVersionFileUrl[MAX_PATH] = { _T('\0'), };
 	DWORD aPsVersionFileUrlSize = _countof(aPsVersionFileUrl);
 	HRESULT aRetVal = ::UrlCombine(m_PsVersionFileUrl, m_PsVersionFileName, aPsVersionFileUrl, &aPsVersionFileUrlSize, 0);
 
 	if (FAILED(aRetVal)) {
-		g_Log.Log(LogType::_ERROR, L"업데이트 URL 생성 실패\n");
+		g_Log.Log(LogType::_ERROR, L"Failed to generate update URL\n");
 		return;
 	}
 
@@ -843,10 +843,10 @@ void CPsUpdater::ExecInternetFunc()
 	if (!m_hInternet)
 		return;
 
-	// 비동기 호출을 위한 콜백함수 설정
+	// Set callback for asynchronous operations
 	::InternetSetStatusCallback(m_hInternet,  (INTERNET_STATUS_CALLBACK)&Internet_Status_Callback);
 
-	// Url 오픈
+	// Open URL
 	m_hInternetConnection = InternetOpenUrl (m_hInternet, 
 		aPsVersionFileUrl, 
 		NULL,
@@ -919,21 +919,21 @@ void CPsUpdater::UpdateProcess(LPBYTE pVersionBuff)
 	TCHAR aNewPsVersion[DF_PSUD_VERSIONSIZE] = { _T('\0'), };
 	UINT64 aNewPsVersionNo = 0;
 
-	// 버전데이터 파싱
+	// Parse version data
 	{
 		WORD aYear, aBuildNo;
 		BYTE aMonth, aDay;
 
 		bool aLocalRetVal = ParseVersion(reinterpret_cast<LPCSTR>(pVersionBuff), aYear, aMonth, aDay, aBuildNo);
 		if (!aLocalRetVal) {
-			// 오류 발생
+			// Error occurred
 			return;
 		}
 
 		aNewPsVersionNo = MAKELONGLONG(MAKELONG(aBuildNo, aDay), MAKELONG(aMonth, aYear));
 	}
 
-	// 버전 문자열에 불필요한 문자들 제거
+	// Strip unwanted characters from version string
 	{
 		USES_CONVERSION;
 
@@ -942,7 +942,7 @@ void CPsUpdater::UpdateProcess(LPBYTE pVersionBuff)
 		INT aStartPtr = 0;
 		CStringSet aToken = aStringSet.Tokenize(_T("\n\r"), aStartPtr);
 		if (aToken.IsEmpty()) {
-			// 오류 발생
+			// Error occurred
 			return;
 		}
 
@@ -950,7 +950,7 @@ void CPsUpdater::UpdateProcess(LPBYTE pVersionBuff)
 
 	}
 
-	// 이전 버전과 신규 버전 비교
+	// Compare previous version with new version
 	if (m_CurPsVersionNo == aNewPsVersionNo) {
 		return;
 	}
@@ -962,18 +962,18 @@ void CPsUpdater::UpdateProcess(LPBYTE pVersionBuff)
 	_tcsncpy_s(m_NewPsVersion, _countof(m_NewPsVersion), aNewPsVersion, _countof(m_NewPsVersion));
 	m_NewPsVersionNo = aNewPsVersionNo;
 
-	g_Log.Log(LogType::_NORMAL, L"업데이트 준비중입니다\n");
+	g_Log.Log(LogType::_NORMAL, L"Preparing update\n");
 
 	if (!g_PsUpdater)
 	{
-		g_Log.Log(LogType::_ERROR, L"업데이트가 원활하지 않습니다.\n");
+		g_Log.Log(LogType::_ERROR, L"Update is not progressing smoothly.\n");
 		return;
 	}
 
-	// 버젼 체크 완료후 업데이트한다.
+	// Update files after version check succeeds.
 	m_IsUpdate = true;
 
-	g_Log.Log(LogType::_NORMAL, L"업데이트를 시작합니다\n");
+	g_Log.Log(LogType::_NORMAL, L"Starting update\n");
 
 	DoUpdate(CPsUpdater::eNotifyTypeUpdate);
 	g_PsUpdater->Close();

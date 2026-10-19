@@ -2,8 +2,8 @@
 #include "locale.h"
 
 // Rotha 
-// Microsoft Excel : CSV 출력 유틸입니다 , 데이터를 뽑아 확인하는 용도로 제작합니다.
-// 나중에 필요한것 있으시면 추가하시거나 가져다 쓰시면됩니다.
+// Microsoft Excel : CSV export utility for inspecting data.
+// Add or use as needed.
 
 class CSVWriter
 {

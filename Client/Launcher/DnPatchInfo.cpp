@@ -51,15 +51,15 @@ CDnPatchInfo& CDnPatchInfo::GetInstance()
 HRESULT CDnPatchInfo::Init()
 {
 	LogWnd::TraceLog( L"PatchInfo Init Start!" );
-	// 1. 지정된 경로에서 PATCHCONFIG_LIST 파일을 다운받는다.
+	// Read local config options.
 	if( FAILED( DownLoadPatchConfigList() ) )
 		return E_FAIL;
 
-	// 2. 다운 받은 xml 파일을 Parsing
+	// Remove temporary downloaded XML file.
 	if( FAILED( ParsingPatchConfigList() ) )
 		return E_FAIL;
 
-	// 클라이언트 경로 셋팅
+	// Read local config options.
 	TCHAR szCurDir[ _MAX_PATH ]={0,};
 	GetCurrentDirectory( _MAX_PATH, szCurDir );
 	m_strClientPath = szCurDir;
@@ -68,7 +68,7 @@ HRESULT CDnPatchInfo::Init()
 	if ( nLast > 0 && m_strClientPath[nLast - 1] != _T('\\') && m_strClientPath[nLast - 1] != _T('/') )
 		m_strClientPath += _T('\\');
 
-	// 다운받았던 xml파일 삭제
+	// Remove temporary downloaded XML file.
 	ClientDeleteFile( m_strClientPath + PATCHCONFIG_LIST );
 	LogWnd::TraceLog( L"PatchInfo Init Success!" );
 
@@ -132,7 +132,7 @@ void CDnPatchInfo::SetLocaleGuidePage()
 
 HRESULT CDnPatchInfo::DownLoadPatchConfigList()
 {
-	// 로컬 주소파일 체크
+	// Set client directory path.
 	WCHAR LocalLoginListUrl[1024]={ 0, };
 	TCHAR szCurDir[ _MAX_PATH ]={0,};
 	bool bUseLocalURL = false;
@@ -156,22 +156,22 @@ HRESULT CDnPatchInfo::DownLoadPatchConfigList()
 
 	WCHAR PatchConfigListUrl[1024]={ 0, };
 	//kat 2016
-	//if( g_szCommandLinePatchURL.GetLength() > 0 )	// 패치환경 파일의 주소가 커맨드라인 파라미터로 넘어오는 경우 ( 현재 한국, 미국 사용 )
-	//	wcscpy_s( PatchConfigListUrl, _countof(PatchConfigListUrl), g_szCommandLinePatchURL );
+	// Command line override for PatchConfigList.xml URL if specified
+	// Read local config options.
 	//else
 		wcscpy_s( PatchConfigListUrl, _countof(PatchConfigListUrl), PATCHCONFIG_LIST_URL );
 
 	LogWnd::TraceLog( _T("DownLoad PatchConfigList (FileName %s)"), PATCHCONFIG_LIST );
 
 //	CString test;
-//	test.Format( L"%s%s", PatchConfigListUrl, PATCHCONFIG_LIST );
+// Read local config options.
 //	ErrorMessageBoxLog( test );
 //	LogWnd::TraceLog( test );
 
 	HRESULT hr = S_FALSE;
 	for( int i=0; i<RETRY_MAX_COUNT; i++ )
 	{
-		if( bUseLocalURL )	// 로컬에 지정된 주소파일이 있는 경우 ( 현재 중국에서 제휴사 관련해서 사용 )
+		if( bUseLocalURL )	// Check if LocalURL.ini override is used
 		{
 			BOOL bResult = DeleteUrlCacheEntry( CVarArg<__MAX_PATH>(_T("%s"), LocalLoginListUrl) );
 			hr = DownloadToFile( CVarArg<__MAX_PATH>(_T("%s"), LocalLoginListUrl), CVarArg<__MAX_PATH>(_T(".\\%s"), PATCHCONFIG_LIST) );
@@ -201,7 +201,7 @@ HRESULT CDnPatchInfo::ParsingPatchConfigList()
 {
 	LogWnd::TraceLog( L"ParsingPatchConfigList" );
 
-	if( ReadConfig() )	// local config
+	if( ReadConfig() )	// Read local config options.
 		return S_OK;
 
 	CXMLParser aParser;
@@ -386,7 +386,7 @@ BOOL CDnPatchInfo::ReadConfig()
 	CHAR szCurDir[ _MAX_PATH ]= { 0, };
 	CHAR szPatchInfoName[128]={0,};
 
-	// 현재 실행 모듈을 알아낸다.
+	// Populate partition and channel lists
 	CHAR ModuleName[MAX_PATH] ={0,};
 	::GetModuleFileNameA( NULL, ModuleName , MAX_PATH );
 
@@ -434,21 +434,21 @@ BOOL CDnPatchInfo::ReadConfig()
 
 BOOL CDnPatchInfo::SetPatchInfo()
 {
-	if( !SetBasePatchInfo() )	// 기본 패치 정보 셋팅
+	if( !SetBasePatchInfo() )	// Set base patch configuration
 	{
 		g_nInitErrorCode = INIT_ERROR_SET_PATCHINFO;
 		m_bSetPatchInfo = FALSE;
 		return FALSE;
 	}
 
-	if( !SetParameter() )		// 파라미터 셋팅
+	if( !SetParameter() )		// Set launch command line parameters
 	{
 		g_nInitErrorCode = INIT_ERROR_SET_PARAMETER;
 		m_bSetPatchInfo = FALSE;
 		return FALSE;
 	}
 
-	LoadPatchVersionInfo();		// Client & Server Version 셋팅 (Version을 못구하면 풀패치로 넘긴다 따라서 실패해도 됨)
+	LoadPatchVersionInfo();		// Load client and server version numbers
 
 	m_bSetPatchInfo = TRUE;
 	return TRUE;
@@ -633,15 +633,15 @@ void CDnPatchInfo::LoadClientVersionFromResourceFile()
 
 			while( szToken != NULL )
 			{
-				if( sscanf_s( szToken, "%s %s", &arg1, sizeof(arg1), &arg2, sizeof(arg2) ) )
+				if( sscanf_s( szToken, "%s %s", arg1, (unsigned int)sizeof(arg1), arg2, (unsigned int)sizeof(arg2) ) )
 				{
 					_strlwr_s( arg1 );
-					if( _stricmp( arg1, "version" ) == 0 )	// version 서버 클라 버젼이름 통일
+					if( _stricmp( arg1, "version" ) == 0 )	// Match version key
 					{
 						m_nClientVersion = atol( arg2 );
 						//break;
 					}
-					else if( _stricmp( arg1, "module") == 0 ) // 모듈 버전 파싱.
+					else if( _stricmp( arg1, "module") == 0 ) // Match module key
 					{
 						DNFIRSTPATCHINFO.SetLocalModuleVersion(atol( arg2 ));
 					}
@@ -667,7 +667,7 @@ void CDnPatchInfo::LoadClientVersionFromResourceFile()
 
 			if( nModuleVersion <= -1 )
 			{
-				// 모듈버전이 -1이라면, 런처버전과 동일하게 설정해준다. 어차피 둘다 동일한 버전이므로.
+				// If client version is -1, fallback to local version file
 				if( m_nClientVersion != -1 )
 				{
 					nModuleVersion = m_nClientVersion;
@@ -684,7 +684,7 @@ void CDnPatchInfo::LoadClientVersionFromResourceFile()
 			}	
 			else 
 			{
-				//팩안에 버젼이 없으면 읽을때 넣어주자.
+				// Fallback: load version from resource file
 				char strVersion[256] = {0,};
 				sprintf_s( strVersion, sizeof(strVersion), "Version %d\r\nModule %d", m_nClientVersion, DNFIRSTPATCHINFO.GetLocalModuleVersion() );
 				char StrVersionName[32] = "\\version.cfg";
@@ -726,7 +726,7 @@ void CDnPatchInfo::LoadClientVersionFromVersionFile()
 
 	if( nModuleVersion <= -1 )
 	{
-		// 모듈버전이 -1이라면, 런처버전과 동일하게 설정해준다. 어차피 둘다 동일한 버전이므로.
+		// If client version is -1, fallback to local version file
 		if( m_nClientVersion != -1 )
 		{
 			nModuleVersion = m_nClientVersion;
@@ -755,7 +755,7 @@ void CDnPatchInfo::LoadServerVersion()
 	for( int i=0; i<RETRY_MAX_COUNT; i++ )
 	{
 		CString strVersionUrlFile = m_strVersionUrl + SERVER_VERSION_NAME;
-		BOOL bResult = DeleteUrlCacheEntry( strVersionUrlFile.GetBuffer() );	// 서버의 버전 구하기 PatchInfoServer.cfg 를 다운로드
+		BOOL bResult = DeleteUrlCacheEntry( strVersionUrlFile.GetBuffer() );	// Clear WinInet URL cache for PatchInfoServer.cfg
 		hr = DownloadToFile( strVersionUrlFile.GetBuffer(), strFilePath.GetBuffer() );
 		if( hr == S_OK )
 			break;
@@ -800,7 +800,7 @@ int CDnPatchInfo::LoadVersion( CString& szFilePath )
 	nFileSize = GetFileSize( hFile, &tmp );
 	nFileSize++;
 
-	// 7 byte 미만인은것은 클라이언트 version.cfg 파일이 옛날꺼 새로운것으로 교체한다.
+	// Validate version.cfg file size
 	if( nFileSize < 5 )
 	{
 		AfxMessageBox( _T("Error the old version.cfg.") );
@@ -826,10 +826,10 @@ int CDnPatchInfo::LoadVersion( CString& szFilePath )
 
 	while( szToken != NULL )
 	{
-		if( sscanf_s( szToken, "%s %s", &arg1, sizeof(arg1), &arg2, sizeof(arg2) ) )
+		if( sscanf_s( szToken, "%s %s", arg1, (unsigned int)sizeof(arg1), arg2, (unsigned int)sizeof(arg2) ) )
 		{
 			_strlwr_s( arg1 );
-			// version 서버 클라 버젼이름 통일
+			// Match version key
 			if( _stricmp( arg1, "version" ) == 0 )
 				nVersion = atol( arg2 );
 			else if( _stricmp( arg1, "skipnum" ) == 0 )
@@ -869,7 +869,7 @@ int CDnPatchInfo::LoadVersion( CString& szFilePath, CString szTypeName )
 	nFileSize = GetFileSize( hFile, &tmp );
 	nFileSize++;
 
-	// 7 byte 미만인은것은 클라이언트 version.cfg 파일이 옛날꺼 새로운것으로 교체한다.
+	// Validate version.cfg file size
 	if( nFileSize < 5 )
 	{
 		AfxMessageBox( _T("Error the old version.cfg.") );
@@ -895,7 +895,7 @@ int CDnPatchInfo::LoadVersion( CString& szFilePath, CString szTypeName )
 	int nValue = 0;
 	while( szToken != NULL )
 	{
-		if( sscanf_s( szToken, "%s %s", &arg1, sizeof(arg1), &arg2, sizeof(arg2) ) )
+		if( sscanf_s( szToken, "%s %s", arg1, (unsigned int)sizeof(arg1), arg2, (unsigned int)sizeof(arg2) ) )
 		{
 			_strlwr_s( arg1 );
 
@@ -916,7 +916,7 @@ int CDnPatchInfo::LoadVersion( CString& szFilePath, CString szTypeName )
 
 void CDnPatchInfo::SetClientPath( CString strClientPath )
 {
-	// 클라이언트 경로 셋팅
+	// Read config options
 	m_strClientPath = strClientPath;
 
 	int nLast = m_strClientPath.GetLength();
@@ -1056,4 +1056,5 @@ void CDnPatchInfo::ParseCommandLineDev( LPCTSTR szCommandLine )
 	SetPartitionList( channellistset, 0, 100, 1, szGuidepageAddr, szHomepageAddr, L"CustomConfig", szVersionAddr, szUpdateAddr, L"", vecLoginServerList );
 	m_vecChannelList.push_back( channellistset );
 }
+
 

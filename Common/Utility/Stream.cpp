@@ -635,7 +635,7 @@ int CPacketCompressStream::Write( const void *pBuffer, int nSize, CompressTypeEn
 
 	return CMemoryStream::Write( pCompressValue, nCompressValueSize );
 
-	// 0일때 압축
+	// Compress when 0
 //	if( (int*)pCompressValue
 }
 

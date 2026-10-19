@@ -1,4 +1,4 @@
-// AutoUpdateDlg.cpp : implementation file
+// DnAutoUpdateDlg.cpp : implementation file
 //
 
 #include "stdafx.h"
@@ -10,50 +10,37 @@
 #define new DEBUG_NEW
 #endif
 
-
 CString				g_strHttpPath;
 CString				g_strLocalPath;
-vector<int>			g_vecUpdateVersion;
 CString				g_strCurrentDownloadFileName;
+vector<int>			g_vecUpdateVersion;
 int					g_nCurrentDownloadCount;
-
 CHttpDownload		g_HttpDownload;
-CDnAutoUpdateDlg*	g_pMainDialog;
+CDnAutoUpdateDlg*	g_pMainDialog = NULL;
 
-// Download Thread
 UINT threadDownloadProc( LPVOID pParam )
 {
-	HINTERNET hInternetSession;
-	// 세션 열기
-	hInternetSession = InternetOpen( NULL, INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0 );
-
-	if( hInternetSession != NULL )
+	HINTERNET hInternetSession = InternetOpen( NULL, INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0 );
+	if( hInternetSession )
 	{
-		int nRtn = CHttpDownload::HTTPDOWNLOAD_ERROR;
-		int nVersionCount = static_cast<int>( g_vecUpdateVersion.size() );
-		for( int i=0; i<nVersionCount; i++ )
+		int nRtn = CHttpDownload::HTTPDOWNLOAD_SUCCESS;
+		for( int i=0; i<(int)g_vecUpdateVersion.size(); i++ )
 		{
-			g_HttpDownload.Reset();
-
-			CString strVersion;
-			strVersion.Format( _T( "%08d" ), g_vecUpdateVersion[i] );
-
-			CString strUrl;
-			strUrl += g_strHttpPath;
-			strUrl += strVersion;
-			strUrl += _T("/");
-
-			CString strPatchFileUrl, strPatchFileName;
-			strPatchFileUrl.Format( _T( "%sPatch%08d.pak" ), strUrl.GetBuffer(), g_vecUpdateVersion[i] );
-			strPatchFileName.Format( _T( "%sPatch%08d.pak.tmp" ), g_strLocalPath, g_vecUpdateVersion[i] );
-
 			g_nCurrentDownloadCount = i + 1;
-			g_strCurrentDownloadFileName = strPatchFileName;
-			
-			for( int i=0; i<RETRY_MAX_COUNT; i++ )
+			int nVersion = g_vecUpdateVersion[i];
+
+			CString strHttpPath;
+			strHttpPath.Format( L"%sPatch%08d.pak", g_strHttpPath, nVersion );
+
+			CString strLocalPath;
+			strLocalPath.Format( L"%sPatch%08d.pak", g_strLocalPath, nVersion );
+
+			g_strCurrentDownloadFileName.Format( L"Patch%08d.pak", nVersion );
+
+			for( int j=0; j<RETRY_MAX_COUNT; j++ )
 			{
-				nRtn = g_HttpDownload.DownloadFile( hInternetSession, strPatchFileUrl, strPatchFileName );
-				if( nRtn == CHttpDownload::HTTPDOWNLOAD_SUCCESS )
+				nRtn = g_HttpDownload.DownloadFile( hInternetSession, strHttpPath, strLocalPath );
+				if( nRtn == CHttpDownload::HTTPDOWNLOAD_SUCCESS || nRtn == CHttpDownload::HTTPDOWNLOAD_ALREADY_DOWNLOAD )
 					break;
 			}
 
@@ -68,8 +55,6 @@ UINT threadDownloadProc( LPVOID pParam )
 
 	return 0;
 }
-
-
 
 // CDnAutoUpdateDlg dialog
 
@@ -86,7 +71,6 @@ void CDnAutoUpdateDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control( pDX, IDC_PROGRESS1, m_progressCtrl );
 }
-
 
 BEGIN_MESSAGE_MAP(CDnAutoUpdateDlg, CDialog)
 	ON_WM_PAINT()
@@ -108,17 +92,18 @@ END_MESSAGE_MAP()
 
 void CDnAutoUpdateDlg::OnDestroy()
 {
-	// Thread Terminate
+	// Terminate thread
 	if( m_pThread )
 	{
 		g_HttpDownload.SetExit( TRUE );
 		::WaitForSingleObject( m_pThread->m_hThread, INFINITE );
 	}
 
-	Shell_NotifyIcon( NIM_DELETE, &m_stNID );	// 트레이 해제
+	Shell_NotifyIcon( NIM_DELETE, &m_stNID );	// Delete tray icon
 
 	CDialog::OnDestroy();
 }
+
 // CDnAutoUpdateDlg message handlers
 
 void CDnAutoUpdateDlg::OnClose()
@@ -135,10 +120,10 @@ BOOL CDnAutoUpdateDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-	// 트레이 풍선말 표시
+	// Setup notification icon
 	m_stNID.cbSize = sizeof( NOTIFYICONDATA );
-	m_stNID.hWnd = this->GetSafeHwnd();;
-	m_stNID.dwInfoFlags = NIIF_USER; //풍선에 뜰 아이콘을 사용자 지정 아이콘으로
+	m_stNID.hWnd = this->GetSafeHwnd();
+	m_stNID.dwInfoFlags = NIIF_USER;
 	m_stNID.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP | NIF_INFO; 
 	m_stNID.uID = IDR_MAINFRAME;
 	m_stNID.uCallbackMessage = WM_NOTIFYICON_MSG;
@@ -154,7 +139,7 @@ BOOL CDnAutoUpdateDlg::OnInitDialog()
 
 	m_TrayMenu.LoadMenu(IDR_MENU1);
 
-	// 다운로드 쓰레드 생성
+	// Start download worker thread
 	m_pThread = AfxBeginThread( threadDownloadProc , this );
 
 	SetTimer( 1, 500, 0 );
@@ -251,7 +236,7 @@ BOOL CDnAutoUpdateDlg::ShowWindowEx( int nCmdShow )
 
 void CDnAutoUpdateDlg::OnSysCommand( UINT nID, LPARAM lParam )
 {
-	if( (nID & 0xFFF0) == SC_MINIMIZE )	// 최소화 버튼은 걸러서 Hide 처리만 한다.
+	if( (nID & 0xFFF0) == SC_MINIMIZE )	// Minimize hides to tray
 		ShowWindowEx( SW_HIDE );
 	else
 		CDialog::OnSysCommand( nID, lParam );
@@ -318,7 +303,7 @@ void CDnAutoUpdateDlg::DownloadComplete( int nRtn )
 {
 	Shell_NotifyIcon( NIM_DELETE, &m_stNID );
 
-	m_stNID.dwInfoFlags = NIIF_USER; //풍선에 뜰 아이콘을 사용자 지정 아이콘으로
+	m_stNID.dwInfoFlags = NIIF_USER;
 	m_stNID.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP | NIF_INFO; 
 	m_stNID.hIcon = LoadIcon( AfxGetInstanceHandle(), MAKEINTRESOURCE (IDR_MAINFRAME) );
 	m_stNID.uTimeout = 4000;

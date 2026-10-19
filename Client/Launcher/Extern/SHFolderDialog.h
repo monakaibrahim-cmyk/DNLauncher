@@ -60,22 +60,22 @@ private:
 		{
 		case BFFM_INITIALIZED:
 			{
-				//캡션에서 Help 삭제
+				// Remove Help button
 				DWORD dwStyle = GetWindowLong( hWnd, GWL_EXSTYLE );
-				SetWindowLong( hWnd, GWL_EXSTYLE, dwStyle & ~WS_EX_CONTEXTHELP );
+				// Remove Help button
 
-				//지정된 폴더가 선택되도록 한다.
+				// Set initial directory selection.
 				SendMessage( hWnd, BFFM_SETSELECTION, TRUE, dwData );
 
-				//대화상자가 중앙에 오도록 한다.
-				RECT rc;
+				// Center dialog on screen.
+				// Center dialog on screen.
 				GetClientRect( hWnd, &rc );
 				SetWindowPos( hWnd, NULL,
 					(GetSystemMetrics(SM_CXSCREEN) - (rc.right - rc.left)) / 2,
 					(GetSystemMetrics(SM_CYSCREEN) - (rc.bottom - rc.top)) / 2,
 					0, 0, SWP_NOZORDER | SWP_NOSIZE );
 
-				//Status text에 3D 테두리 첨가
+				// Give status text 3D border
 				HWND hwndLabel = GetDlgItem( hWnd, 0x3743 );
 				if( IsWindow( hwndLabel ) )
 				{

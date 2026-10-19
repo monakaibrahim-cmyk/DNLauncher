@@ -136,7 +136,7 @@ $Log: E:\Projects\NoeZooArc\SkinProgressTest.zoo\SkinProgressTest\SkinProgress.c
 /*            9 = cSPB_EnumElements        : current number of elements       */
 /* Example : None                                                             */
 /******************************************************************************/
-typedef enum eSkinProgressBitmap
+enum eSkinProgressBitmap
 {
   cSPB_START = 0,
   cSPB_BEFORE,
@@ -165,7 +165,7 @@ typedef enum eSkinProgressBitmap
 /*            4 = cSPT_EnumElements : current number of elements              */
 /* Example : None                                                             */
 /******************************************************************************/
-typedef enum eProgressSkinText
+enum eProgressSkinText
 {
   cSPT_NONE = 0,
   cSPT_PERCENT,
@@ -635,7 +635,7 @@ class CSkinProgress : public CStatic
 	    afx_msg void OnPaint();
 	    afx_msg void OnSizing(UINT fwSide, LPRECT pRect);
 	    afx_msg void OnSize(UINT nType, int cx, int cy);
-	    afx_msg void OnTimer(UINT nIDEvent);
+	    afx_msg void OnTimer(UINT_PTR nIDEvent);
 	  //}}AFX_MSG
 
 	  DECLARE_MESSAGE_MAP()

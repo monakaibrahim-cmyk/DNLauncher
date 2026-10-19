@@ -3,11 +3,11 @@
 	<< DIRECTORY >>
 
 	FILE : DIRECTORY.H, DIRECTORY.CPP
-	DESC : 디렉토리 관리 클래스
+	DESC : Directory management class
 	INIT BUILT DATE : 2007. 07. 23
 	LAST BUILT DATE : 2007. 08. 24
 
-	Copyrightⓒ 2002~2007 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2007 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -27,7 +27,7 @@
 //	DEFINE
 ///////////////////////////////////////////////////////////////////
 
-#define DF_DIR_MAX_PATH		(1024)		// MAX_PATH 대신 사용
+#define DF_DIR_MAX_PATH		(1024)		// Used instead of MAX_PATH
 
 
 ///////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@
 // TYPE : CLASS
 // NAME : CDirectory
 //*---------------------------------------------------------------
-// DESC : 디렉토리 관리 클래스
+// DESC : Directory management class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CDirectory

@@ -3,11 +3,11 @@
 	<< BASE-SET >>
 
 	FILE : BASESET.H
-	DESC : 프로젝트의 기본 세팅을 체크하기 위한 클래스
+	DESC : Class for verifying base project configurations
 	INIT BUILT DATE : 2007. 03. 13
 	LAST BUILT DATE : 2007. 03. 13
 
-	Copyrightⓒ 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -21,8 +21,8 @@
 
 /*
 	P.S.>
-	- 본 헤더는 프로젝트 최상위 헤더에 포함되어야 함
-	- 본 헤더의 프로젝트 포함 이전에 WINDOWS.H 등 기본헤더들이 이미 포함되어있다고 전제함 (따라서 본 헤더는 WINDOWS.H 등 기본헤더 제외시킴)
+	- This header should be included in project top-level headers
+	- Assumes WINDOWS.H and platform headers are already included prior to this file
 */
 
 
@@ -40,7 +40,7 @@
 // TYPE : CLASS
 // NAME : CBaseSet
 //*---------------------------------------------------------------
-// DESC : 프로젝트의 기본 세팅을 체크하기 위한 클래스
+// DESC : Class for verifying base project configurations
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 
@@ -63,9 +63,9 @@ public:
 // TYPE : FUNCTION
 // NAME : CBaseSet::
 //*---------------------------------------------------------------
-// DESC : 현재 프로젝트 구성이 _DEBUG 인지 여부 반환
+// DESC : Returns whether project build configuration is _DEBUG
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 inline BOOL CBaseSet::IsDebug()
@@ -78,9 +78,9 @@ inline BOOL CBaseSet::IsDebug()
 // TYPE : FUNCTION
 // NAME : CBaseSet::IsUnicode
 //*---------------------------------------------------------------
-// DESC : 현재 프로젝트의 언어 옵션이 _UNICODE 인지 여부 반환
+// DESC : Returns whether character set is _UNICODE
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 inline BOOL CBaseSet::IsUnicode()
@@ -93,9 +93,9 @@ inline BOOL CBaseSet::IsUnicode()
 // TYPE : FUNCTION
 // NAME : CBaseSet::IsMultiThread
 //*---------------------------------------------------------------
-// DESC : 현재 프로젝트의 코드생성 옵션이 _MT 인지 여부 반환
+// DESC : Returns whether runtime library is _MT
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 inline BOOL CBaseSet::IsMultiThread()
@@ -108,9 +108,9 @@ inline BOOL CBaseSet::IsMultiThread()
 // TYPE : FUNCTION
 // NAME : CBaseSet::IsLittleEndian
 //*---------------------------------------------------------------
-// DESC : 현재 플랫폼이 little-endian 기반인지 여부 반환
+// DESC : Returns whether current platform is little-endian
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 inline BOOL CBaseSet::IsLittleEndian()
@@ -124,9 +124,9 @@ inline BOOL CBaseSet::IsLittleEndian()
 // TYPE : FUNCTION
 // NAME : CBaseSet::IsWindowStationVisible
 //*---------------------------------------------------------------
-// DESC : 현재 프로세스의 윈도우 스테이션이 USER-INTERACTIVE 한지 여부 반환
+// DESC : Returns whether process window station is USER-INTERACTIVE
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 inline BOOL CBaseSet::IsWindowStationVisible()

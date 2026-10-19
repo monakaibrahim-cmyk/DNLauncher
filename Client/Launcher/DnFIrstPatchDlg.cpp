@@ -35,40 +35,38 @@ void CDnFIrstPatchDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control( pDX,	IDC_STATIC_FIRSTPATCH_TEXT, m_StaticFirstPatchText );
 }
 
-
 BEGIN_MESSAGE_MAP(CDnFIrstPatchDlg, CDialog)
 	ON_WM_TIMER()
 	ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
-
 BOOL CDnFIrstPatchDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	// * 윈도우 크기 설정 *
+	// * Window size configuration *
 	m_dwWidth	= 510;
 	m_dwHeight	= 104;
 	SetWindowPos( &wndNoTopMost, 0, 0, m_dwWidth, m_dwHeight, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE );
 		
-	// * xml파일에서 컨트롤 위치를 파싱 *
+	// * Read control positions from XML *
 	m_pFirstRectControl = new CRect[m_nRectControlMax];
 	if(!m_pFirstRectControl)
 	{
-		LogWnd::TraceLog(_T("xml파일에서 컨트롤 정보 파싱 에러."));
+		LogWnd::TraceLog(_T("Failed to allocate memory for FirstPatch control rects."));
 		return FALSE;
 	}
 	if( ParsingControlPosition(m_pFirstRectControl, m_nRectControlMax) == E_FAIL )
 	{
-		LogWnd::TraceLog(_T("FirstPatch Control 셋팅 에러"));
+		LogWnd::TraceLog(_T("FirstPatch control position parsing failed."));
 		LogWnd::Log( LogLevel::Error, _T("FirstPatchControlData Parsing Error") );
 		return FALSE;
 	}
 
-	// * 컨트롤 생성 *
+	// * Initialize controls *
 	InitControl();
 	
-	// * 타이머 설정 *
+	// * Set timer *
 	SetTimer( IDD_DIALOG_FIRSTPATCH_TIMER, 40, NULL );
 
 	SAFE_DELETE_ARRAY(m_pFirstRectControl);
@@ -83,12 +81,12 @@ HRESULT CDnFIrstPatchDlg::ParsingControlPosition(CRect* pRect, int nMaxSize)
 
 void CDnFIrstPatchDlg::MakeFont()
 {
-	m_Font.CreateFont( 25, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_ROMAN, _T("돋움") );
+	m_Font.CreateFont( 25, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, 0, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_ROMAN, _T("Arial") );
 }
 
 void CDnFIrstPatchDlg::InitControl()
 {
-	// * Font 생성 *
+	// * Initialize font *
 	MakeFont();
 
 	// Text Control
@@ -96,7 +94,6 @@ void CDnFIrstPatchDlg::InitControl()
 	m_StaticFirstPatchText.SetFont( &m_Font );
 	m_StaticFirstPatchText.MoveWindow(&m_pFirstRectControl[em_FIRST_PATCH_TEXT]);
 	m_strFirstPatchTitle.Format( _S(STR_LAUNCHER_INITIALIZE + DNPATCHINFO.GetLanguageOffset()) );
-
 
 	// ProgressBar Control
 	/*
@@ -110,7 +107,7 @@ void CDnFIrstPatchDlg::InitControl()
 	m_StaticDownloadProgress.SetWindowText( L"" );
 	*/
 
-	// 기본 ProgressBar
+	// Standard ProgressBar
 	m_pProgress = new CProgressCtrl;
 	if(!m_pProgress)
 	{
@@ -132,7 +129,7 @@ void CDnFIrstPatchDlg::OnTimer(UINT_PTR nIDEvent)
 
 void CDnFIrstPatchDlg::UpdateProgress()
 {
-	// 그냥 쭉쭉쭉 지나가는 프로그레시브바....
+	// Marquee-style progress for initialization.
 	static int nProgressPercent = 0;
 	
 	( nProgressPercent < 100 ) ? nProgressPercent++ : nProgressPercent = 0;

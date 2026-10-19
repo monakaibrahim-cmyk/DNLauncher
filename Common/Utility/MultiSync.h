@@ -34,8 +34,8 @@ private :
 #define _MCS_ENTER(CS)	(CS).Enter(_T(__FILE__), __LINE__)
 #define _MCS_ENTEREXCLUSIVE(CS)	(CS).EnterExclusive(_T(__FILE__), __LINE__)
 
-// 2009.01.19 ±è¹ä
-// ScopeLock<CSyncLock> Å¬·¡½º Ãß°¡
+// 2009.01.19 Kimbap
+// Added ScopeLock<CSyncLock> class
 #include "CriticalSection.h"
 
 template <> 

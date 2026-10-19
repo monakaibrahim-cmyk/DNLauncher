@@ -3,11 +3,11 @@
 	<< SAFE STRING MACROS >>
 
 	FILE : SAFESTRINGMACROS.H
-	DESC : 프로젝트 전반적으로 사용되는 안전문자열 CRT함수 관련 매크로들을 모아놓은 헤더파일
+	DESC : Safe CRT string manipulation macros
 	INIT BUILT DATE : 2007. 03. 21
 	LAST BUILT DATE : 2007. 05. 17
 
-	Copyrightⓒ 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -21,13 +21,13 @@
 
 /*
 	P.S.>
-	- 본 헤더는 프로젝트 최상위 헤더에 포함되어야 함
-	- 본 헤더의 프로젝트 포함 이전에 WINDOWS.H 등 기본헤더들이 이미 포함되어있다고 전제함 (따라서 본 헤더는 WINDOWS.H 등 기본헤더 제외시킴)
+	- This header should be included in project top-level headers
+	- Assumes WINDOWS.H and platform headers are already included prior to this file
 */
 
-// 아래 헤더들은 기존에는 추가되어있지 않는 것이고 안전문자열 CRT 함수와는 무관
-#define	_CONVERSION_DONT_USE_THREAD_LOCALE	// ATL 7.0 부터 생긴 각 스레드별 코드페이지를 얻어오지 않고 기존 ATL 3.0 처럼 CP_THREAD_ACP 매크로 사용
-#include <ATLBASE.H>	// ATL 7.0 문자열 변환 클래스와 매크로를 위함
+// The following headers are independent of safe string CRT functions
+#define	_CONVERSION_DONT_USE_THREAD_LOCALE	// Use CP_THREAD_ACP macro like ATL 3.0 rather than per-thread codepage from ATL 7.0
+#include <ATLBASE.H>	// For ATL 7.0 string conversion classes and macros
 #include <ATLCONV.H>
 
 
@@ -35,7 +35,7 @@
 //	DEFINE
 ///////////////////////////////////////////////////////////////////
 
-// 문자열 무결성 보증 매크로함수
+// String integrity verification macros
 #if defined(_DEBUG)
 #define	CHECK_STRINGA(pMSG, pSZ)				DN_ASSERT((NULL != pMSG) && ('\0'  != pMSG[0]) && (0 < pSZ),		"Invalid string!");
 #define	CHECK_STRINGW(pMSG, pSZ)				DN_ASSERT((NULL != pMSG) && (L'\0' != pMSG[0]) && (0 < pSZ),		"Invalid string!");
@@ -55,11 +55,11 @@
 #define	MAKE_STRING(pSTR)						MAKE_STRINGA(pSTR)
 #endif	// #if defined(_UNICODE)
 
-// 안전문자열 CRT함수 관련 매크로함수
+// Safe CRT string function macros
 //#if defined(_DEBUG)
 //#if !defined( _FINAL_BUILD )
 #if 1
-	//#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+	//#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	#if 1
 		#define	STRCPYA(pDEST, pDESTSZ, pSTR)			{ int error_t = ::strcpy_s(pDEST, pDESTSZ, pSTR );				DN_ASSERT( 0 == error_t, "Invalid!"); }
 		#define	STRCPYW(pDEST, pDESTSZ, pSTR)			{ int error_t = ::wcscpy_s(pDEST, pDESTSZ, pSTR);				DN_ASSERT( 0 == error_t, "Invalid!"); }
@@ -124,7 +124,7 @@
 	#define	STRUPW(pSTR, pSTRSZ)						::_wcsupr(pSTR)
 	#define	STRLWA(pSTR, pSTRSZ)						::_strlwr(pSTR)
 	#define	STRLWW(pSTR, pSTRSZ)						::_wcslwr(pSTR)
-	// Warn	: null termination 이 안됨
+	// Warn	: Not null-terminated
 	#define	SPRINTFA									::sprintf
 	#define	SPRINTFW									::swprintf
 	#define	SNPRINTFA									::_snprintf

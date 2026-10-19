@@ -250,7 +250,7 @@ DWORD CEtPackingFile::CalcChecksum( int nFileIndex )
 	int i, nSize;
 	DWORD dwChecksum = 0, *pdwBuffer;
 
-	// nSize를 4의 배수로 바꾼다..
+	// Align nSize to 4 bytes boundary
 	nSize = m_vecPackingFileInfo[ nFileIndex ].dwCompressSize / 4;
 	if( m_vecPackingFileInfo[ nFileIndex ].dwCompressSize % 4 )
 	{
@@ -351,7 +351,7 @@ bool CEtPackingFile::OpenFileSystem(const char* strPath, bool bReadOnly /* = fal
 	m_bIsReadOnly = bReadOnly;
 	if( bReadOnly )
 	{
-		m_hFile = CreateFile(strPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,		// 중복 Read 가능하게 수정.
+		m_hFile = CreateFile(strPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,		// Open in Read-only mode
 			FILE_ATTRIBUTE_NORMAL,NULL);
 	}
 	else
@@ -368,7 +368,7 @@ bool CEtPackingFile::OpenFileSystem(const char* strPath, bool bReadOnly /* = fal
 		return false;
 	}
 
-	// 파일 시스템 헤더를 로드한다.
+	// Set file pointer
 	_Read( m_hFile, &m_PackingFileHeader, sizeof( SPackingFileHeader ) );
 	if( ( m_PackingFileHeader.nVersion < PACKING_FILE_NOCHECKSUM_VERSION ) || ( m_PackingFileHeader.nVersion > PACKING_FILE_VERSION ) )
 	{
@@ -376,10 +376,10 @@ bool CEtPackingFile::OpenFileSystem(const char* strPath, bool bReadOnly /* = fal
 		return false;
 	}
 
-	// 구버전 파일시스템에는 파일인포 옵셋이 안들어 있어서 파일끝에서 Seek으로 찾아야 한다.
+	// Seek to position in package file
 	if( m_PackingFileHeader.nVersion > PACKING_FILE_NOCHECKSUM_VERSION )
 	{
-		// bRequireHeaderWrite 값이 셋팅 돼 있으면 패치때 제대로 종료 안됐것임.. 잘못된 파일 시스템으로 인정..
+		// If header write is required, flush upon closing
 		if( m_PackingFileHeader.bRequireHeaderWrite == true )
 		{
 			return false;
@@ -407,7 +407,7 @@ bool CEtPackingFile::OpenFileSystem(const char* strPath, bool bReadOnly /* = fal
 
 	GeneratePackingMap();
 
-	// 현재 디렉토리를 최상위 디렉토리로 바꾼다.
+	// Write package header
 	ChangeDir("\\");
 
 	m_strPackingFileName = strPath;
@@ -429,14 +429,14 @@ bool CEtPackingFile::NewFileSystem(const char* strPath)
 		return false;
 	}
 
-	// 헤더 정보 만들기
+	// Open file mode
 	memset( &m_PackingFileHeader, 0, sizeof( SPackingFileHeader ) );
 	strcpy_s( m_PackingFileHeader.szHeaderString, 256, PACKING_FILE_STRING );
 	m_PackingFileHeader.nVersion = PACKING_FILE_VERSION;
 	m_PackingFileHeader.nFileCount = 0;
 	m_PackingFileHeader.dwFileInfoOffset = PACKING_HEADER_RESERVED + sizeof( SPackingFileHeader );
 
-	// 헤더 기록
+	// File seek
 	if( _Write( m_hFile, &m_PackingFileHeader, sizeof( SPackingFileHeader ) ) == false )
 	{
 		return false;
@@ -584,24 +584,24 @@ CEtFileHandle *CEtPackingFile::OpenOnly( const char *strPath )
 
 void CEtPackingFile::_Tokenize( const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters /* = " " */ )
 {
-	// 맨 첫 글자가 구분자인 경우 무시
+	// Skip delimiters at beginning
 	std::string::size_type lastPos = str.find_first_not_of( delimiters, 0 );
-	// 구분자가 아닌 첫 글자를 찾는다
+	// Find first non-delimiter
 	std::string::size_type pos = str.find_first_of( delimiters, lastPos );
 
 	while( std::string::npos != pos || std::string::npos != lastPos )
 	{
-		// token을 찾았으니 vector에 추가한다
+		// Found a token, add it to the vector
 		tokens.push_back( str.substr( lastPos, pos - lastPos ) );
-		// 구분자를 뛰어넘는다.  "not_of"에 주의하라
+		// Find end of token
 		lastPos = str.find_first_not_of( delimiters, pos );
-		// 다음 구분자가 아닌 글자를 찾는다
+		// Find next non-delimiter
 		pos = str.find_first_of( delimiters, lastPos );
 	}
 }
 
 
-// str 문자열 중에서 szOld 가 있으면 전부 szNew 로 변경한다.
+// Replace occurrences of szOld in str with szNew
 void CEtPackingFile::_AllReplace( std::string& str, std::string& szOld, std::string& szNew )
 {
 	while (true)
@@ -758,7 +758,7 @@ bool CEtPackingFile::AddFile(const char* strPath)
 {
 	if( m_hFile == INVALID_HANDLE_VALUE) return false;
 
-	// 추가할 실제 파일 로드
+	// Package header information
 	HANDLE	hFile = INVALID_HANDLE_VALUE;
 
 	hFile = CreateFile( strPath, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL,NULL );
@@ -766,7 +766,7 @@ bool CEtPackingFile::AddFile(const char* strPath)
 	if( hFile == INVALID_HANDLE_VALUE )
 		return false;
 
-	// 파일 크기를 알아내서.
+	// Read package header
 	DWORD dwFileSize = GetFileSize(hFile, NULL);
 	if( dwFileSize == INVALID_FILE_SIZE )
 	{
@@ -810,7 +810,7 @@ bool CEtPackingFile::AddFile(const char* strName, char *pData, DWORD nSize)
 
 	if( g_bUseCompress )
 	{
-		// 압축한다.
+		// End of files.
 		if(compress2( ( BYTE * )pDstData, (uLongf*)&lDstSize, ( BYTE * )pData, nSize, Z_BEST_SPEED) != Z_OK)
 		{
 			delete[] pDstData;
@@ -827,11 +827,11 @@ bool CEtPackingFile::AddFile(const char* strName, char *pData, DWORD nSize)
 
 	CopyMemory(&nSeedKey, pDstData, sizeof(DWORD));
 
-	// 적당한 시드 인덱스를 하나 골라서..
+	// Package file decryption
 	DWORD nSeedCnt = nSeedKey%ET_SEED_CNT;
 	DWORD nSeed = ET_ENCRYPT_SEED[nSeedCnt];
 
-	// 적당히.. XOR 로 변경하자 -_-
+	// Simple XOR decryption
 	_Encode( ( BYTE * )pDstData, lDstSize, nSeed );
 
 	char szName[ _MAX_PATH ];
@@ -860,7 +860,7 @@ bool CEtPackingFile::AddFile(const char* strName, char *pData, DWORD nSize)
 
 		_Seek( m_hFile, m_vecPackingFileInfo[ nFindEmptyIndex ].dwOffset, SEEK_SET );
 		_Write( m_hFile, pDstData,lDstSize );
-		// 파일 헤더 쓰는데 시간 많이 걸려서 표시만 해두고 CloseFileSystem()에서 헤더 한꺼번에 Write한다
+		// Update package header upon CloseFileSystem()
 		m_PackingFileHeader.bRequireHeaderWrite = true;
 		m_PackingFileHeader.dwFileInfoOffset = ( DWORD )_Seek( m_hFile, 0, SEEK_CUR );
 	}
@@ -936,7 +936,7 @@ int CEtPackingFile::ReservePatchFile( SPackingFileInfo *pFileInfo )
 	PackingFileInfo.dwOffset = m_PackingFileHeader.dwFileInfoOffset;
 	m_vecPackingFileInfo.push_back( PackingFileInfo );
 
-	// 예약만 걸고 헤더 Write는 예약이 다 끝난 후 패치 전 실행
+	// Write file data to package archive
 	m_PackingFileHeader.bRequireHeaderWrite = true;
 	m_PackingFileHeader.dwFileInfoOffset += PackingFileInfo.dwCompressSize;
 
@@ -1014,7 +1014,7 @@ bool CEtPackingFile::PatchFile( CEtFileHandle *pFileHandle )
 
 		_Seek( m_hFile, m_vecPackingFileInfo[ nFindEmptyIndex ].dwOffset, SEEK_SET );
 		_Write( m_hFile, pFileHandle->m_pData, pFileHandle->m_FileInfo.dwCompressSize );
-		// 파일 헤더 쓰는데 시간 많이 걸려서 표시만 해두고 CloseFileSystem()에서 헤더 한꺼번에 Write한다
+		// Update package header upon CloseFileSystem()
 		m_PackingFileHeader.bRequireHeaderWrite = true;
 		m_PackingFileHeader.dwFileInfoOffset = ( DWORD )_Seek( m_hFile, 0, SEEK_CUR );
 	}
@@ -1274,7 +1274,7 @@ bool CEtPackingFile::Patch( const char* strPatchPath, CPatchCallback* pCallpack,
 			int j;
 			for( j = 0; j < ( int )pvecSkipList->size(); j++ )
 			{
-				// 파일이름 앞에.. \ 붙어 있어서 그거 제외한 이름으로 비교해야 제대로 된다.
+				// Normalize path separators: replace / with \\
 				if( _stricmp( pPackingFileInfo->szFileName + 1, ( *pvecSkipList )[ j ].c_str() ) == 0 )
 				{
 					bSkip = true;
@@ -1643,11 +1643,11 @@ void CEtFileSystem::FindFileListInFolder( const char *szFolderName, const char *
 			}
 		}
 
-		// 패킹파일 안에 있는 파일중에 \resource\ext로 시작하는 파일을 얻어오는 루틴인데,
-		// 모든 파일을 다 뒤지기때문에, 매번 150ms의 딜레이가 생긴다.
-		// 이게 점점 패킹파일안에 파일이 늘어나고, ext의 개수가 많아질수록 더 많은 수행시간이 필요하므로,
-		// 이렇게 캐시를 둬서 얻어오는 형태로 하겠다.
-		// 이렇게 하니 팩안쓰는 것과 비슷한 로딩속도를 보여준다.(TableDB로드 부분)
+		// Check \\resource\\ext folder first before archive lookup
+		// to optimize loading time for unpacked developer/patch files.
+		// If present in ext, load directly from filesystem,
+		// otherwise fallback to package archives.
+		// (Used for rapid dev iteration, TableDB overrides, etc.)
 		m_szMapCacheFileListInFolder.insert( make_pair( strFolder, ResultArray ) );
 	}
 

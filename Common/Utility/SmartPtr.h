@@ -80,7 +80,7 @@ public:
 			if( !m_pInstance->IsValidSmartPtr( m_nHandle, m_pInstance ) )
 			{
 				ASSERT( 0 );
-				// 강제 크래쉬 발생
+				// Force crash
 				int* p = NULL;
 				*p = 0xfefe;
 			}
@@ -96,7 +96,7 @@ public:
 			if( !m_pInstance->IsValidSmartPtr( m_nHandle, m_pInstance ) )
 			{
 				ASSERT( 0 );
-				// 강제 크래쉬 발생
+				// Force crash
 				int* p = NULL;
 				*p = 0xfefe;
 			}
@@ -143,7 +143,7 @@ public:
 	}
 	~CSmartPtrMng()
 	{
-		// 외부에서 생성된 포인터들이기 때문에 CSmartPtrMng가 해제의 책임을 질필요는 없는 듯 하다.
+		// Pointers were created externally so CSmartPtrMng does not own deletion.
 		/*		int i;
 
 		for( i = 0; i < ( int )m_vecSmartPtrs.size(); i++ )
@@ -213,7 +213,7 @@ public:
 				return i;
 			}
 		}
-		ASSERT( 0 && "이런일이 생기면 안된다" ); 
+		ASSERT( 0 && "Should never happen" ); 
 		return -1;
 	}
 	CSmartPtr< T > GetItem( int nItemIndex )
@@ -302,7 +302,7 @@ public:
 	}
 
 private:
-	static CSmartPtrMng< T > s_SmartPtrMng;	// 상속받은 클래스에서 직접 액세스 하지 못하도록 private로 선언.
+	static CSmartPtrMng< T > s_SmartPtrMng;	// Declared private so derived classes cannot access directly.
 	static CSmartPtr< T > s_Identity;
 
 protected:
@@ -326,11 +326,11 @@ public:
 	}
 
 	static void SwapItemIndex( int nItemIndex1, int nItemIndex2 ) { s_SmartPtrMng.SwapItemIndex( nItemIndex1, nItemIndex2 ); }
-	// 실제로 할당돼 있는 slot의 갯수를 리턴한다.
+	// Returns count of currently allocated slots.
 	static int GetItemCount() { 
 		return s_SmartPtrMng.GetItemCount(); 
 	}			
-	// 실제 할당돼 있는 slot의 리스트에서 가져온다. 여기의 nItemIndex는 오브젝트 삽입삭제에 의해서 변경될 수 있으므로 주의
+	// Retrieve from allocated slot list. Note: nItemIndex may change upon insertion/deletion.
 	static CSmartPtr< T >GetItem( int nItemIndex ) { 
 		return s_SmartPtrMng.GetItem( nItemIndex ); 
 	}	
@@ -338,7 +338,7 @@ public:
 	int GetMyItemIndex() { return s_SmartPtrMng.GetItemIndex( m_MySmartPtr ); }
 	int GetMyIndex() { return m_MySmartPtr.GetIndex(); }
 	CSmartPtr< T > GetMySmartPtr() { return m_MySmartPtr; }
-	// 전체 리스트에서 아이템을 가져온다. 여기의 nIndex는 오브젝트 삽입삭제와 상관없이 불변이다. 위의 GetItem() 함수와 구별해서 사용.
+	// Retrieve from full list. nIndex remains invariant regardless of insert/delete.
 	static CSmartPtr< T > GetSmartPtr( int nIndex ) { 
 		if( nIndex < 0 || nIndex >= s_SmartPtrMng.BufferSize() ) return Identity();
 		return s_SmartPtrMng[ nIndex ]; 

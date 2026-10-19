@@ -1,7 +1,7 @@
 #pragma once
 
-// Note : std::vector, std::list, std::map에서만 동작을 보증.
-//		다른 컨테이너에서는 테스트를 해보고 사용해야 한다.
+// Note : Guaranteed to work with std::vector, std::list, std::map.
+//		Test before using with other containers.
 //
 
 struct YES {};

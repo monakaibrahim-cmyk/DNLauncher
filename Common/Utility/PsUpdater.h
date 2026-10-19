@@ -7,12 +7,12 @@
 #include <WINDOWS.H>
 #include <WININET.H>
 #include <BASETSD.H>
-#define	_CONVERSION_DONT_USE_THREAD_LOCALE	// ATL 7.0 부터 생긴 각 스레드별 코드페이지를 얻어오지 않고 기존 ATL 3.0 처럼 CP_THREAD_ACP 매크로 사용
+#define	_CONVERSION_DONT_USE_THREAD_LOCALE	// Use CP_THREAD_ACP macro like ATL 3.0 rather than per-thread codepage from ATL 7.0
 #include <ATLCONV.H>		// A2T()
 #include "HTTPCLIENT.H"
 #include "CONSOLEOUTPUT.H"
 #include "./BOOST/SHARED_PTR.HPP"
-#include "Log.h"		// 테스트용 공용로그 임시사용
+#include "Log.h"		// Temporary shared log for testing
 
 #pragma comment(lib, "MPR.LIB")		// WNetAddConnection2, WNetCancelConnection2
 
@@ -44,8 +44,8 @@ public:
 public:
 	enum eNotifyType
 	{
-		eNotifyTypeUpdate,		// 업데이트
-		eNotifyTypeCheck,		// 버전체크
+		eNotifyTypeUpdate,		// Update
+		eNotifyTypeCheck,		// Version check
 		eNotifyTypeMax,
 	};
 

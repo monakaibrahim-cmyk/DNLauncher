@@ -4,7 +4,6 @@
 #include "SkinProgress.h"
 #include "ColorStatic.h"
 
-
 class CDnFIrstPatchDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CDnFIrstPatchDlg)
@@ -24,10 +23,10 @@ public:
 	};
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	// ProgressBar
-	CProgressCtrl*	m_pProgress; // 기본 프로그래스를 사용한다.
+	CProgressCtrl*	m_pProgress; // Standard progress bar control.
 	/*
 	CSkinProgress*	m_pDownloadProgress;
 	CBitmap*		m_pDownloadProgressBitmap;
@@ -40,13 +39,12 @@ protected:
 	COLORREF		m_staticBaseColor;
 	CFont			m_Font;
 
-	// Control 위치.
+	// Control rect positions.
 	CRect*			m_pFirstRectControl;
 	int				m_nRectControlMax;
 
 	DWORD			m_dwWidth;
 	DWORD			m_dwHeight;
-
 
 	DECLARE_MESSAGE_MAP()
 public:

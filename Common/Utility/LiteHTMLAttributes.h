@@ -493,7 +493,7 @@ inline UINT CLiteHTMLElemAttr::parseFromStr(LPCWSTR lpszString)
 	// extract attribute name
 	CStringW	strAttrName(lpszBegin, UINT(lpszEnd - lpszBegin));
 
-	// Note : 속성 이름과 '=' 사이에 스페이스가 있다면 Skip 해줘야 한다.
+	// Note : Skip whitespace between attribute name and '='.
 	//
 	while (::iswspace(*lpszEnd))
 		//lpszEnd = ::_tcsinc(lpszEnd);
@@ -565,7 +565,7 @@ inline UINT CLiteHTMLElemAttr::parseFromStr(LPCWSTR lpszString)
 		}
 
 		// calculate and return the count of characters successfully parsed
-		// Note : 마지막에 붙은 ''' or '"'는 Skip
+		// Note : Skip trailing single or double quote
 		//
 		while( *lpszEnd == L'\'' || *lpszEnd == L'\"' )
 			//lpszEnd = ::_tcsinc(lpszEnd);

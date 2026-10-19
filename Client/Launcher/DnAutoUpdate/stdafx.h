@@ -1,6 +1,6 @@
-// stdafx.h :     ʴ
-// ǥ ý    Ʈ    
-//  ִ  Դϴ.
+// stdafx.h : include file for standard system include files,
+// or project specific include files that are used frequently,
+// but are changed infrequently.
 
 #pragma once
 
@@ -9,45 +9,39 @@
 #endif
 
 #ifndef VC_EXTRALEAN
-#define VC_EXTRALEAN		//   ʴ  Windows  մϴ.
+#define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-// Ʒ  ÷ 켱ϴ ÷  ϴ   Ǹ Ͻʽÿ.
-// ٸ ÷ Ǵ ش  ֽ  MSDN Ͻʽÿ.
-#ifndef WINVER				// Windows XP ̻󿡼    ֽϴ.
-#define WINVER 0x0601		// ٸ  Windows µ    ֽʽÿ.
+#ifndef WINVER				// Windows 7 and above
+#define WINVER 0x0601
 #endif
 
-#ifndef _WIN32_WINNT		// Windows XP ̻󿡼    ֽϴ.                   
-#define _WIN32_WINNT 0x0601	// ٸ  Windows µ    ֽʽÿ.
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0601
 #endif						
 
-#ifndef _WIN32_WINDOWS		// Windows 98 ̻󿡼    ֽϴ.
-#define _WIN32_WINDOWS 0x0410 // Windows Me ̻ µ    ֽʽÿ.
+#ifndef _WIN32_WINDOWS
+#define _WIN32_WINDOWS 0x0410
 #endif
 
-#ifndef _WIN32_IE			// IE 6.0 ̻󿡼    ֽϴ.
-#define _WIN32_IE 0x0600	// ٸ  IE µ    ֽʽÿ.
+#ifndef _WIN32_IE
+#define _WIN32_IE 0x0600
 #endif
 
-#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// Ϻ CString ڴ  ˴ϴ.
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
 
-// MFC  κа    ޽  ⸦ մϴ.
+// turns off MFC's hiding of some common and often safely ignored warning messages
 #define _AFX_ALL_WARNINGS
 
-#include <afxwin.h>         // MFC ٽ  ǥ  Դϴ.
-#include <afxext.h>         // MFC ȮԴϴ.
-
-
-#include <afxdisp.h>        // MFC ڵȭ ŬԴϴ.
-
-
+#include <afxwin.h>         // MFC core and standard components
+#include <afxext.h>         // MFC extensions
+#include <afxdisp.h>        // MFC Automation classes
 
 #ifndef _AFX_NO_OLE_SUPPORT
-#include <afxdtctl.h>		// Internet Explorer 4  Ʈѿ  MFC Դϴ.
+#include <afxdtctl.h>		// MFC support for Internet Explorer 4 Common Controls
 #endif
 #ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>			// Windows  Ʈѿ  MFC Դϴ.
+#include <afxcmn.h>			// MFC support for Windows Common Controls
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
 #include <vector>
@@ -62,8 +56,6 @@ using namespace std;
 
 #define RETRY_MAX_COUNT	3
 
-
-
 #ifdef _UNICODE
 #if defined _M_IX86
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -75,5 +67,3 @@ using namespace std;
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 #endif
-
-

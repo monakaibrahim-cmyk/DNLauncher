@@ -28,7 +28,7 @@ namespace CDebugSet
 		StringCbVPrintf(szBuffer, MAX_STRLENGTH, szFormat, argList);
 		va_end(argList);
 
-		//	Note	:	절대 경로 붙이기
+		//	Note	:	Prepend absolute path
 		//
 		char szFullPathFileName[256] = {0};
 
@@ -63,7 +63,7 @@ namespace CDebugSet
 		StringCbVPrintf(szBuffer, MAX_STRLENGTH, szFormat, argList);
 		va_end(argList);
 
-		//	Note	:	절대 경로 붙이기
+		//	Note	:	Prepend absolute path
 		//
 		char szFullPathFileName[256] = {0};
 

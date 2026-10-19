@@ -24,7 +24,7 @@ bool CLfhHeap::InitPool()
 	m_hLfhHeap = HeapCreate(0, 0, 0);
 	
 	if (m_hLfhHeap == NULL)	return false;
-	if (IsDebuggerPresent())	return true;	//디버거가 연결중인상태라면 lfh disable
+	if (IsDebuggerPresent())	return true;	// Disable LFH when debugger is attached
 	ULONG heapFragValue = 2;
 	if (HeapSetInformation(m_hLfhHeap, HeapCompatibilityInformation, &heapFragValue, sizeof(heapFragValue)) == 0)
 		return false;

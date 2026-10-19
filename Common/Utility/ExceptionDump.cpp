@@ -52,7 +52,7 @@ ExceptionDump::Disable()
 void __cdecl
 ExceptionDump::BadAllocFilter()
 {
-	//MessageBox( NULL, _T("메모리 할당 실패 입니다."), _T("치명적인 오류"), MB_OK );
+	//MessageBox( NULL, _T("Memory allocation failed."), _T("Fatal Error"), MB_OK );
 	MessageBox( NULL, _T("Failed to Memory Alloc."), _T("Critical Error"), MB_OK );
 	throw std::bad_alloc();
 }
@@ -62,7 +62,7 @@ ExceptionDump::Exception_Minidump(_EXCEPTION_POINTERS* pExceptionInfo)
 {
 	CallStackDump(pExceptionInfo);
 
-	// 현재 실행 모듈을 알아낸다.
+	// Detect current running module.
 	CHAR DumpFileName[MAX_PATH];
 	::GetModuleFileNameA(NULL, DumpFileName, MAX_PATH);
 
@@ -73,7 +73,7 @@ ExceptionDump::Exception_Minidump(_EXCEPTION_POINTERS* pExceptionInfo)
 
 	_splitpath( DumpFileName, drive, dir, fname, ext ); 
 
-	// 확장자를 제거한 모듈 경로를 준비해둔다.
+	// Strip extension from module path.
 	std::string szDumpFileName;
 	szDumpFileName = drive;
 	szDumpFileName += dir;
@@ -88,10 +88,10 @@ ExceptionDump::Exception_Minidump(_EXCEPTION_POINTERS* pExceptionInfo)
 	CHAR szTail[MAX_PATH];
 	ZeroMemory(szTail, sizeof(CHAR) * MAX_PATH);
 
-	sprintf(szTail, "_%04d년%02d월%02d일_%02d시%02d분%02d초",
+	sprintf(szTail, "_%04d%02d%02d_%02d%02d%02d",
 		1900+now->tm_year, now->tm_mon+1, now->tm_mday, now->tm_hour, now->tm_min, now->tm_sec);
 
-	// 모듈명 + 시간정보로 저장할 파일 명을 만든다.
+	// Construct dump file name from module name and timestamp.
 	szDumpFileName += szTail;
 
 	cout << _T("unhandled excetpion writing dump...") << endl;
@@ -102,9 +102,9 @@ ExceptionDump::Exception_Minidump(_EXCEPTION_POINTERS* pExceptionInfo)
 	HMODULE hDLL = NULL;
 	CHAR szDbgHelpPath[_MAX_PATH] = {0, };
 
-	// 먼저 실행 파일이 있는 디렉토리에서 DBGHELP.DLL을 로드해 본다.
-	// Windows 2000 의 System32 디렉토리에 있는 DBGHELP.DLL 파일은 버전이 
-	// 오래된 것일 수 있기 때문이다. (최소 5.1.2600.0 이상이어야 한다.)
+	// Try loading DBGHELP.DLL from application directory first.
+	// DBGHELP.DLL in system directory might be outdated 
+	// (requires at least version 5.1.2600.0).
 	if (::GetModuleFileNameA(NULL, szDbgHelpPath, _MAX_PATH))
 	{
 		if (CHAR* slash = ::strchr(szDbgHelpPath, _T('\\')))
@@ -114,13 +114,13 @@ ExceptionDump::Exception_Minidump(_EXCEPTION_POINTERS* pExceptionInfo)
 		}
 	}
 
-	// 현재 디렉토리에 없다면, 아무 버전이나 로드한다.
+	// If not in current directory, load system version.
 	if (hDLL == NULL) 
 	{
 		hDLL = ::LoadLibraryA("dbghelp.dll");
 	}
 
-	// DBGHELP.DLL을 찾을 수 없다면 더 이상 진행할 수 없다.
+	// Cannot proceed without DBGHELP.DLL.
 	if (hDLL == NULL)
 	{
 		FILE* pFile = fopen(szTimeStampLogFileName.c_str(), "w");
@@ -131,7 +131,7 @@ ExceptionDump::Exception_Minidump(_EXCEPTION_POINTERS* pExceptionInfo)
 		return EXCEPTION_CONTINUE_SEARCH;
 	}
 
-	// DLL 내부에서 MiniDumpWriteDump API를 찾는다.
+	// Locate MiniDumpWriteDump entry point in DLL.
 	MINIDUMPWRITEDUMP pfnMiniDumpWriteDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDLL, "MiniDumpWriteDump");
 	if (pfnMiniDumpWriteDump == NULL)
 	{
@@ -147,7 +147,7 @@ ExceptionDump::Exception_Minidump(_EXCEPTION_POINTERS* pExceptionInfo)
 
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
-		// 스택과 로드한 모듈 정보를 텍스트 파일로 만든다.
+		// Write callstack and loaded modules info to text file.
 		FILE* pFile = fopen(szTimeStampLogFileName.c_str(), "w");
 		fprintf(pFile, "Failed to save Dump File to %s ( error : %d )\n", szTimeStampLogFileName.c_str(), ::GetLastError());
 		fclose(pFile);
@@ -169,10 +169,10 @@ ExceptionDump::Exception_Minidump(_EXCEPTION_POINTERS* pExceptionInfo)
 	case eMiniDumpWithFullMemory:   dumptype = MiniDumpWithFullMemory; break;
 	}
 
-	// 덤프 파일 생성 결과를 로그 파일에다 기록한다.
+	// Log dump creation result.
 	pfnMiniDumpWriteDump( ::GetCurrentProcess(), ::GetCurrentProcessId(), hFile, dumptype, &ExParam, NULL, NULL);
 
-	// dmp 파일을 만든다.
+	// Create .dmp file.
 	CHAR temp[2048] = "0";
 
 	sprintf(temp, "Exception at 0x%08x\nDump to %s", pExceptionInfo->ExceptionRecord->ExceptionCode, szTimeStampDmpFileName.c_str());
@@ -249,7 +249,7 @@ GetFaultReason(EXCEPTION_POINTERS* pExPtrs)
 	if (::IsBadReadPtr(pExPtrs, sizeof(EXCEPTION_POINTERS))) 
 		return ("bad exception pointers");
 
-	// 간단한 에러 코드라면 그냥 변환할 수 있다.
+	// Translate common error codes directly.
 	switch (pExPtrs->ExceptionRecord->ExceptionCode)
 	{
 	case EXCEPTION_ACCESS_VIOLATION:         return ("EXCEPTION_ACCESS_VIOLATION");
@@ -281,7 +281,7 @@ GetFaultReason(EXCEPTION_POINTERS* pExPtrs)
 		break;
 	}
 
-	// 뭔가 좀 더 복잡한 에러라면...
+	// Handle detailed error codes...
 	static CHAR szFaultReason[2048] = "";
 	::strcpy(szFaultReason, ("Unknown")); 
 	::FormatMessageA(
@@ -296,8 +296,8 @@ GetFaultReason(EXCEPTION_POINTERS* pExPtrs)
 	return szFaultReason;
 }
 
-/// \brief 사용자 정보를 반환한다.
-/// \return LPCTSTR 사용자 이름
+/// \brief Returns user information.
+/// \return LPCTSTR User name
 const char*
 GetUserInfo()
 {
@@ -312,8 +312,8 @@ GetUserInfo()
 	return szUserName;
 }
 
-/// \brief 윈도우즈 버전을 반환한다.
-/// \return LPCTSTR 윈도우즈 버전 문자열
+/// \brief Returns Windows version.
+/// \return LPCTSTR Windows version string
 const char*
 GetOSInfo()
 {
@@ -330,12 +330,12 @@ GetOSInfo()
 	return szOSInfo;
 }
 
-/// \brief CPU 정보를 반환한다.
-/// \return LPCTSTR CPU 정보 문자열
+/// \brief Returns CPU information.
+/// \return LPCTSTR CPU information string
 std::string 
 GetCpuInfo()
 {
-	// CPU 정보 기록
+	// Record CPU info
 	SYSTEM_INFO	SystemInfo;
 	GetSystemInfo(&SystemInfo);
 
@@ -383,8 +383,8 @@ GetCpuInfoFromRegistry()
 	return szCpuString;
 }
 
-/// \brief 메모리 정보를 반환한다.
-/// \return LPCTSTR 메모리 정보 문자열
+/// \brief Returns memory information.
+/// \return LPCTSTR Memory information string
 const char*
 GetMemoryInfo()
 {
@@ -417,7 +417,7 @@ GetMemoryInfo()
 	return szMemoryInfo;
 }
 
-/// \brief 윈도우즈 버전을 알아낸다.
+/// \brief Detects Windows version.
 ///
 /// This table has been assembled from Usenet postings, personal observations, 
 /// and reading other people's code.  Please feel free to add to it or correct 
@@ -442,10 +442,10 @@ GetMemoryInfo()
 /// CE            3
 /// </pre>
 ///
-/// \param pszVersion 버전 문자열을 집어넣을 포인터
-/// \param nVersion 버전 숫자값을 집어넣을 포인터
-/// \param pszMajorMinorBuild 빌드 문자열을 집어넣을 포인터
-/// \return bool 무사히 실행한 경우에는 true, 뭔가 에러가 생긴 경우에는 false
+/// \param pszVersion Buffer to receive version string
+/// \param nVersion Pointer to receive version numeric value
+/// \param pszMajorMinorBuild Buffer to receive build string
+/// \return bool true on success, false on failure
 bool
 GetWinVersion(char* pszVersion, int *nVersion, char* pszMajorMinorBuild)
 {
@@ -1194,7 +1194,7 @@ LONG __stdcall
 CallStackDump(EXCEPTION_POINTERS* pExPtrs)
 {
 	std::string szDumpFileName;
-	// 현재 실행 모듈을 알아낸다.
+	// Detect current running module.
 	CHAR DumpFileName[MAX_PATH];
 	::GetModuleFileNameA(NULL, DumpFileName, MAX_PATH);
 
@@ -1205,7 +1205,7 @@ CallStackDump(EXCEPTION_POINTERS* pExPtrs)
 
 	_splitpath( DumpFileName, drive, dir, fname, ext ); 
 
-	// 확장자를 제거한 모듈 경로를 준비해둔다.
+	// Strip extension from module path.
 	szDumpFileName = drive;
 	szDumpFileName += dir;
 	szDumpFileName += fname;
@@ -1220,13 +1220,13 @@ CallStackDump(EXCEPTION_POINTERS* pExPtrs)
 	CHAR szTail[MAX_PATH];
 	ZeroMemory(szTail, sizeof(CHAR) * MAX_PATH);
 
-	sprintf(szTail, "_%04d년%02d월%02d일_%02d시%02d분%02d초",
+	sprintf(szTail, "_%04d%02d%02d_%02d%02d%02d",
 		1900+now->tm_year, now->tm_mon+1, now->tm_mday, now->tm_hour, now->tm_min, now->tm_sec);
 
-	// 모듈명 + 시간정보로 저장할 파일 명을 만든다.
+	// Construct dump file name from module name and timestamp.
 	szDumpFileName += szTail;
 
-	// 먼저 콜스택과 모듈들을 문자열로 만든다.
+	// First format callstack and modules to string.
 	std::string szStackString ;
 
 	NxGetCallStack(szStackString, pExPtrs, GSTSO_ALL);
@@ -1242,7 +1242,7 @@ CallStackDump(EXCEPTION_POINTERS* pExPtrs)
 	szRegister += GetRegisterString(pExPtrs);
 
 
-	// 스택과 로드한 모듈 정보를 텍스트 파일로 만든다.
+	// Write callstack and loaded modules info to text file.
 	FILE* pFile = fopen(szTimeStampLogFileName.c_str(), "w");
 	fprintf(pFile, "saved dump file to '%s'\n"
 		"\n<fault reason>\n%s"
@@ -1265,7 +1265,7 @@ CallStackDump(EXCEPTION_POINTERS* pExPtrs)
 	fclose(pFile);
 
 
-	// dmp 파일을 만든다.
+	// Create .dmp file.
 	CHAR temp[2048] = "0";
 
 	sprintf(temp, "Exception at 0x%08x\n\nCallstack Logging %s", pExPtrs->ExceptionRecord->ExceptionCode, szTimeStampLogFileName.c_str());

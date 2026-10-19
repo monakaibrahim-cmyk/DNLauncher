@@ -3,14 +3,14 @@
 	<< STRING SET >>
 
 	FILE : STRINGSET.H, STRINGSET.CPP
-	DESC : 문자열 데이터 클래스 (동적)
+	DESC : String data class (dynamic)
 	INIT BUILT DATE : 2006. 10. 17
 	LAST BUILT DATE : 2007. 11. 29
 
 	P.S.> 
-		- GetA / GetW 는 힙메모리에 할당된 문자열을 반환하므로 NULL 이 아닐 경우 사용 후에 반드시 ::free() 로 제거해야 함
+		- GetA / GetW return heap-allocated strings; caller must free them with ::free() when non-NULL
 
-	Copyrightⓒ 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -42,13 +42,13 @@
 // TYPE : STRUCT
 // NAME : STRINGHEADER
 //*---------------------------------------------------------------
-// DESC : 문자열 데이터의 헤더정보 구조체
+// DESC : String data header info structure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 typedef struct
 {
-	INT	m_iSize;		// 바이트 단위가 아닌 TCHAR 단위
-	INT m_iLinePtr;		// 바이트 단위가 아닌 TCHAR 단위
+	INT	m_iSize;		// In TCHAR units, not bytes
+	INT m_iLinePtr;		// In TCHAR units, not bytes
 } STRINGHEADER, *LPSTRINGHEADER;
 
 
@@ -56,7 +56,7 @@ typedef struct
 // TYPE : CLASS
 // NAME : CStringSet
 //*---------------------------------------------------------------
-// DESC : 문자열 데이터 클래스 (동적)
+// DESC : String data class (dynamic)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CStringSet
@@ -105,7 +105,7 @@ public:
 	CStringSet& Append(CStringSet* pString);
 	operator LPCTSTR() const;
 
-	// 대입 연산
+	// Assignment operators
 	CStringSet& operator=(LPCTSTR pString);
 	CStringSet& operator=(CStringSet& pString);
 	CStringSet& operator=(CStringSet* pString);
@@ -113,7 +113,7 @@ public:
 	CStringSet& operator+=(CStringSet& pString);
 	CStringSet& operator+=(CStringSet* pString);
 
-	// 비교 연산 (외부 의존도를 줄이기 위해 std::rel_ops 사용하지 않고 모두 구현)
+	// Comparison operators (implemented directly without std::rel_ops)
 	bool operator==(LPCTSTR pString) const;
 	bool operator==(const CStringSet& pString) const;
 	bool operator==(const CStringSet* pString) const;

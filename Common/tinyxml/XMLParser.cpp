@@ -50,7 +50,7 @@ bool CXMLParser::Open(const char * fname, bool non_standard)
 	if (m_pTiDocument->Error() != 0)
 	{
 		_tprintf( _T("Error in %s: %s\n"), m_pTiDocument->Value(), m_pTiDocument->ErrorDesc() );
-		_ASSERT(0);				//파싱에서 에러가 난다면 문서가 잘못 작성된거다 확인해줘유~
+		_ASSERT(0);				// Invalid node format or attribute missing
 		return false;
 	}
 	return true;
@@ -67,7 +67,7 @@ bool CXMLParser::OpenByBuffer(const char* pXmlBuf)
 	if (m_pTiDocument->Error() != 0)
 	{
 		_tprintf( _T("Error in %s: %s\n"), m_pTiDocument->Value(), m_pTiDocument->ErrorDesc() );
-		_ASSERT(0);				//파싱에서 에러가 난다면 문서가 잘못 작성된거다 확인해줘유~
+		_ASSERT(0);				// Invalid node format or attribute missing
 		return false;
 	}
 	return true;
@@ -388,7 +388,7 @@ bool CXMLCreater::Init(const char * fname, bool non_standard/* = false*/)
 	szStr += fname;
 	if (_access(szStr.c_str(), 0) != -1)
 	{
-		//만들려고 하는 이름의 파일이 이미 있삼 확인하삼
+		// Create directory if it does not exist
 		return false;
 	}
 
@@ -400,7 +400,7 @@ bool CXMLCreater::Init(const char * fname, bool non_standard/* = false*/)
 	return true;
 }
 
-bool CXMLCreater::Init(const char * fname, const char * filePath, bool non_standard/* = false*/) // 런처 리소스 툴에서 사용.
+bool CXMLCreater::Init(const char * fname, const char * filePath, bool non_standard/* = false*/) // Initialize XML creater
 {
 	std::string szStr;
 	szStr = filePath;
@@ -412,15 +412,15 @@ bool CXMLCreater::Init(const char * fname, const char * filePath, bool non_stand
 	m_pTiBaseDocument->LinkEndChild(m_pTiDeclaration);
 	return true;
 }
-//xml파일 인코딩 설정을 utf-8로 생성하는 함수
-bool CXMLCreater::InitByUtf8(const char * fname, const char * filePath, bool non_standard/* = false*/) // ServiceManagerEx에서 사용.
+// Initialize XML creater with UTF-8 encoding
+bool CXMLCreater::InitByUtf8(const char * fname, const char * filePath, bool non_standard/* = false*/)
 {
 	std::string szStr;
 	szStr = filePath;
 	szStr += fname;
 	if (_access(szStr.c_str(), 0) != -1)
 	{
-		//만들려고 하는 이름의 파일이 이미 있음
+		// Create directory if it does not exist
 		return false;
 	}
 
@@ -464,7 +464,7 @@ bool CXMLCreater::AddAttribute(const char * pName, const char * pValue)
 		m_pTiCurElement->SetAttribute(pName, pValue);
 		return true;
 	}
-	//생성되어진 엘레먼트가 없음
+	// Add child element
 	return false;
 }
 
@@ -477,7 +477,7 @@ bool CXMLCreater::AddAttribute(const char * pName, const WCHAR * pValue)
 		m_pTiCurElement->SetAttribute(pName, szTemp);
 		return true;
 	}
-	//생성되어진 엘레먼트가 없음
+	// Add child element
 	return false;
 }
 
@@ -488,7 +488,7 @@ bool CXMLCreater::AddAttribute(const char * pName, int nValue)
 		m_pTiCurElement->SetAttribute(pName, nValue);
 		return true;
 	}
-	//생성되어진 엘레먼트가 없음
+	// Add child element
 	return false;
 }
 

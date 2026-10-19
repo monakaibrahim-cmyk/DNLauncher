@@ -60,18 +60,18 @@ public:
 
 //------------------------------------------------------------------------------------
 
-// 빈공간 주소 정보
+// Patch callback and error codes
 class CPatchCallback
 {
 public:
 	enum
 	{
 		None = 0,
-		SrcPackOpenFailed,		// 패치할 소스팩을 열지 못했다.
-		SrcPackFileSizeZero,	// 소스팩의 파일이 없다. 
-		SrcPackFileNotFound,	// 소스팩에서 파일을 찾을수 없다. 
-		DstPackAddFailed,		// 대상팩에 파일 추가가 실패했다.
-		PatchFailed,			// 패치도중 실패했다.
+		SrcPackOpenFailed,		// Failed to open source package file.
+		SrcPackFileSizeZero,	// Source package file size is zero.
+		SrcPackFileNotFound,	// File not found in source package.
+		DstPackAddFailed,		// Failed to add file to destination package.
+		PatchFailed,			// RTPatch execution failed.
 
 	};
 	virtual void OnPatch(int nCurrentCnt, int nMaxCount, CFileNameString szFilename) { }
@@ -108,7 +108,7 @@ public:
 	SPackingFileInfo *GetFileInfo( int nIndex ) { return ( SPackingFileInfo * )&m_vecPackingFileInfo[ nIndex ]; }
 	void GetFileInfoListCurDir( std::vector< SPackingFileInfo * > &vecFileInfo );
 	void GetDirListCurDir( std::vector< std::string > &vecDirList );
-	// 현재 패킹 파일에 패치 한다. 
+	// Applies patch files to target package.
 	bool	Patch(const char* strPatchPath, CPatchCallback* pCallpack, std::vector< CFileNameString > *pvecSkipList );
 
 	void	SetLogger(CEtFileSystemLog* pLog) { m_pLog = pLog; }
@@ -146,12 +146,12 @@ private:
 	void		_Encode(IN BYTE* pBuffer, int nBufSize, DWORD nCode);
 	void		_Decode(IN BYTE* pBuffer, int nBufSize, DWORD nCode);
 
-	// 이 함수들은 Win32 API 가 길어서 타이핑 하기가 귀찮아서.. 
+	// Wrapper helpers for Win32 file APIs
 	bool		_Read(HANDLE hFile, IN void* pBuffer, DWORD ToReadSize);
 	bool		_Write(HANDLE hFile, IN void* pBuffer, DWORD ToWriteSize);
 	LONGLONG	_Seek(HANDLE hFile, LONGLONG nDistance, DWORD SeekType);
 	
-	// string 관련
+	// String helper utilities
 	void		_Tokenize( const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters /* = " " */ );
 	void		_AllReplace( std::string& str, std::string& szOld, std::string& szNew );
 
@@ -179,7 +179,7 @@ public:
 	virtual ~CEtFileSystem();
 	
 	void	AddPackingFolder(const char* szPackingFileName, const char* szExt = "pak" );
-	void	AddPackingFolder(const WCHAR* szPackingFileName, const char* szExt = "pak" );	// 처음 루트폴더 처리를 위해 추가.
+	void	AddPackingFolder(const WCHAR* szPackingFileName, const char* szExt = "pak" );	// Add folder containing packages.
 	bool	AddPackingFile(const char* szPackingFileName, const char *szRootPath);
 	void	RemoveAll();
 	

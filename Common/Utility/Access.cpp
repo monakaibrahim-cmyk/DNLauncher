@@ -35,11 +35,11 @@ DWORD CAccess::Open(BOOL pDoEnable)
 {
 	DN_ASSERT(!IsOpen(),			"Alrady Opened!");
 #if defined(_DEBUG)
-//	DN_ASSERT(m_DebugLock.IsOpen(),	"Invalid!");	// CAccess::OpenDebug() 가 먼저 호출되어야 함
+//	DN_ASSERT(m_DebugLock.IsOpen(),	"Invalid!");	// CAccess::OpenDebug() must be called first
 #endif	// _DEBUG
 
 	m_dwAccessCount = 0;
-	m_bEnable = pDoEnable;	// !!! 임시 → 나중에 접근단계 플래그로 바뀌어야 함
+	m_bEnable = pDoEnable;	// !!! Temporary -> should be replaced with access level flag later
 	m_bOpen = TRUE;
 
 /*
@@ -57,7 +57,7 @@ VOID CAccess::Close()
 {
 //	DN_ASSERT(IsOpen(),		"Not Opened!");
 
-	m_bEnable = FALSE;		// !!! 임시 → 나중에 접근단계 플래그로 바뀌어야 함
+	m_bEnable = FALSE;		// !!! Temporary -> should be replaced with access level flag later
 	m_bOpen = FALSE;
 
 //	m_Lock.Close();
@@ -183,7 +183,7 @@ BOOL CAccess::Detach()
 	if (FALSE == m_bEnable) {
 		if (1 > m_dwAccessCount) {
 			m_bEnable = FALSE;
-			bRetVal = (0 == m_dwAccessCount);	// 중복처리 방지 위해 0 일 때만 TRUE
+			bRetVal = (0 == m_dwAccessCount);	// To prevent double processing, TRUE only when 0
 		}
 	}
 	return(bRetVal);
@@ -198,7 +198,7 @@ BOOL CAccess::DetachMust()
 
 	TP_LOCKAUTO aLockAuto(m_Lock);
 
-	if (0 < m_dwAccessCount) {	// 중복처리 방지위해 0 이상일 때만 처리
+	if (0 < m_dwAccessCount) {	// To prevent double processing, process only when > 0
 		m_dwAccessCount = 0;
 		m_bEnable = FALSE;
 		bRetVal = TRUE;

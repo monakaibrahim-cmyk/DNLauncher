@@ -200,15 +200,15 @@ BOOL CDnLauncherDlg::OnInitDialog()
 	SetIcon( m_hIcon, FALSE );	// Set small icon
 
 	this->SetWindowText( _S( STR_DRAGONNEST_LAUNCHER + DNPATCHINFO.GetLanguageOffset() ) );
-	DNOPTIONDATA.LoadConfigOption( this->m_hWnd );		// Option 읽기
+	DNOPTIONDATA.LoadConfigOption( this->m_hWnd );		// Load config options
 
-	if( !InitInterface() )		// UI 초기화
+	if( !InitInterface() )		// Initialize UI controls
 	{
 		g_nInitErrorCode = INIT_ERROR_INTERFACE;
 		return InitFail();
 	}
 
-	if( !InitWebpage() )		// 가이드 웹페이지 초기화
+	if( !InitWebpage() )		// Initialize webpage control
 	{
 		g_nInitErrorCode = INIT_ERROR_WEBPAGE;
 		return InitFail();
@@ -217,7 +217,7 @@ BOOL CDnLauncherDlg::OnInitDialog()
 NavigateHtml();
 
 	m_strLauncherVersion.Format( _T("Ver.%d"), DNPATCHINFO.GetClientVersion() );
-	SetTimer( TEVENT_REFRESH_TEXTINFO, 40, NULL );		//화면 텍스트 갱신
+	SetTimer( TEVENT_REFRESH_TEXTINFO, 40, NULL );		// Refresh text timer
 	LogWnd::TraceLog( L"InitDialog Success!" );
 
 StartPatchDownloadThread();
@@ -233,7 +233,7 @@ if( m_pDnHtmlView )
 BOOL CDnLauncherDlg::InitWebpage()
 {
 	LogWnd::TraceLog( L"InitWebpage" );
-	// 가이드 웹페이지 View/Html 셋팅
+	// Move webpage view to matched control position
 	CCreateContext pContext;
 	CWnd* pFrameWnd = this;
 	pContext.m_pCurrentDoc = NULL;
@@ -263,7 +263,7 @@ BOOL CDnLauncherDlg::InitInterface()
 
 	// -- Control -- //
 	InitCtrlRect();
-	GetCtrlRect( m_pRectCtrl, m_nMaxCtrlNum );	// Ctrl Rect 셋팅
+	GetCtrlRect( m_pRectCtrl, m_nMaxCtrlNum );	// Retrieve control rectangles
 	InitControl();
 
 	// -- Transparent -- //
@@ -279,7 +279,7 @@ BOOL CDnLauncherDlg::InitInterface()
 			(BOOL (WINAPI *)(HWND, COLORREF, BYTE, DWORD))GetProcAddress(h_user32_dll, 
 			"SetLayeredWindowAttributes");
 
-		if( fp_set_layered_window_attributes != NULL )	// 함수의 포인터를 이용해서 SetLayeredWindowAttributes 함수를 간접 수행한다.
+		if( fp_set_layered_window_attributes != NULL )	// Support transparent layered window if available
 			(*fp_set_layered_window_attributes)( m_hWnd, RGB( 255, 0, 255 ), 0, LWA_COLORKEY );
 	}
 
@@ -288,15 +288,48 @@ BOOL CDnLauncherDlg::InitInterface()
 
 BOOL CDnLauncherDlg::InitBackground()
 {
-	CxImage xImage;
 	int nBgID = IDR_PNG_BACK_GROUND + DNPATCHINFO.GetLanguageOffset();
-	if( !xImage.LoadResource( FindResource( NULL, MAKEINTRESOURCE( nBgID ), L"PNG" ), CXIMAGE_FORMAT_PNG ) )
+	HRSRC hRes = FindResource( NULL, MAKEINTRESOURCE( nBgID ), L"PNG" );
+	if( !hRes )
+		hRes = FindResource( NULL, MAKEINTRESOURCE( nBgID ), L"JPG" );
+	if( !hRes )
+		return FALSE;
+
+	DWORD dwSize = SizeofResource( NULL, hRes );
+	HGLOBAL hGlob = LoadResource( NULL, hRes );
+	if( !hGlob )
+		return FALSE;
+
+	LPVOID pData = LockResource( hGlob );
+	if( !pData || dwSize == 0 )
+		return FALSE;
+
+	HGLOBAL hMem = GlobalAlloc( GMEM_MOVEABLE, dwSize );
+	if( !hMem )
+		return FALSE;
+
+	void* pMem = GlobalLock( hMem );
+	if( pMem )
 	{
-		if( !xImage.LoadResource( FindResource( NULL, MAKEINTRESOURCE( nBgID ), L"JPG" ), CXIMAGE_FORMAT_JPG ) )
-			return FALSE;
+		memcpy( pMem, pData, dwSize );
+		GlobalUnlock( hMem );
 	}
 
-	HBITMAP hBmp = xImage.MakeBitmap();
+	IStream* pStream = NULL;
+	if( FAILED( CreateStreamOnHGlobal( hMem, TRUE, &pStream ) ) )
+	{
+		GlobalFree( hMem );
+		return FALSE;
+	}
+
+	CImage xImage;
+	HRESULT hr = xImage.Load( pStream );
+	pStream->Release();
+
+	if( FAILED( hr ) )
+		return FALSE;
+
+	HBITMAP hBmp = xImage.Detach();
 	if( hBmp == NULL )
 		return FALSE;
 
@@ -315,7 +348,7 @@ BOOL CDnLauncherDlg::InitBackground()
 	// select background image
 	SelectObject( m_dcBkGrnd, hBmp );
 	
-	// set window size the same as image size ( 최상위로 설정 )
+	// Set window size the same as background image size
 	//::SetWindowPos( this->GetSafeHwnd(), HWND_TOPMOST, 0, 0, m_dwWidth, m_dwHeight, SWP_NOZORDER | SWP_NOMOVE );
 	SetWindowPos( &wndTopMost, 0, 0, m_dwWidth, m_dwHeight, SWP_NOZORDER | SWP_NOMOVE | SWP_NOACTIVATE );
 	::SetForegroundWindow( this->GetSafeHwnd() );
@@ -525,7 +558,7 @@ void CDnLauncherDlg::OnClickedCheckDirectGamestart()
 void CDnLauncherDlg::OnClickButtonCancel()
 {
 	int nResult = AfxMessageBox( _S( STR_PATCH_CANCEL + DNPATCHINFO.GetLanguageOffset() ), MB_YESNO );
-	if ( nResult == IDYES && m_emDownloadPatchState != PATCH_COMPLETE )	// 확인창 열린 상태에서 패치완료 되었을 경우 예방
+	if ( nResult == IDYES && m_emDownloadPatchState != PATCH_COMPLETE )	// User confirmed cancellation while patch is downloading
 	{
 		if( g_pPatchDownloadThread )
 		{
@@ -535,7 +568,7 @@ void CDnLauncherDlg::OnClickButtonCancel()
 			SAFE_DELETE( g_pPatchDownloadThread );
 			g_pPatchDownloadThread = NULL;
 		}
-		LogWnd::TraceLog(_T("★ Patch Canceled"));
+		LogWnd::TraceLog(_T("Patch Canceled"));
 
 }
 }
@@ -619,7 +652,7 @@ void CDnLauncherDlg::OnClickButtonClose()
 	int nResult = AfxMessageBox( _S( STR_LAUNCHER_EXIT + DNPATCHINFO.GetLanguageOffset() ), MB_YESNO );
 	if( nResult == IDYES )
 	{
-		LogWnd::TraceLog(_T("★ Launcher Closed"));
+		LogWnd::TraceLog(_T("Launcher Closed"));
 		CDialog::OnCancel();
 	}
 }
@@ -631,7 +664,7 @@ void CDnLauncherDlg::OnClickMinimumBtn()
 
 void CDnLauncherDlg::OnTimer( UINT_PTR nIDEvent )
 {
-	if( nIDEvent == TEVENT_REFRESH_TEXTINFO )	// 화면 텍스트 정보 갱신
+	if( nIDEvent == TEVENT_REFRESH_TEXTINFO )	// Refresh text information timer event
 		RefreshTextInfo();
 
 	CDialog::OnTimer(nIDEvent);
@@ -717,7 +750,7 @@ LRESULT CDnLauncherDlg::OnStatusMsg( WPARAM wParam, LPARAM lParam )
 			m_pFileCountProgress->SetPos( 100 );
 			m_strDownloadPercentage.Format( _T("%d%%"), 100 );
 
-			if(	DNOPTIONDATA.m_bAutoGameStart )	// 자동시작 체크되있을 경우 시작하도록 한다.
+			if( DNOPTIONDATA.m_bAutoGameStart )	// Auto-launch game if enabled
 				OnClickButtonGameStart();
 
 			m_bDownloading = FALSE;
@@ -764,7 +797,7 @@ void CDnLauncherDlg::ResetDownloadInfo()
 
 void CDnLauncherDlg::UpdateDownloadInfo()
 {
-	// 다운로드 중 - 파일, 사이즈, 남은시간 표기
+	// Download info: file count, size, download state
 	if( m_emDownloadPatchState == PATCH_DOWNLOAD_DATA || m_emDownloadPatchState == PATCH_MD5_CHECK
 		|| m_emDownloadPatchState == PATCH_APPLY_PAK_FILE )
 	{
@@ -775,7 +808,7 @@ void CDnLauncherDlg::UpdateDownloadInfo()
 		m_fDownloadRate = g_DownloadInfoData.m_fDownloadRate;
 		UpdateDownloadLeftTime();
 
-		// 다운로드 중 - 프로그래스바
+		// Download info: estimated time remaining
 		m_nDownloadProgressMin = g_DownloadInfoData.m_nDownloadProgressMin;
 		m_nDownloadProgressMax = g_DownloadInfoData.m_nDownloadProgressMax;
 		m_nCurrentFileCount = g_DownloadInfoData.m_nCurrentFileCount;
@@ -797,7 +830,7 @@ void CDnLauncherDlg::UpdateDownloadInfo()
 		}
 	}
 
-	// 패치 데이터 설치 완료 후
+	// Format file size string
 	if( m_emDownloadPatchState == PATCH_APPLY_PAK_FILE_END )
 		m_strLauncherVersion.Format( _T("Ver.%d"), DNPATCHINFO.GetClientVersion() );
 }
@@ -810,7 +843,7 @@ void CDnLauncherDlg::UpdatProgressInfo()
 	if( m_nDownloadProgressMax == 0 || m_nTotalFileCount == 0 )		// error divide by zero
 		return;
 
-	// 다운로드 프로그래스바 & %표기 업데이트
+	// Update progress bar and percentage
 	m_pFileCountProgress->SetRange( 0, 100 );
 	int nDownloadPercentage = 0;
 	if( m_emDownloadPatchState == PATCH_DOWNLOAD_DATA || PATCH_APPLY_PAK_FILE )
@@ -824,8 +857,8 @@ void CDnLauncherDlg::UpdatProgressInfo()
 	m_strDownloadPercentage.Format( _T("%d%%"), nDownloadPercentage );
 	m_pDownloadProgress->SetPos( nDownloadPercentage );
 
-	// 총 파일 수 프로그래스바 업데이트 (파일당 구간을 100으로 쪼개 50은 다운로드 50은 패킹적용에 할당)
-	m_pFileCountProgress->SetRange( 0, m_nTotalFileCount * 100 );	// 파일 갯수 구간을 100으로 나눔
+	// Scale file count progress range by 100 for smooth interpolation
+	m_pFileCountProgress->SetRange( 0, m_nTotalFileCount * 100 );	// Total file count scaled by 100
 	int nCurrentFileCountPercentage = 0;
 
 	if( m_emDownloadPatchState == PATCH_DOWNLOAD_DATA || m_emDownloadPatchState == PATCH_MD5_CHECK )
@@ -864,7 +897,7 @@ void CDnLauncherDlg::UpdateDownloadLeftTime()
 {
 	if( m_fDownloadRate > 0 )
 	{
-		// KB/s 이므로 1000으로 나눠 줌
+		// Download speed calculation
 		int nEstimateTimeLeft = static_cast<int>( static_cast<float>( m_nDownloadProgressMax - m_nDownloadProgressMin ) / m_fDownloadRate / 1000.0f );
 
 		if( nEstimateTimeLeft > 3600 )
@@ -887,7 +920,7 @@ void CDnLauncherDlg::UpdateDownloadLeftTime()
 
 BOOL CDnLauncherDlg::PreTranslateMessage(MSG* pMsg)
 {
-	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	// PreTranslateMessage handler
 
 	if( pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_RETURN )
 	{

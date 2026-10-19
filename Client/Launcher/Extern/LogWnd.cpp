@@ -55,10 +55,10 @@ __LogWnd::__LogWnd( bool bAttachDate, DWORD nTarget, const TCHAR* szFilename, co
 			struct tm now;
 			time_t systemTime;
 
-			time(&systemTime); // 현재 시각을 초 단위로 얻기
-			localtime_s(&now, &systemTime); // 초 단위의 시간을 분리하여 구조체에 넣기
+			time(&systemTime); // Get current system time
+			localtime_s(&now, &systemTime); // Convert to local time
 
-			// 현재 실행 모듈을 알아낸다.
+			// Format current time string.
 			TCHAR szCurFileName[MAX_PATH] = {0,};
 			::GetModuleFileName (NULL, szCurFileName, MAX_PATH );
 			TCHAR __szDrive[MAX_PATH] = { 0, };
@@ -114,7 +114,7 @@ void __LogWnd::CreateLogWindow()
 	x = GetSystemMetrics( SM_CXSCREEN ) - cx;
 	y = 0;
 
-	// 현재 실행 모듈을 알아낸다.
+	// Format current time string.
 	TCHAR szCurFileName[MAX_PATH];
 	::GetModuleFileName( NULL, szCurFileName, MAX_PATH );
 
@@ -136,7 +136,7 @@ void __LogWnd::CreateLogWindow()
 	ShowWindow( m_hwndList, SW_SHOW );
 	ShowWindow( m_hwndEdit, SW_SHOW );
 
-	m_OldEditProc = (WNDPROC)SetWindowLong( m_hwndEdit, GWL_WNDPROC, LONG((WNDPROC)__LogWnd::EditSubWndProc) );
+	m_OldEditProc = (WNDPROC)SetWindowLongPtr( m_hwndEdit, GWLP_WNDPROC, (LONG_PTR)(WNDPROC)__LogWnd::EditSubWndProc );
 }
 
 int __LogWnd::Log( int nLogLevel, const TCHAR* szLog )
@@ -144,8 +144,8 @@ int __LogWnd::Log( int nLogLevel, const TCHAR* szLog )
 	struct tm now;
 	time_t systemTime;
 
-	time( &systemTime );				// 현재 시각을 초 단위로 얻기
-	localtime_s( &now, &systemTime );	// 초 단위의 시간을 분리하여 구조체에 넣기
+	time( &systemTime );				// Get current system time
+	localtime_s( &now, &systemTime );	// Convert to local time
 
 	TCHAR szTotal[2048] = _T("");
 	ZeroMemory(szTotal, sizeof(TCHAR) * 2048);
@@ -183,7 +183,7 @@ int __LogWnd::Log( int nLogLevel, const TCHAR* szLog )
 	else
 		_sntprintf_s(szTotal, 2048, _T("[Lv:%d]=>%s"), nLogLevel, szLog );
 	
-	// Log File에 출력할 경우
+	// Output to log file
 	if( m_nTarget & LOG_TARGET_FILE )
 	{
 #ifdef _UNICODE
@@ -200,7 +200,7 @@ int __LogWnd::Log( int nLogLevel, const TCHAR* szLog )
 	}
 
 	static const int nEnterLineLen = 65;
-	// Log Window에 출력할 경우 
+	// Output to log window
 	if( m_nTarget & LOG_TARGET_WINDOW )
 	{
 		std::wstring szLogMsg;
@@ -268,7 +268,7 @@ LRESULT CALLBACK __LogWnd::WndProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
 		break;
 	case WM_DESTROY:
 		{
-			SetWindowLong( m_hwndEdit, GWL_WNDPROC, (LONG)m_OldEditProc );
+			SetWindowLongPtr( m_hwndEdit, GWLP_WNDPROC, (LONG_PTR)m_OldEditProc );
 		}
 		break;
 	}

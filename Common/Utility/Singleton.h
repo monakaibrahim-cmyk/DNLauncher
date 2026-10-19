@@ -9,7 +9,7 @@ public:
 	CSingleton()
 	{
 #pragma warning( disable:4311 4312 )
-		ASSERT( !s_pObj && "중복 생성 되었습니다." );
+		ASSERT( !s_pObj && "Duplicate instance created." );
 
 #if defined( WIN64 )
 		s_pObj = static_cast<T*>(this);
@@ -64,10 +64,10 @@ template < class T > T *CSingleton < T >::s_pObj = 0;
 // TYPE : FUNCTION
 // NAME : DECLARE_SINGLETON_CLASS
 //*---------------------------------------------------------------
-// DESC : Singleton 매크로 함수
+// DESC : Singleton macro function
 // PRGM : B4nFter
 // P.S.>
-//		- 방법2 : 매크로 함수
+//		- Method 2: Macro function
 //*---------------------------------------------------------------
 #define DECLARE_SINGLETON_CLASS(pCLASS)								\
 private:															\
@@ -81,7 +81,7 @@ public:																\
 	pCLASS&	pCLASS::GetInstance()		{ return m_Singleton; }		\
 	pCLASS*	pCLASS::GetInstancePtr()	{ return &m_Singleton; }
 
-// /GL 옵션 적용 시 C4744 경고가 발생 (_tmain()) 하여 inline 되지 않도록 별도 구현
+// Implemented out of line to prevent C4744 warning with /GL in _tmain()
 /*
 #define DECLARE_SINGLETON_CLASS(pCLASS)								\
 private:															\

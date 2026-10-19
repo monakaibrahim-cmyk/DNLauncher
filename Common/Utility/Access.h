@@ -3,11 +3,11 @@
 	<< ACCESS >>
 
 	FILE : ACCESS.H, ACCESS.CPP
-	DESC : 특정 자원이나 객체 공유 시 배타적 잠금을 사용하지 참조 정보만으로 접근하고자 할 때 참조 정보를 관리
+	DESC :                
 	INIT BUILT DATE : 2007. 07. 25
 	LAST BUILT DATE : 2007. 07. 29
 
-	Copyrightⓒ 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -22,7 +22,7 @@
 #include "CRITICALSECTION.H"
 #if defined(_DEBUG)
 #include <MAP>
-#define	DF_DEBUG_COUNT	(1000)	// Access/Detach 무결성 체크 시 Access 개수 허용범위
+#define	DF_DEBUG_COUNT	(1000)	// Access/Detach    Access  
 #endif // _DEBUG
 
 
@@ -34,13 +34,13 @@
 // TYPE : CLASS
 // NAME : CAccess
 //*---------------------------------------------------------------
-// DESC : 참조 정보 관리 클래스
+// DESC :    
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CAccess
 {
 private:
-//	DISABLE_COPY_ASSIGN(CAccess)	// 객체간 복사, 대입 금지
+//	DISABLE_COPY_ASSIGN(CAccess)	//  ,  
 
 public:
 	typedef	CSyncLock						TP_LOCK;
@@ -119,12 +119,12 @@ private:
 // TYPE : CLASS
 // NAME : CDetachAuto
 //*---------------------------------------------------------------
-// DESC : CAccess 파생클래스의 자동 해제를 관리하는 클래스
+// DESC : CAccess     
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CDetachAuto
 {
-//	DISABLE_COPY_ASSIGN(CDetachAuto)	// 객체간 복사, 대입 금지
+//	DISABLE_COPY_ASSIGN(CDetachAuto)	//  ,  
 
 public:
 	explicit CDetachAuto(CAccess& lpAccess);
@@ -133,7 +133,7 @@ public:
 
 /*
 private:
-	// 객체간 복사, 대입 금지
+	//  ,  
 	CDetachAuto(const CDetachAuto& pAccess) : m_lpAccess(pAccess.m_lpAccess)	{ DN_ASSERT(0, "Can't be Called!"); }
 #pragma warning (disable:4100)
 	CDetachAuto& operator=(const CDetachAuto& pLock)							{ DN_ASSERT(0, "Can't be Called!"); return(*this); }
@@ -149,13 +149,13 @@ private:
 // TYPE : CLASS
 // NAME : CDetachAutoEx
 //*---------------------------------------------------------------
-// DESC : Detach() 메서드를 구현된 TACCESS 클래스 객체의 자동 해제를 관리하는 클래스
+// DESC : Detach()   TACCESS      
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<class TACCESS>
 class CDetachAutoEx
 {
-//	DISABLE_COPY_ASSIGN(CDetachAutoEx)	// 객체간 복사, 대입 금지
+//	DISABLE_COPY_ASSIGN(CDetachAutoEx)	//  ,  
 
 public:
 	explicit CDetachAutoEx(TACCESS& pAccess);
@@ -163,7 +163,7 @@ public:
 	~CDetachAutoEx();
 
 private:
-	// 객체간 복사, 대입 금지
+	//  ,  
 	CDetachAutoEx(const CDetachAutoEx<TACCESS>& pAccess) : m_lpAccess(pAccess.m_lpAccess)	{ DN_ASSERT(0, "Can't be Called!"); }
 #pragma warning (disable:4100)
 	CDetachAutoEx& operator=(const CDetachAutoEx<TACCESS>& pLock)							{ DN_ASSERT(0, "Can't be Called!"); return(*this); }
@@ -182,9 +182,9 @@ private:
 // TYPE : FUNCTION
 // NAME : CAccess::IsOpen
 //*---------------------------------------------------------------
-// DESC : CAccess 객체가 사용 가능한지 여부 반환
+// DESC : CAccess     
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /*
@@ -199,9 +199,9 @@ inline BOOL CAccess::IsOpen() const
 // TYPE : FUNCTION
 // NAME : CAccess::IsAttach
 //*---------------------------------------------------------------
-// DESC : CAccess 객체가 Attach() 되었는지 여부 반환
+// DESC : CAccess  Attach()   
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 inline BOOL CAccess::IsAttach() const
@@ -216,15 +216,15 @@ inline BOOL CAccess::IsAttach() const
 // TYPE : FUNCTION
 // NAME : CDetachAuto::CDetachAuto
 //*---------------------------------------------------------------
-// DESC : 생성자
-// PARM :	1 . lpAccess - CAccess 클래스 객체참조
+// DESC : Constructor
+// PARM :	1 . lpAccess - CAccess  
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 inline CDetachAuto::CDetachAuto(CAccess& lpAccess) : m_lpAccess(&lpAccess)
 {
 //	DN_ASSERT(NULL != m_lpAccess,		"Invalid!");
-//	DN_ASSERT(m_lpAccess->IsAttach(),	"Not Attached!");	// Detach()에서 체크됨
+//	DN_ASSERT(m_lpAccess->IsAttach(),	"Not Attached!");	// Detach() 
 }
 
 
@@ -232,15 +232,15 @@ inline CDetachAuto::CDetachAuto(CAccess& lpAccess) : m_lpAccess(&lpAccess)
 // TYPE : FUNCTION
 // NAME : CDetachAuto::CDetachAuto
 //*---------------------------------------------------------------
-// DESC : 생성자
-// PARM :	1 . lpAccess - CAccess 클래스 객체포인터
+// DESC : Constructor
+// PARM :	1 . lpAccess - CAccess  
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 inline CDetachAuto::CDetachAuto(CAccess* lpAccess) : m_lpAccess(lpAccess)
 {
 //	DN_ASSERT(NULL != m_lpAccess,		"Invalid!");
-//	DN_ASSERT(m_lpAccess->IsAttach(),	"Not Attached!");	// Detach()에서 체크됨
+//	DN_ASSERT(m_lpAccess->IsAttach(),	"Not Attached!");	// Detach() 
 }
 
 
@@ -248,7 +248,7 @@ inline CDetachAuto::CDetachAuto(CAccess* lpAccess) : m_lpAccess(lpAccess)
 // TYPE : FUNCTION
 // NAME : CDetachAuto::~CDetachAuto
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -266,8 +266,8 @@ inline CDetachAuto::~CDetachAuto()
 // TYPE : FUNCTION
 // NAME : CDetachAutoEx::CDetachAutoEx
 //*---------------------------------------------------------------
-// DESC : 생성자
-// PARM :	1 . pAccess - TACCESS 클래스 객체참조
+// DESC : Constructor
+// PARM :	1 . pAccess - TACCESS  
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -275,7 +275,7 @@ template<class TACCESS>
 inline CDetachAutoEx<TACCESS>::CDetachAutoEx(TACCESS& pAccess) : m_lpAccess(&pAccess)
 {
 //	DN_ASSERT(NULL != m_lpAccess,		"Invalid!");
-//	DN_ASSERT(m_lpAccess->IsAttach(),	"Not Attached!");	// Detach()에서 체크됨
+//	DN_ASSERT(m_lpAccess->IsAttach(),	"Not Attached!");	// Detach() 
 
 	if (m_lpAccess) {
 		m_lpAccess->Attach();
@@ -287,8 +287,8 @@ inline CDetachAutoEx<TACCESS>::CDetachAutoEx(TACCESS& pAccess) : m_lpAccess(&pAc
 // TYPE : FUNCTION
 // NAME : CDetachAutoEx::CDetachAutoEx
 //*---------------------------------------------------------------
-// DESC : 생성자
-// PARM :	1 . pAccess - TACCESS 클래스 객체포인터
+// DESC : Constructor
+// PARM :	1 . pAccess - TACCESS  
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -296,7 +296,7 @@ template<class TACCESS>
 inline CDetachAutoEx<TACCESS>::CDetachAutoEx(TACCESS* pAccess) : m_lpAccess(pAccess)
 {
 //	DN_ASSERT(NULL != m_lpAccess,		"Invalid!");
-//	DN_ASSERT(m_lpAccess->IsAttach(),	"Not Attached!");	// Detach()에서 체크됨
+//	DN_ASSERT(m_lpAccess->IsAttach(),	"Not Attached!");	// Detach() 
 
 	if (m_lpAccess) {
 		m_lpAccess->Attach();
@@ -308,7 +308,7 @@ inline CDetachAutoEx<TACCESS>::CDetachAutoEx(TACCESS* pAccess) : m_lpAccess(pAcc
 // TYPE : FUNCTION
 // NAME : CDetachAutoEx::~CDetachAutoEx
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter

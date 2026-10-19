@@ -178,7 +178,7 @@ namespace CommonUtil
 			if (charLev < startLev || charLev > endLev)
 				continue;
 
-			int startAmount	= pSox->GetFieldFromLablePtr(nItemID, "_AmountS")->GetInteger();	// Gold단위
+			int startAmount	= pSox->GetFieldFromLablePtr(nItemID, "_AmountS")->GetInteger();	// Gold unit
 			int endAmount	= pSox->GetFieldFromLablePtr(nItemID, "_AmountE")->GetInteger();
 			int attachGold	= (int)(attachAmount / 10000);
 			if (attachGold < startAmount || attachGold > endAmount)
@@ -288,7 +288,7 @@ namespace CommonUtil
 			int i = 0;
 			for (; i < DATE_MAX; ++i)
 			{
-				//마지막 초단위 정보는 추가 하지 않는다.
+				// Do not append final seconds info.
 				if (i == SECOND)
 					continue;
 
@@ -301,7 +301,7 @@ namespace CommonUtil
 
 				stringProcessed += str;
 
-				//앞에 3개는 날짜 포맷...(맨 마지막 날짜(i==2)인 경우 공백 추가
+				// First 3 entries are date format... (add space if last date component i==2)
 				if (i < HOUR)
 				{
 					if (i == 2)
@@ -309,10 +309,10 @@ namespace CommonUtil
 					else
 						stringProcessed += dateSeperator;
 				}
-				//시간 포맷
+				// Time format
 				else if (i >= HOUR)
 				{
-					//분단위는 마지막이라 시간 분리자 추가 안함
+					// Minutes is final component so do not add time separator
 					if (i < MINUTE)
 						stringProcessed += timeSeperator;
 				}
@@ -400,11 +400,11 @@ namespace CommonUtil
 	{
 		switch( Difficulty )
 		{
-			case Dungeon::Difficulty::Easy: return GetEtUIXML().GetUIString( CEtUIXML::idCategory1, 2370 );	//	UISTRING : 쉬움
-			case Dungeon::Difficulty::Normal: return GetEtUIXML().GetUIString( CEtUIXML::idCategory1, 2371 );	//	UISTRING : 보통
-			case Dungeon::Difficulty::Hard: return GetEtUIXML().GetUIString( CEtUIXML::idCategory1, 2372 ); 	//	UISTRING : 어려움
-			case Dungeon::Difficulty::Master: return GetEtUIXML().GetUIString( CEtUIXML::idCategory1, 2373 );	//	UISTRING : 마스터
-			case Dungeon::Difficulty::Abyss: return GetEtUIXML().GetUIString(CEtUIXML::idCategory1, 2374); 	//	UISTRING : 어비스
+			case Dungeon::Difficulty::Easy: return GetEtUIXML().GetUIString( CEtUIXML::idCategory1, 2370 );	//	UISTRING : Easy
+			case Dungeon::Difficulty::Normal: return GetEtUIXML().GetUIString( CEtUIXML::idCategory1, 2371 );	//	UISTRING : Normal
+			case Dungeon::Difficulty::Hard: return GetEtUIXML().GetUIString( CEtUIXML::idCategory1, 2372 ); 	//	UISTRING : Hard
+			case Dungeon::Difficulty::Master: return GetEtUIXML().GetUIString( CEtUIXML::idCategory1, 2373 );	//	UISTRING : Master
+			case Dungeon::Difficulty::Abyss: return GetEtUIXML().GetUIString(CEtUIXML::idCategory1, 2374); 	//	UISTRING : Abyss
 			//case Dungeon::Difficulty::Chaos: return GetEtUIXML().GetUIString(CEtUIXML::idCategory1, 2374); 	
 			//case Dungeon::Difficulty::Hell: return GetEtUIXML().GetUIString(CEtUIXML::idCategory1, 2374); 	
 		}
@@ -546,7 +546,7 @@ namespace CommonUtil
 	{
 		WCHAR awcBuffer[ 256 ] = { 0 };
 
-		// 기본 스택 정보(랜덤 최고치의 능력치)
+		// Base stat info (maximum random roll)
 		if( pItemState->GetStrength() > 0 )
 		{
 			swprintf_s( awcBuffer, 256, L"%s : %d ", DN_INTERFACE::STRING::ITEM::GET_STATIC( emTOOLTIP_STATIC::ITEM_STRENGTH ), pItemState->GetStrength() );
@@ -604,7 +604,7 @@ namespace CommonUtil
 		int nTemp(0);
 		INT64 nTempHP = 0;
 
-		// 내부 스탯 증가
+		// Internal stat increment
 		nTemp = pItemState->GetStiff();
 		if( nTemp > 0 )
 		{
@@ -675,7 +675,7 @@ namespace CommonUtil
 			strItemStat.append( awcBuffer );
 		}
 
-		// 슈퍼아머, 파이널데미지
+		// Super armor, final damage
 		nTemp = pItemState->GetSuperAmmor();
 		if( nTemp > 0 )
 		{
@@ -690,8 +690,8 @@ namespace CommonUtil
 			strItemStat.append( awcBuffer );
 		}
 
-		// 아이템 능력치 표시 두번째. Ratio관련.
-		// 공격력/방어력
+		// Item stats display part 2 (ratio-based).
+		// Attack / Defense power
 		if( pItemState->GetAttackPMinRatio() > 0 || pItemState->GetAttackPMaxRatio() > 0 )
 		{
 			swprintf_s( awcBuffer, 256, L"%s : %.1f%%~%.1f%% ", GetEtUIXML().GetUIString( CEtUIXML::idCategory1, 5018 ), pItemState->GetAttackPMinRatio() * 100.0f, pItemState->GetAttackPMaxRatio() * 100.0f );
@@ -714,7 +714,7 @@ namespace CommonUtil
 			strItemStat.append( awcBuffer );
 		}
 
-		// 기본 스택 정보(랜덤 최고치의 능력치)
+		// Base stat info (maximum random roll)
 		if( pItemState->GetStrengthRatio() > 0 )
 		{
 			swprintf_s( awcBuffer, 256, L"%s : %.2f%% ", DN_INTERFACE::STRING::ITEM::GET_STATIC( emTOOLTIP_STATIC::ITEM_STRENGTH ), pItemState->GetStrengthRatio() * 100.0f );
@@ -743,7 +743,7 @@ namespace CommonUtil
 
 		float fTemp(0);
 
-		// 내부 스탯 증가
+		// Internal stat increment
 		fTemp = pItemState->GetStiffRatio();
 		if( fTemp > 0 )
 		{
@@ -815,7 +815,7 @@ namespace CommonUtil
 			strItemStat.append( awcBuffer );
 		}
 
-		// 슈퍼아머, 파이널데미지
+		// Super armor, final damage
 		fTemp = pItemState->GetSuperAmmorRatio();
 		if( fTemp > 0 )
 		{
@@ -832,7 +832,7 @@ namespace CommonUtil
 
 
 
-		// 속성 공격력/저항 만 별도의 Ratio가 없으므로 아래 출력한다.
+		// Elemental attack/resistance lack separate ratio, output below.
 		//
 		fTemp = ( pItemState->GetElementAttack( CDnState::Light ) * 100.f );
 		if( fTemp > 0 )
@@ -1021,7 +1021,7 @@ namespace CommonUtil
 			pFileSox = CDnGameTable::GetInstance().GetTable( CDnGameTable::FILE_TABLE );
 #else
 	
-			// 컷신툴에서는 외부에서 직접 pFileSox 넣어줍니다. TableDB 는 사용하지 않아서 컴파일 에러나서 제외시킵니다.
+			// Cutscene tool provides pFileSox externally. TableDB is unused here.
 #if !defined (_CUTSCENETOOL) && !defined (_TABLEVERIFIER)
 			pFileSox = GetDNTable( CDnTableDB::TFILE );
 #endif
@@ -1052,7 +1052,7 @@ namespace CommonUtil
 
 
 #if defined (_CLIENT) || defined (_SERVER)
-	// job의 상위 직업명 반환.
+	// Return parent job name.
 	int GetParentJob( int job )
 	{
 		DNTableFileFormat * pTable = GetDNTable( CDnTableDB::TJOB );
@@ -1080,7 +1080,7 @@ namespace CommonUtil
 		return nParentJob;	
 	}
 
-	// 직업의 직종 구하기( 디스트로이어 => 워리어,  셀레아나 => 소서리스 )
+	// Get base job class (Destroyer => Warrior, Saleana => Sorceress)
 	int GetClassByJob( int job )
 	{
 		DNTableFileFormat * pTable = GetDNTable( CDnTableDB::TJOB );

@@ -3,11 +3,11 @@
 	<< FILE SET >>
 
 	FILE : FILESET.H, FILESET.CPP
-	DESC : 파일 관리 클래스
+	DESC : File management class
 	INIT BUILT DATE : 2007. 05. 02
 	LAST BUILT DATE : 2007. 05. 14
 
-	Copyrightⓒ 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -40,18 +40,18 @@
 // TYPE : CLASS
 // NAME : CFileSet
 //*---------------------------------------------------------------
-// DESC : 파일 관리 클래스
+// DESC : File management class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CFileSet
 {
 public:
-	enum EF_BOMTYPE {			// BOM (Byte Order Mark) 타입
+	enum EF_BOMTYPE {			// BOM (Byte Order Mark) type
 		EV_BT_UTF8,				// BOM - UTF-8
-		EV_BT_UTF16_LE,			// BOM - UTF-16/UCS-2 (리틀엔디언)
-		EV_BT_UTF16_BE,			// BOM - UTF-16/UCS-2 (빅엔디언)
-// 		EV_BT_UTF32_LE,			// BOM - UTF-32/UCS-4 (리틀엔디언)		// P.S.> 필요 시 추가
-// 		EV_BT_UTF32_BE,			// BOM - UTF-32/UCS-4 (빅엔디언)		// P.S.> 필요 시 추가
+		EV_BT_UTF16_LE,			// BOM - UTF-16/UCS-2 (Little Endian)
+		EV_BT_UTF16_BE,			// BOM - UTF-16/UCS-2 (Big Endian)
+// 		EV_BT_UTF32_LE,			// BOM - UTF-32/UCS-4 (Little Endian)		// P.S.> Add when needed
+// 		EV_BT_UTF32_BE,			// BOM - UTF-32/UCS-4 (Big Endian)		// P.S.> Add when needed
 		EV_BT_NONE,
 	};
 	typedef struct FILEBOMTYPEDAT

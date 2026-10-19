@@ -3,10 +3,10 @@
 
 struct LogLevel
 {
-	// 0 번이 제일 크리티컬한 로그 숫자가 커질수록 평범한(?) 로그,
+	// Severity levels (higher values represent higher severity)
 	enum Enum
 	{
-		None = -1,	// -1 이면 로그 찍지 않음
+		None = -1,	// -1: Disable logging
 		Error = 0,
 		Warning,
 		Info,

@@ -25,7 +25,7 @@
 // TYPE : FUNCTION
 // NAME : CHttpClient::CHttpClient
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -40,7 +40,7 @@ CHttpClient::CHttpClient()
 // TYPE : FUNCTION
 // NAME : CHttpClient::~CHttpClient
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -55,7 +55,7 @@ CHttpClient::~CHttpClient()
 // TYPE : FUNCTION
 // NAME : CHttpClient::Initialize
 //*---------------------------------------------------------------
-// DESC : 객체 관련 자원들을 초기화
+// DESC : Initialize object resources
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -78,7 +78,7 @@ VOID CHttpClient::Initialize()
 // TYPE : FUNCTION
 // NAME : CHttpClient::Finalize
 //*---------------------------------------------------------------
-// DESC : 객체 관련 자원들을 해제
+// DESC : Release object resources
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -93,13 +93,13 @@ VOID CHttpClient::Finalize()
 // TYPE : FUNCTION
 // NAME : CHttpClient::Open
 //*---------------------------------------------------------------
-// DESC : HTTP 세션을 서버에 연결 / One-Req,One-Rsp 모드의 경우 URL자원을 바로 가져옴
-// PARM :	1 . lpszHttpServerAddressUrl - One-Req,One-Rsp : HTTP 자원의 전체 URL / Keep-Alive : HTTP 서버의 주소 (도메인이름 (http:// 빼야함), 점10진방식)
-//			2 . eHttpConnectionMode - EV_HTTP_CONNECTION_ONEREQONERSP : One-Req,One-Rsp 방식 (기본값) / EV_HTTP_CONNECTION_KEEPALIVE : Keep-Alive 방식
-//			3 . wHttpServerPortNumber - (Keep-Alive 모드만 사용) HTTP 서버의 포트번호 (기본값 80)
-//			4 . lpszUserName - (Keep-Alive 모드만 사용) HTTP 서버의 사용자 계정명 (기본값 NULL)
-//			5 . lpszPassword - (Keep-Alive 모드만 사용) HTTP 서버의 사용자 계정에 따른 비밀번호(기본값 NULL)
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Connect HTTP session to server; in One-Req,One-Rsp mode, fetch URL resource immediately
+// PARM :	1 . lpszHttpServerAddressUrl - One-Req,One-Rsp : Resource URL / Keep-Alive : Hostname or IP
+//			2 . eHttpConnectionMode - Connection mode (One-Req,One-Rsp or Keep-Alive)
+//			3 . wHttpServerPortNumber - Port number (default 80)
+//			4 . lpszUserName - Username (default NULL)
+//			5 . lpszPassword - Password (default NULL)
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CHttpClient::Open(
@@ -122,7 +122,7 @@ BOOL CHttpClient::Open(
 	}
 
 	switch(eHttpConnectionMode) {
-	case EV_HTTP_CONNECTION_ONEREQONERSP:	// One-Req,One-Rsp 일 경우
+	case EV_HTTP_CONNECTION_ONEREQONERSP:	// One-Req,One-Rsp mode
 		{
 			m_hInternet = ::InternetOpen(_T("Microsoft Internet Explorer"), INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, NULL); 
 			if (m_hInternet == NULL) {
@@ -153,7 +153,7 @@ BOOL CHttpClient::Open(
 			m_eHttpConnectionMode = EV_HTTP_CONNECTION_ONEREQONERSP;
 		}
 		return TRUE;
-	case EV_HTTP_CONNECTION_KEEPALIVE:		// Keep-Alive 일 경우
+	case EV_HTTP_CONNECTION_KEEPALIVE:		// Keep-Alive mode
 		{
 //			STRNCPY(m_szHttpServerAddress, lpszHttpServerAddressUrl, COUNT_OF(m_szHttpServerAddress));
 			_tcsncpy_s(m_szHttpServerAddress, lpszHttpServerAddressUrl, _countof(m_szHttpServerAddress));
@@ -197,7 +197,7 @@ BOOL CHttpClient::Open(
 			m_eHttpConnectionMode = EV_HTTP_CONNECTION_KEEPALIVE;
 		}
 		return TRUE;
-	default:	// 에러
+	default:	// Error
 		{
 			m_eHttpConnectionMode = EV_HTTP_CONNECTION_NONE;
 //			DN_TRACE(_T("Unknown Http Connection Type : %d - CHttpClient::Open()\n"), eHttpConnectionMode);
@@ -212,9 +212,9 @@ BOOL CHttpClient::Open(
 // TYPE : FUNCTION
 // NAME : CHttpClient::IsOpen
 //*---------------------------------------------------------------
-// DESC : HTTP 세션이 연결되어 있는지 확인
+// DESC : Check whether HTTP session is connected
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CHttpClient::IsOpen()
@@ -234,7 +234,7 @@ BOOL CHttpClient::IsOpen()
 // TYPE : FUNCTION
 // NAME : CHttpClient::Close
 //*---------------------------------------------------------------
-// DESC : HTTP 세션 연결 종료, 자원 해제
+// DESC : Disconnect HTTP session and release resources
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -261,9 +261,9 @@ VOID CHttpClient::Close()
 // TYPE : FUNCTION
 // NAME : CHttpClient::Close
 //*---------------------------------------------------------------
-// DESC : (Keep-Alive 모드만 사용) HTTP 세션 연결을 재수립
+// DESC : (Keep-Alive mode) Reconnect HTTP session
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CHttpClient::ReOpen()
@@ -293,11 +293,11 @@ BOOL CHttpClient::ReOpen()
 // TYPE : FUNCTION
 // NAME : CHttpClient::SendRequest
 //*---------------------------------------------------------------
-// DESC : HTTP 서버에 연결 후 서버의 상대적 위치의 자원을 요청 (Keep-Alive 모드만 사용)
-// PARM :	1 . lpszUrl - HTTP서버로 부터 상대적인 자원위치를 나타내는 URL
-//			2 . bCheckResultDataLength - 요청 성공 시 자원의 길이를 받을 것인지 여부
+// DESC : Request resource from HTTP server (Keep-Alive mode)
+// PARM :	1 . lpszUrl - Resource relative URL path
+//			2 . bCheckResultDataLength - Whether to query content length on success
 //			3 . bAsyncRequest - 
-// RETV : 0 미만 : 실패 / 0 이상 : 성공, bCheckResultDataLength == TRUE 이고 0 이상의 값이면 받을 자원의 크기
+// RETV : Negative on error, >= 0 on success (content length if queried)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 INT CHttpClient::SendRequest(LPCTSTR lpszUrl, BOOL bCheckResultDataLength, BOOL bAsyncRequest)
@@ -367,10 +367,10 @@ INT CHttpClient::SendRequest(LPCTSTR lpszUrl, BOOL bCheckResultDataLength, BOOL 
 // TYPE : FUNCTION
 // NAME : CHttpClient::SendRequest
 //*---------------------------------------------------------------
-// DESC : HTTP 서버에 연결 후 서버의 상대적 위치의 자원을 요청 (Keep-Alive 모드만 사용)
-// PARM :	1 . lpszUrl - HTTP서버로 부터 상대적인 자원위치를 나타내는 URL
+// DESC : Request resource from HTTP server (Keep-Alive mode)
+// PARM :	1 . lpszUrl - Resource relative URL path
 //			2 . szPostData - PostData
-// RETV : 0 미만 : 실패 / 0 이상 : 성공, bCheckResultDataLength == TRUE 이고 0 이상의 값이면 받을 자원의 크기
+// RETV : Negative on error, >= 0 on success (content length if queried)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 INT CHttpClient::SendRequsetPostA(LPCTSTR lpszUrl, LPCSTR szPostData)
@@ -491,10 +491,10 @@ INT CHttpClient::SendRequestGet(LPCTSTR lpszUrl)
 // TYPE : FUNCTION
 // NAME : CHttpClient::RecvResponse
 //*---------------------------------------------------------------
-// DESC : HTTP 서버로의 자원요청 성공 후 데이터를 받음 (One-Req,One-Rsp : Open() 이후 / Keep-Alive : SendRequest() 이후)
-// PARM :	1 . lpbtBuffer - 데이터를 받을 버퍼의 포인터
-//			2 . uBufferSize - 데이터를 받을 버퍼의 크기
-// RETV : 0 미만 : 실패/ 0 : 성공, 수신완료 / 0 초과 : 성공, 수신할 데이터 남아있음
+// DESC : Receive response data after request succeeds
+// PARM :	1 . lpbtBuffer - Destination buffer pointer
+//			2 . uBufferSize - Buffer size
+// RETV : <0: failure / 0: success, done / >0: success, more data remaining
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 INT CHttpClient::RecvResponse(LPBYTE lpbtBuffer, INT nBufferSize)
@@ -516,17 +516,17 @@ INT CHttpClient::RecvResponse(LPBYTE lpbtBuffer, INT nBufferSize)
 	HINTERNET hInternetFile = NULL;
 
 	switch(m_eHttpConnectionMode) {
-	case EV_HTTP_CONNECTION_ONEREQONERSP:	// One-Req,One-Rsp 일 경우
+	case EV_HTTP_CONNECTION_ONEREQONERSP:	// One-Req,One-Rsp mode
 		{
 			hInternetFile = m_hInternetConnection;
 		}
 		break;
-	case EV_HTTP_CONNECTION_KEEPALIVE:		// Keep-Alive 일 경우
+	case EV_HTTP_CONNECTION_KEEPALIVE:		// Keep-Alive mode
 		{
 			hInternetFile = m_hHttpRequest;
 		}
 		break;
-	default:	// 에러
+	default:	// Error
 		{
 // 			DN_TRACE(_T("Unknown Http Connection Type : %d - CHttpClient::RecvResponse()\n"), m_eHttpConnectionMode);
 		}
@@ -554,18 +554,18 @@ INT CHttpClient::RecvResponse(LPBYTE lpbtBuffer, INT nBufferSize)
 		{
 			if( nBufferSize == dwBufferOffset )
 			{
-				// 버퍼 완전 부족..
+				// Buffer exhausted
 				g_Log.Log(LogType::_ERROR, L"Buffer Empty!! nBufferSize:%d, dwBufferOffset:%u, dwNumberOfBytesAvailable:%u \n", nBufferSize, dwBufferOffset, dwNumberOfBytesAvailable);
 				return 1;
 			}
-			// 버퍼가 부족하면 부족한 버퍼에 맞게 받을 크기를 다시 계산
+			// Recalculate read size for available buffer space
 			dwNumberOfBytesAvailable = nBufferSize - dwBufferOffset;
 			g_Log.Log(LogType::_ERROR, L"(nBufferSize:%d - dwBufferOffset:%u) < dwNumberOfBytesAvailable:%u - CHttpClient::RecvResponse()\n", nBufferSize, dwBufferOffset, dwNumberOfBytesAvailable);
 //			DN_TRACE(_T("((INT)uBufferSize - (INT)dwBufferOffset) < (INT)dwNumberOfBytesAvailable - CHttpClient::RecvResponse()\n"));			
 		}
 
 		if ((INT)dwNumberOfBytesAvailable <= 0) {
-			// 버퍼부족 - 에러가 아니고 버퍼를 더 확보하라는 의미
+			// Buffer full notification - allocate larger buffer
 //			DN_TRACE(_T("(INT)dwNumberOfBytesAvailable <= 0 - CHttpClient::RecvResponse()\n"));
 			return 1;
 		}
@@ -586,7 +586,7 @@ INT CHttpClient::RecvResponse(LPBYTE lpbtBuffer, INT nBufferSize)
 		++nCount;
 		if( nCount > 20 )
 		{
-			// 무한 루프 추적용..
+			// Loop tracking
 			g_Log.Log(LogType::_ERROR, L"RecvResponse Loof nBufferSize:%d, dwBufferOffset:%u, dwNumberOfBytesAvailable:%u\n", nBufferSize, dwBufferOffset, dwNumberOfBytesAvailable);
 			Close();
 			return 1;
@@ -594,11 +594,11 @@ INT CHttpClient::RecvResponse(LPBYTE lpbtBuffer, INT nBufferSize)
 	}
 
 	if (dwNumberOfBytesAvailable == 0) {
-		// 모든 결과 데이터 수신 성공
+		// All data received successfully
 		return 0;
 	}
 	
-	// 알 수 없는 에러 - 이런 결과가 생기는지 확인해 보아야 함
+	// Unknown error
 	return -1;
 }
 
@@ -615,17 +615,17 @@ INT CHttpClient::RecvDownFile(LPCTSTR lpszFileName, LPBINDSTATUSCALLBACK pCallBa
 	HINTERNET hInternetFile = NULL;
 
 	switch(m_eHttpConnectionMode) {
-	case EV_HTTP_CONNECTION_ONEREQONERSP:	// One-Req,One-Rsp 일 경우
+	case EV_HTTP_CONNECTION_ONEREQONERSP:	// One-Req,One-Rsp mode
 		{
 			hInternetFile = m_hInternetConnection;
 		}
 		break;
-	case EV_HTTP_CONNECTION_KEEPALIVE:		// Keep-Alive 일 경우
+	case EV_HTTP_CONNECTION_KEEPALIVE:		// Keep-Alive mode
 		{
 			hInternetFile = m_hHttpRequest;
 		}
 		break;
-	default:	// 에러
+	default:	// Error
 		{
 			// 			DN_TRACE(_T("Unknown Http Connection Type : %d - CHttpClient::RecvResponse()\n"), m_eHttpConnectionMode);
 		}
@@ -673,7 +673,7 @@ INT CHttpClient::RecvDownFile(LPCTSTR lpszFileName, LPBINDSTATUSCALLBACK pCallBa
 	}
 
 	if (dwNumberOfBytesAvailable == 0) {
-		// 모든 결과 데이터 수신 성공
+		// All data received successfully
 		if( pCallBack )
 			pCallBack->OnProgress( dwTotalBytes, dwTotalBytes, BINDSTATUS_ENDDOWNLOADDATA, NULL);		
 		fclose(downfile);
@@ -686,20 +686,20 @@ INT CHttpClient::RecvDownFile(LPCTSTR lpszFileName, LPBINDSTATUSCALLBACK pCallBa
 // TYPE : FUNCTION
 // NAME : CHttpClient::SetOption
 //*---------------------------------------------------------------
-// DESC : HTTP 세션에 필요한 인터넷 옵션들을 지정 (wininet.lib 을 사용하는 경우만 가능하고 winhttp.lib  을 사용하는 경우는 지정불가)
-// PARM :	1 . dwMaxConnCount - HTTP 요청의 최대개수 지정
-//			2 . dwTimout - HTTP 요청의 타임아웃
-// RETV : 0 미만 : 실패/ 0 : 성공, 수신완료 / 0 초과 : 성공, 수신할 데이터 남아있음
+// DESC : Configure WinINet session options
+// PARM :	1 . dwMaxConnCount - Max concurrent connections
+//			2 . dwTimout - HTTP request timeout
+// RETV : <0: failure / 0: success, done / >0: success, more data remaining
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CHttpClient::SetOption(DWORD dwMaxConnCount, DWORD dwTimout)
 {
 // 	DN_ASSERT(0 < dwMaxConnCount,		"Invalid!");
-// 	DN_ASSERT((1*1000) < dwTimout,	"1초이내로 송신이 완료되야 하는 것이 맞는가?");
+// 	DN_ASSERT((1*1000) < dwTimout,	"Is transmission expected to complete within 1 second?");
 
-	// HTTP 규약에 의해서 HTTP서버에 동시에 요청할 수 있는 개수의 제약이 있음 (1.0:4개, 1.1:2개)
-	// 이것을 초과해서 요청 시 다음 것은 block 됨
-	// P.S.> 다음 기사 참고 → INFO: WinInet Limits Connections Per Server (Q183110)
+	// Per-server connection limit per HTTP spec (1.0: 4, 1.1: 2)
+	// Requests exceeding this limit block until previous requests finish
+	// Reference: INFO: WinInet Limits Connections Per Server (Q183110)
 	DWORD dwArgVal = dwMaxConnCount;
 	if (FALSE == ::InternetSetOption(NULL, INTERNET_OPTION_MAX_CONNS_PER_1_0_SERVER, &dwArgVal, sizeof(dwArgVal)))
 	{
@@ -728,9 +728,9 @@ DWORD CHttpClient::SetOption(DWORD dwMaxConnCount, DWORD dwTimout)
 		return(::GetLastError());
 	}
 
-	// Windows Server 2003 x64 (정확히는 Requires Internet Explorer 7.0.) 부터는 IDN을 사용하는데, MBCS이 깨짐
-	// 그래서 IDN을 off시키면 system code page를 사용해서 보내야 깨지지 않음
-	// Windows XP SP2 and Windows Server 2003 SP1 에서는 지원하지 않음
+	// Disable IDN on Windows Server 2003 / IE7+ to avoid MBCS corruption
+	// When IDN is off, send using system code page
+	// Unsupported on Windows XP SP2 and Windows Server 2003 SP1
 /*
 	dwArgVal = 0;
 	if (FALSE == ::InternetSetOption(NULL, INTERNET_OPTION_IDN, &dwArgVal, sizeof(dwArgVal)))

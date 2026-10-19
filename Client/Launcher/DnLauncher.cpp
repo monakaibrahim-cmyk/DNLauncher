@@ -41,9 +41,9 @@ int __cdecl MyAllocHook( int nAllocType, void * pvData, size_t nSize, int nBlock
 // The one and only CDnLauncherApp object
 CDnLauncherApp	theApp;
 CString			g_szCmdLine;
-CString			g_szOriginalCmdLine;		// ġ ؼ ʱⰪ 
-CString			g_szCommandLinePatchURL;	// Ŀǵ  PatchConfigList.xml ִ  ּҸ    ()
-int				g_nInitErrorCode = 0;		// ó ʱȭ   ڵ
+CString			g_szOriginalCmdLine;		// Original command line
+CString			g_szCommandLinePatchURL;	// Command line PatchConfigList.xml URL
+int				g_nInitErrorCode = 0;		// Launcher initialization error code
 
 extern CDnFistPatchDownloadThread*  g_pFirstPatchDownloadThread;
 CDnFIrstPatchDlg					g_FirstPatchDlg;
@@ -70,7 +70,7 @@ CDnLauncherApp::CDnLauncherApp()
 #endif // _USE_LOG
 
 #ifdef _DEBUG
-	//׽ 2005  TRACE  Ʈ̱  ⋪   Ѵ. 
+	// Visual Studio TRACE output configuration
 	_tsetlocale( LC_ALL, _T("korean") );
 
 //	_CrtSetAllocHook( MyAllocHook );
@@ -101,7 +101,7 @@ CDnLauncherApp::~CDnLauncherApp()
 BOOL CDnLauncherApp::InitInstance()
 {
 	g_szOriginalCmdLine = g_szCmdLine = m_lpCmdLine;
-	ParseCommandLine();	// Ŀǵ  Ľ
+	ParseCommandLine();	// Parse command line arguments
 
 /*	while(1)
 	{
@@ -112,7 +112,7 @@ BOOL CDnLauncherApp::InitInstance()
 	SetLanguageParam();
 #endif // _USE_MULTILANGUAGE
 
-// üũ
+// Single-instance mutex check
 #ifndef _DEBUG
 	g_hMutex = ::OpenMutexA( MUTEX_ALL_ACCESS, FALSE, g_szMutexName );
 	if( g_hMutex == NULL )
@@ -139,7 +139,7 @@ BOOL CDnLauncherApp::InitInstance()
 	SetRegistryKey(_T("DragonNest Launcher"));
 
 //	ErrorMessageBoxLog( g_szCmdLine );
-//	LogWnd::TraceLog( g_szCmdLine );
+	// Visual Studio TRACE output configuration
 
 	if( InitLauncher() )
 	{
@@ -158,7 +158,7 @@ BOOL CDnLauncherApp::InitLauncher()
 	LogWnd::TraceLog( L"InitLauncher Start!" );
 
 #ifdef _USE_SINGLE_CLIENT
-	if( FindProcessName( _T(DNCLIENT_NAME) ) || FindProcessName( _T(DNCLIENT_NAME_X64) ) )	//   ߿  
+	if( FindProcessName( _T(DNCLIENT_NAME) ) || FindProcessName( _T(DNCLIENT_NAME_X64) ) )	// Check if client is already running
 	{
 		ErrorMessageBoxLog( _S( STR_CLIENT_ALEADY_RUN + DNPATCHINFO.GetLanguageOffset() ) );
 		g_nInitErrorCode = INIT_ERROR_CLIENT_ALEADY_RUN;
@@ -167,43 +167,43 @@ BOOL CDnLauncherApp::InitLauncher()
 #endif // _USE_SINGLE_CLIENT
 		
 #ifdef _FIRST_PATCH
-	if( !InitFirstPatchThread() )			// FirstPatch Thread Ѵ.
+	if( !InitFirstPatchThread() )			// Initialize FirstPatch thread
 	{	
 		return InitFail();
 	}
 #endif
 
-	if( !CheckDirectXVersion() )			// DirectX  üũ
+	if( !CheckDirectXVersion() )			// Check DirectX version
 	{
 		return InitFail();
 	}
 
-	if( DNPATCHINFO.Init() != S_OK )		// PatchInfo ʱȭ ( PatchConfigList.xml ٿ, Ľ, Ŭ̾Ʈ  , xml )
+		// Exit on failure
 	{
 		return InitFail();
 	}
 
-if( !DNPATCHINFO.SetPatchInfo() )		// PatchInfo    ( PatchConfigList.xml  κ , Ķ , ġ  ⼭ üũ )	
+		// Exit on failure
 	{
 		return InitFail();
 	}
 #ifdef _USE_MULTILANGUAGE
-	// ٱ   guidepage   äο о  
+	// Set locale guide page if multilanguage is enabled
 	DNPATCHINFO.SetLocaleGuidePage();
 #endif // _USE_MULTILANGUAGE
 
 #if defined(_FIRST_PATCH)
 	if( DNFIRSTPATCHINFO.GetFirstPatchStatus() == DNFIRSTPATCHINFO.EM_FIRSTPATCH_OK )
 	{
-		if( !DNFIRSTPATCHINFO.SetPatchInfo() ) // First Patch "ʱȭ" & " "
+		if( !DNFIRSTPATCHINFO.SetPatchInfo() ) // Initialize and set FirstPatch info
 		{
 			return InitFail();
 		}
 	}
-	TerminateFirstPatchThread();			// * First Patch    * 
+	TerminateFirstPatchThread();			// Terminate FirstPatch thread
 #endif // _FIRST_PATCH
 
-#if defined( _USE_COMMAND_LINE )			// Ŀǵ   Ķ   Ȩ 
+#if defined( _USE_COMMAND_LINE ) // Direct browser redirect if no command line
 	if( g_szCmdLine.GetLength() == 0 )
 	{
 		ShellExecute( NULL, L"open", DNPATCHINFO.GetHomepageUrl(), NULL, NULL, SW_SHOW );
@@ -212,13 +212,13 @@ if( !DNPATCHINFO.SetPatchInfo() )		// PatchInfo    ( PatchConfigList.xml  κ , �
 #endif // _USE_COMMAND_LINE
 
 	g_pServiceModule = DnServiceModule::CreateServiceModule();
-	if( g_pServiceModule && !g_pServiceModule->Initialize() )	//  ü Initialize
+	if( g_pServiceModule && !g_pServiceModule->Initialize() )	// Initialize service module
 	{
 		g_nInitErrorCode = INIT_ERROR_SERVICE_MODULE;
 		return InitFail();
 	}
 	
-	if( !RemoveUsedFile() )	 // ó    ߴ   ó Ʈ   tmp  
+	if( !RemoveUsedFile() )	 // Remove temporary files used by launcher update
 	{
 		return InitFail();
 	}
@@ -226,7 +226,7 @@ if( !DNPATCHINFO.SetPatchInfo() )		// PatchInfo    ( PatchConfigList.xml  κ , �
 #ifdef _FIRST_PATCH
 if(g_nFirstPatchErrorMessage == FPR_NEED_FULLPATCH)
 	{
-		// Ŭ̾Ʈ 缳ġ . ׳ Ŵ.
+		// FirstPatch failed, client full patch required
 		LogWnd::TraceLog( L"FirstPatch Failed / need Client Full Patch!" );
 		LogWnd::Log( LogLevel::Error, _T("FirstPatch Failed / Need Full Patch") );
 		return InitFail();
@@ -249,7 +249,7 @@ BOOL CDnLauncherApp::InitFirstPatchThread()
 		}
 	}
 
-	// * FirstPatch Ȳ ִ Dialog Thread  *
+	// Create FirstPatch dialog thread
 	g_FirstPatchDlgHandle = (HANDLE)_beginthreadex(NULL, 0, ShowFirstPatchDlg, NULL, 0, NULL);
 	if(g_FirstPatchDlgHandle == NULL)
 	{
@@ -258,23 +258,23 @@ BOOL CDnLauncherApp::InitFirstPatchThread()
 		return FALSE;
 	}
 
-	// ġ ۉ.
+	// Set FirstPatch in progress state
 	DNFIRSTPATCHINFO.SetFirstPatchProcess(DNFIRSTPATCHINFO.EM_FIRSTPATCH_ING);
 	return TRUE;
 }
 
 void CDnLauncherApp::TerminateFirstPatchThread()
 {
-	if( g_pFirstPatchDownloadThread ) // ٿε .
+	if( g_pFirstPatchDownloadThread ) // Wait for FirstPatch download thread to complete
 	{
-		// FirstPatch ٿ ޴ 尡 .
+		// Wait for FirstPatch thread completion
 		WaitForSingleObject( g_pFirstPatchDownloadThread->GetThreadHandle(), INFINITE );
 	}
 
-	// ̾α .
+	// Close FirstPatch dialog if open
 	if( g_FirstPatchDlg )
 	{
-		// * FirstPatch ̾α &   * //
+		// Terminate FirstPatch dialog thread and close dialog
 		DWORD dwExitCode;
 		if( GetExitCodeThread( g_FirstPatchDlgHandle, &dwExitCode ) )
 		{
@@ -284,7 +284,7 @@ void CDnLauncherApp::TerminateFirstPatchThread()
 		g_FirstPatchDlg.EndDialog( IDYES );
 	}
 
-	// ġ .
+	// Reset FirstPatch status
 	DNFIRSTPATCHINFO.SetFirstPatchProcess(DNFIRSTPATCHINFO.EM_FIRSTPATCH_NOT);
 }
 #endif // _FIRST_PATCH
@@ -311,7 +311,7 @@ BOOL CDnLauncherApp::InitFail()
 	
 	if( WAIT_FAILED != WaitForMultipleObjects(2, pHandles, TRUE, INFINITE) )
 	{
-		// 尡  , Ų.
+		// Exit on failure
 		return FALSE;
 	}
 #endif
@@ -364,16 +364,16 @@ void CDnLauncherApp::ParseCommandLine()
 
 	for( DWORD i=0; i<tokens.size(); i++ )
 	{
-		if( NULL != StrStr( tokens[i].c_str(), szlpURL ) )			// PatchConfigList.xml ּҰ  ִ
+		if( NULL != StrStr( tokens[i].c_str(), szlpURL ) ) // Command line URL argument found
 		{
-			g_szCommandLinePatchURL = tokens[i].c_str();			// ּ 
-			g_szCmdLine.Replace( g_szCommandLinePatchURL, L"" );	// Ŀǵ ο ּ ش
+			g_szCommandLinePatchURL = tokens[i].c_str(); // Store custom patch URL
+			g_szCmdLine.Replace( g_szCommandLinePatchURL, L"" ); // Remove URL from command line
 #ifndef _USE_MULTILANGUAGE
 			break;
 #endif // _USE_MULTILANGUAGE
 		}
 #ifdef _USE_MULTILANGUAGE
-		if( NULL != StrStr( tokens[i].c_str(), szlpLanguage ) )			// PatchConfigList.xml ּҰ  ִ
+		if( NULL != StrStr( tokens[i].c_str(), szlpLanguage ) ) // Command line language argument found
 		{
 			tokens[i].erase( 0, tokens[i].find(L":") + 1 );
 			DNPATCHINFO.SetLanguageParam( tokens[i].c_str() );
@@ -434,11 +434,11 @@ void CDnLauncherApp::DeleteOldLogFile()
 		struct tm now;
 		time_t systemTime;
 
-		time( &systemTime );				//  ð   
-		localtime_s( &now, &systemTime );	//   ð иϿ ü ֱ
+		time( &systemTime ); // Get current system time
+		localtime_s( &now, &systemTime ); // Convert to local time
 
 		TCHAR szCurDate[1024];
-		_sntprintf_s( szCurDate, 1024, _T("%04d%02d%02d"), 1900+now.tm_year, now.tm_mon, now.tm_mday );	// Ѵ  ͵ 
+		_sntprintf_s( szCurDate, 1024, _T("%04d%02d%02d"), 1900+now.tm_year, now.tm_mon, now.tm_mday ); // Format current date string
 		int nCurDate = _wtoi( szCurDate );
 
 		if( nLogDate < nCurDate )
@@ -500,7 +500,7 @@ BOOL CDnLauncherApp::RemoveUsedFile()
 	LogWnd::TraceLog( L"RemoveUsedFile" );
 	if( ClientDeleteFile( _T(DNLAUNCHER_NAME_TMP) ) == FALSE )
 	{		
-		KillProcess( _T(DNLAUNCHER_NAME) );	//  μâ dnlauncher.exe   Ų.
+		KillProcess( _T(DNLAUNCHER_NAME) );	// Terminate existing dnlauncher.exe processes
 		if( ClientDeleteFile( _T(DNLAUNCHER_NAME_TMP) ) == FALSE )
 			bRtn = FALSE;
 	}
@@ -520,7 +520,7 @@ void CDnLauncherApp::SetLanguageParam()
 	CString strLanguageParam = DNPATCHINFO.GetLanguageParam();
 	if( strLanguageParam.GetLength() == 0 )
 	{
-		// ڵ  
+		// Auto-detect language by keyboard layout
 		int nLanguageID = PRIMARYLANGID( LOWORD( GetKeyboardLayout(0) ) );
 		DNPATCHINFO.SetLanguageParamByLanguageID( nLanguageID );
 	}

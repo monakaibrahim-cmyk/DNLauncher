@@ -3,9 +3,9 @@
 #include "StringUtil.h"
 
 
-// 초반 네이밍 칼럼 설정
-// 칼럼 추가는 AddColoum 으로 설정
-// 필드 추가는 AddField로 설정
+// Initial column header setup
+// Add columns using AddColumn
+// Add fields using AddField
 
 
 CSVWriter::CSVWriter()
@@ -21,7 +21,7 @@ CSVWriter::~CSVWriter()
 bool CSVWriter::Initialize( const wchar_t *FileName , std::wstring strColumname )
 {
 #ifndef _FINAL_BUILD
-	_wsetlocale(LC_ALL,L"kor"); // 로케일 지정을 해주어야 국가별 언어가 정상적으로 표현됩니다.
+	_wsetlocale(LC_ALL,L"kor"); // Set locale for proper localized string representation.
 #endif
 
 	m_strFileName = FileName;

@@ -17,7 +17,7 @@ void SAFE_DELETE_VEC( T &vecDel, bool bClearly = true )
 { 
 	vecDel.clear();  
 	if( bClearly ) {
-		vecDel.swap( T() );	// 이렇게 해야 capacity 가 0 이된다.. x.swap(x) 는 아무 동작안함.
+		vecDel.swap( T() );	// Swap with temporary to reduce capacity to 0. x.swap(x) does nothing.
 	}
 } 
 #endif // SAFE_DELETE_VEC
@@ -189,8 +189,8 @@ const char *_GetFileName( char *pBuffer, int iCharBufferSize, const char *pStrin
 const char *_GetOriginalRandomBaseName( char *pBuffer, const char *pString );
 
 // String Function
-char *_CopyString( const char *szStr ); // Allocation 한 char 배열포인터를 리턴한다.
-const char *_GetSubStrByCount( int nCount, const char *szSor, char cCharacter = '|' ); // cCharacter 로 구분된 스트링들을 파싱하여 리턴해준다. 더이상 없으면 NULL 리턴.
+char *_CopyString( const char *szStr ); // Returns allocated char buffer pointer.
+const char *_GetSubStrByCount( int nCount, const char *szSor, char cCharacter = '|' ); // Parse substring separated by cCharacter. Returns NULL when exhausted.
 std::string _GetSubStrByCountSafe( int nCount, char *szSor, char cCharacter );
 int _GetNumSubStr( char *szSor, char cCharacter );
 
@@ -241,8 +241,8 @@ void WriteStdString( std::string &szStr, CStream *pStream );
 void SetBitFlag( char *pBuffer, int nArrayIndex, bool bFlag );
 bool GetBitFlag( char *pBuffer, int nArrayIndex );
 int GetDateValue( int nYear, int nMonth, int nDay );
-// Note : 윈도우 타입 얻기
-//		아래와 같은 리턴값을 가집니다.
+// Note : Get Windows platform/version type
+//		Returns one of the following values.
 //      -1: Failed
 //      1 : Windows 95
 //      2 : Windows 98, 98SE
@@ -258,7 +258,7 @@ unsigned long GetHashCode( const char* String );
 INT64 GetHashCode64( const char* String );
 bool ExecCommand( char *pCommand, std::string *pszOutput );
 
-// 걍 넣은숫자 리턴함수인데.. 뒤에 인덱스를 2개씩 짝지어서 넣으면 해당 인덱스일 경우에 바꿔서 리턴
+// Maps input number based on matching index pairs
 int GetValue2ExceptionSwap( int nValue, int nSwapValueCount, ... ); 
 /*#ifdef _FINAL_BUILD
 #define OutputDebug( fmt, ... ) do { } while( false )

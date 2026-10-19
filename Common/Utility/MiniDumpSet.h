@@ -3,14 +3,14 @@
 	<< MINI-DUMP SET >>
 
 	FILE : MINIDUMPSET.H, MINIDUMPSET.CPP
-	DESC : 미니 덤프 관리 클래스
+	DESC : Minidump management class
 	INIT BUILT DATE : 2007. 10. 28
 	LAST BUILT DATE : 2007. 11. 20
 
-	Copyrightⓒ 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 	P.S.>
-		- 미니덤프 기록형태 (MINIDUMP_TYPE 열거형) 은 다음과 같음 (참고 : http://msdn.microsoft.com/en-us/library/ms680519(VS.85).aspx)
+		- Minidump type flags (MINIDUMP_TYPE enum) are as follows (Reference : http://msdn.microsoft.com/en-us/library/ms680519(VS.85).aspx)
 			MiniDumpNormal = 0x00000000
 			MiniDumpWithDataSegs = 0x00000001
 			MiniDumpWithFullMemory = 0x00000002
@@ -59,7 +59,7 @@
 // TYPE : CLASS
 // NAME : CMiniDumpSet
 //*---------------------------------------------------------------
-// DESC : 예외 처리 클래스
+// DESC : Exception handler class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CMiniDumpSet
@@ -70,7 +70,7 @@ protected:
 	typedef	BOOL (WINAPI *LPFN_MINIDUMPREADDUMPSTREAM)(PVOID, ULONG, PMINIDUMP_DIRECTORY, PVOID*, ULONG*);
 
 private:
-//	DISABLE_COPY_ASSIGN(CMiniDumpSet);	// 객체간 복사, 대입 금지
+//	DISABLE_COPY_ASSIGN(CMiniDumpSet);	// Prevent copy and assignment
 
 public:
 	CMiniDumpSet();

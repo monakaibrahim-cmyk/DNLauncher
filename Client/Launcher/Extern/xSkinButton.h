@@ -1,3 +1,4 @@
+#include <atlimage.h>
 #if !defined(AFX_MYB_H__3832DDEF_0C12_11D5_B6BE_00E07D8144D0__INCLUDED_)
 #define AFX_MYB_H__3832DDEF_0C12_11D5_B6BE_00E07D8144D0__INCLUDED_
 
@@ -58,7 +59,7 @@ public:
 	void SetSkin(UINT normal,UINT down, UINT over=0, UINT disabled=0, UINT focus=0,UINT mask=0,
 				short drawmode=1,short border=1,short margin=4);
 	void SetSkinJpg( UINT normal, UINT down, UINT over=0, UINT disabled=0 );
-	void LoadJpg( CxImage& xImage, UINT uiResourceId ) { xImage.LoadResource( FindResource( NULL, MAKEINTRESOURCE( uiResourceId ), L"JPG" ), CXIMAGE_FORMAT_JPG ); }
+	void LoadJpg( CImage& xImage, UINT uiResourceId );
 	virtual ~CxSkinButton();
 	// Generated message map functions
 protected:
@@ -70,7 +71,7 @@ protected:
 	CToolTipCtrl m_tooltip;
 	CBitmap m_bNormal,m_bDown,m_bDisabled,m_bMask,m_bOver,m_bFocus; //skin bitmaps
 	
-	CxImage m_xNormal,m_xDown,m_xOver,m_xDisabled;	// 기본 4개만 쓰기
+	CImage m_xNormal,m_xDown,m_xOver,m_xDisabled;	// 4 button state images
 	enum{ FORMAT_BMP = 0, FORMAT_JPG };
 	DWORD	m_dwFormat;
 

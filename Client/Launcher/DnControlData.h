@@ -4,7 +4,6 @@
 struct stControlPositionData
 {
 	int		nID;
-	
 	int		nTextID;
 	int		nType;
 	int		nEnum;
@@ -17,10 +16,8 @@ private:
 	CDnControlData();
 	~CDnControlData();
 
-
-	CString m_szLanguageParam; // EU쪽 멀티랭귀지.
+	CString m_szLanguageParam; // Language parameter (e.g. FRA, ESP, GER).
 	std::vector<stControlPositionData>	m_vecCtrlPosData;
-
 
 	bool	LoadXMLFile(char* szFilePath);
 	bool	LoadResourceFromXMLFile(int nID, LPCTSTR szFileName);
@@ -37,15 +34,15 @@ public:
 	
 	CString GetFilePath( WCHAR* szFilePath );
 
-	// EU용 멀티랭귀지
+	// Language parameter
 	void	SetLanguageParam(CString str) { m_szLanguageParam = str; }
 	CString	GetMulitiLanguageFilePath();
-	int		GetMulitiLanguageResourceID(); // 유럽 : 국가에 맞는 리소스 아이디를 뱉는다.
+	int		GetMulitiLanguageResourceID(); // Returns resource ID based on language parameter.
 	
-	// 컨트롤 위치 받아 셋팅하기.
-	HRESULT SetControlDataFromLocalFile( CString szFilePath , CRect* pRect, int nMaxCnt );				 // 로컬파일의 XML
-	HRESULT SetControlDataFromResource( int nResourceID, LPCTSTR szFileName, CRect* pRect, int nMaxCnt );// Resource의 XML
-	/* arg1 : 리소스 아이디, arg2 : 만들어질 파일이름, arg3: 컨트롤rect, arg4 : 컨트롤 총 갯수 */
+	// Sets control position data from file or resource.
+	HRESULT SetControlDataFromLocalFile( CString szFilePath , CRect* pRect, int nMaxCnt );				 // Local XML file
+	HRESULT SetControlDataFromResource( int nResourceID, LPCTSTR szFileName, CRect* pRect, int nMaxCnt );// Resource XML
+	/* arg1 : Resource ID, arg2 : File name, arg3: Control rect array, arg4 : Max control count */
 };
 
 #define DNCTRLDATA CDnControlData::GetInstance()

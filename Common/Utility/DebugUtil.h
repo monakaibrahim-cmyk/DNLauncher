@@ -3,11 +3,11 @@
 	<< DEBUGGING UTILITY >>
 
 	FILE : DEBUGUTIL.H
-	DESC : 디버깅을 위한 메서드 모음
+	DESC : Utility methods for debugging
 	INIT BUILT DATE : 2005. 04. 28
 	LAST BUILT DATE : 2006. 03. 07
 
-	Copyrightⓒ 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -21,14 +21,14 @@
 
 /*
 	P.S.>
-	- 본 헤더는 프로젝트 최상위 헤더에 포함되어야 함
-	- 본 헤더의 프로젝트 포함 이전에 WINDOWS.H 등 기본헤더들이 이미 포함되어있다고 전제함 (따라서 본 헤더는 WINDOWS.H 등 기본헤더 제외시킴)
-	- 본 헤더의 프로젝트 포함 이전에 BASESET.H 가 미리 포함되어 있어야 함
+	- This header should be included near project root header
+	- Assumes WINDOWS.H and platform headers are already included
+	- BASESET.H must be included prior to this file
 */
 
 #if defined(_DEBUG)
 //#include <STRSAFE.H>
-#include <CRTDBG.H>		// DCRT를 위해서 가장 마지막에 include 되어야 함
+#include <CRTDBG.H>		// Must be included last for CRT debug heap support
 #endif	// _DEBUG
 
 
@@ -37,7 +37,7 @@
 ///////////////////////////////////////////////////////////////////
 
 /*
-	<VISUAL STUDIO 버전 설정>
+	<VISUAL STUDIO VERSION CONFIGURATION>
 		Minimum system required				Macros to define
 		------------------------			------------------------
 		Visual Studio.net 9.0 (2008)		_MSC_VER 15.00 (1500)
@@ -49,12 +49,12 @@
 */
 
 /*
-	<메모리 상태값 설명 (WIN32 기준)>
+	<MEMORY STATE DESCRIPTIONS (WIN32)>
 
-	0xCDCDCDCD	: HEAP 에 할당되었으나 초기화 되지 않음
-	0xDDDDDDDD	: HEAP 에서 해제된 영역
-	0xFDFDFDFD	: HEAP 메모리의 경계에 자동으로 위치하는 'NoMansLand' 울타리로 절대 덮어씌여져선 않됨. 만약 덮어쓴다면 아마도 배열 경계의 끝을 넘은것임
-	0xCCCCCCCC	: STACK 에 위치되었으나 초기화 되지 않음
+	0xCDCDCDCD	: Allocated on HEAP but not initialized
+	0xDDDDDDDD	: Memory area freed from HEAP
+	0xFDFDFDFD	: 'NoMansLand' fence automatically placed at boundary of heap memory; must never be overwritten (indicates buffer overflow)
+	0xCCCCCCCC	: Located on STACK but not initialized
 */
 #if defined(_X86_)
 #define DF_MEMSTATE_CDCD	((DWORD_PTR)(0xCDCDCDCD))
@@ -72,22 +72,22 @@
 #pragma FORCE COMPILE ABORT!
 #endif	// !_X86 && !_AMD64_ && !_IA64_
 
-// DWORD 형 리턴값 타입정의
-#define HASERROR			((DWORD)0x00000001L)	// NOERROR 의 반대의미 (에러있음)
-#define OLEERROR			((HRESULT)0x80040000L)	// HRESULT 에러 (OLE_E_FIRST) (P.S.> S_FALSE 는 성공을 의미 → SUCCEEDED(), FAILED() 에서 에러로 취급되지 않음)
+// DWORD return value type definition
+#define HASERROR			((DWORD)0x00000001L)	// Opposite of NOERROR (error present)
+#define OLEERROR			((HRESULT)0x80040000L)	// HRESULT error (OLE_E_FIRST) (Note: S_FALSE is not treated as failure by FAILED())
 
-// 컴파일 주석 매크로 함수
+// Compile comment macro functions
 // P.S.>
 /*
-	- 컴파일 타임에 트레이스 창에 남는 주석
-	- 파일명과 줄번호를 출력하며 클릭 시 이동
-	- #pragma COMPILE_COMMENT("주석내용") 로 기술
+	- Compile-time build log notice
+	- Outputs filename and line number with clickable jump
+	- Format as #pragma COMPILE_COMMENT("comment")
 */
 #define __COMPILE_COMMENTX__(pMSG)		#pMSG
 #define __COMPILE_COMMENT__(pMSG)		__COMPILE_COMMENTX__(pMSG) 
 #define	COMPILE_COMMENT(pCMT)			message(__FILE__ "(" __COMPILE_COMMENT__(__LINE__) ") : "pCMT)
 
-// 디버깅 관련 매크로 함수들
+// Debugging macro functions
 #if defined(_DEBUG)
 	#if !defined(_CRTDBG_MAP_ALLOC)
 		#define	_CRTDBG_MAP_ALLOC
@@ -111,12 +111,12 @@
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);									\
 		_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);												\
 	}
-	#define	DN_ASSERT_CMP(pEXP)			{typedef char DUM[(pEXP)? 1: -1];}		// COMPILE-TIME (배열의 크기가 0 이하가 될 수 없다는 점을 이용, 조건이 틀리면 C2118 ('첨자가 음수입니다.') 에러 발생)
+	#define	DN_ASSERT_CMP(pEXP)			{typedef char DUM[(pEXP)? 1: -1];}		// COMPILE-TIME assertion using negative array size (triggers C2118 on failure)
 	#define	DN_ASSERT(pEXP, pMSG)		{																\
 		BOOL bEXP = static_cast<BOOL>(pEXP);															\
 		if ((FALSE == bEXP) && CBaseSet::IsWindowStationVisible()) {									\
 			DWORD dwLastError = ::GetLastError();														\
-			/* Retry Button => 1, Abort => 종료, Ignore => -1*/											\
+			/* Retry Button => 1, Abort => Exit, Ignore => -1 */											\
 			INT	iRetVal = CDebugUtil::CrtDbgReport(__FILE__, __LINE__, (const CHAR*)pMSG, #pEXP);		\
 			::SetLastError(dwLastError);																\
 			if (iRetVal == 1) {																			\
@@ -131,9 +131,9 @@
 	#define	DN_CONTINUE								{DN_ASSERT(0, "DN_CONTINUE!");continue;}
 	#define	DN_LEAVE								{DN_ASSERT(0, "DN_LEAVE!");__leave;}
 #else	// _DEBUG
-	#define DN_TRACE								/##/	// Release 모드 컴파일 시 한줄 주석으로 인하여 'C1075' (짝이 되기전에 파일이 끝남) 오류가 발생할 수 있으니 주의
-	#define DN_MESSAGEBOX							/##/	// Release 모드 컴파일 시 한줄 주석으로 인하여 'C1075' (짝이 되기전에 파일이 끝남) 오류가 발생할 수 있으니 주의
-	#define	DN_CHECK_MEMORYLEAK						/##/	// Release 모드 컴파일 시 한줄 주석으로 인하여 'C1075' (짝이 되기전에 파일이 끝남) 오류가 발생할 수 있으니 주의
+	#define DN_TRACE								/##/	// Note: Ensure macro ends properly to prevent C1075 in Release mode
+	#define DN_MESSAGEBOX							/##/	// Note: Ensure macro ends properly to prevent C1075 in Release mode
+	#define	DN_CHECK_MEMORYLEAK						/##/	// Note: Ensure macro ends properly to prevent C1075 in Release mode
 	#define	DN_ASSERT_CMP(pEXP)
 	#define	DN_ASSERT(pEXP, pMSG)
 	#define DN_VERIFY(pEXP, pTRUEVAL, pMSG)			((void)(pEXP))
@@ -144,12 +144,12 @@
 	#define	DN_LEAVE								__leave
 #endif	// _DEBUG
 
-// HEAP 체크 관련 매크로 함수들
+// HEAP check macro functions
 // P.S.>
 /*
-		- DCRT의 HEAP 체크를 활성화 하기 위해서는 반드시 DN_DCRT_ON()을 한번 호출해야 함
-		- CRTDBG_CHECK_ALWAYS_DF는 new/delete마다 모든 HEAP 메모리를 검사하고 검증하므로 Overhead가 너무 크므로 활성화시키지 않음
-		- DCRT용 함수를 사용할려면 반드시 _CrtSetDbgFlag()를 호출해야 함
+		- Call DN_DCRT_ON() once to activate CRT debug heap tracking
+		- CRTDBG_CHECK_ALWAYS_DF checks heap on every alloc/free; disabled due to heavy overhead
+		- Must call _CrtSetDbgFlag() to enable CRT debug functions
 */
 #if defined(_DEBUG)
 	#if (1 == DN_DCRT_LEVEL)
@@ -178,7 +178,7 @@
 		#define	DN_CODE(pCODE)		DN_ASSERT(NULL != pCODE,						"Bad Code!");
 	#endif
 
-	// DESC	: null도 check주고, pSZ가 0인지도 확인해 준다.
+	// DESC : Checks for NULL and verifies whether pSZ is 0.
 	#if (3 > DN_DCRT_LEVEL)
 		#define	DN_READ(pMSG, pSZ)		DN_ASSERT((NULL != pMSG) && (0 < pSZ),		"Can`t Read!");
 		#define	DN_WRITE(pBUF, pSZ)		DN_ASSERT((NULL != pBUF) && (0 < pSZ),		"Can`t Write!");
@@ -212,7 +212,7 @@
 #endif	// _UNICODE
 
 
-// 반복문 체크 매크로 함수들
+// Loop check macro functions
 #if defined(_DEBUG)
 #define	_UNIQUE_VAR(pVAR)							__XONLY__VAR__ ## pVAR
 #define	_WHILE(pCOND, pLIMIT, pVAR)																		\
@@ -234,7 +234,7 @@
 #endif	// _DEBUG
 #define	WHILE_INFINITE								for (;;)
 
-// 객체 복사, 대입방지 매크로들 (사용 시 접근레벨 명시해야 함)
+// Macros preventing object copying and assignment (specify access level when used)
 #define	DISABLE_COPY_ASSIGN(pCLS)											\
 		private:															\
 			pCLS(const pCLS##&)												\
@@ -263,7 +263,7 @@
 				return(*this);												\
 			}
 
-// 형 변환, 상속확인 관련 타입, 매크로 함수들
+// Type conversion and inheritance checking macros
 template<typename TDERV, typename TBASE>
 class CCnvChker
 {
@@ -292,20 +292,20 @@ public:
 #define	IS_SAME_CLASS(pDERV, pBASE)		\
 	(IS_SUPER_CLASS(pDERV, pBASE) && CCnvChker<const pDERV, const pBASE>::EV_ISSAME)
 
-// 기타 매크로 함수들
+// Miscellaneous macro functions
 #if defined(_DEBUG)
 #if !defined(NEW)
-//#define NEW	::new(_CLIENT_BLOCK, __FILE__, __LINE__)	// new 로 동적할당 이후 해제되지 않은 코드의 파일, 라인 정보 출력됨 (_CLIENT_BLOCK 은 할당 메모리의 하위 16비트에 Client Block ID 를 설정한 후 이 ID별로 메모리를 추적할 수 있도록 하는 기능)
-#define NEW		::new(_NORMAL_BLOCK, __FILE__, __LINE__)	// new 로 동적할당 이후 해제되지 않은 코드의 파일, 라인 정보 출력됨
+//#define NEW	::new(_CLIENT_BLOCK, __FILE__, __LINE__)	// Prints file and line info for unfreed dynamic allocations (_CLIENT_BLOCK sets Client Block ID in lower 16 bits to track allocations by ID)
+#define NEW		::new(_NORMAL_BLOCK, __FILE__, __LINE__)	// Prints file and line info for unfreed dynamic allocations
 #endif	// #if defined(NEW)
-#define UNUSED(pVAL)				// 사용하지 않는 변수의 경우 RELEASE 모드일 때 선언되어 C4100 경고가 발생하지 않음
+#define UNUSED(pVAL)				// Suppresses C4100 unreferenced formal parameter warning
 #else	// _DEBUG
 #if !defined(NEW)
 #define NEW		::new(std::nothrow)
 #endif	// #if defined(NEW)
-#define UNUSED(pVAL) pVAL			// 사용하지 않는 변수의 경우 RELEASE 모드일 때 선언되어 C4100 경고가 발생하지 않음
+#define UNUSED(pVAL) pVAL			// Suppresses C4100 unreferenced formal parameter warning
 #endif	// _DEBUG
-#define UNUSED_ALWAYS(pVAL) pVAL	// 사용하지 않는 변수의 경우 컴파일 옵션과 무관하게 선언되어 C4100 경고가 발생하지 않음
+#define UNUSED_ALWAYS(pVAL) pVAL	// Declares unreferenced variables to suppress C4100 warning regardless of compiler options
 
 
 ///////////////////////////////////////////////////////////////////
@@ -316,7 +316,7 @@ public:
 // TYPE : CLASS
 // NAME : CDebugUtil
 //*---------------------------------------------------------------
-// DESC : 디버깅을 위한 유틸리티 메서드 모음 클래스로 모두 static 멤버 메서드로 이루어짐
+// DESC : Collection of utility debugging methods consisting entirely of static member methods
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CDebugUtil
@@ -365,8 +365,8 @@ public:
 // TYPE : FUNCTION
 // NAME : CDebugUtil::Trace
 //*---------------------------------------------------------------
-// DESC : 디버깅 정보를 TRACE 로 출력하는 메서드
-// PARM :	1 . lpszFormat - 출력형식
+// DESC : Method for outputting debugging information to TRACE
+// PARM :	1 . lpszFormat - Output format
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -382,7 +382,7 @@ inline VOID CDebugUtil::Trace(LPCTSTR lpszFormat, ...)
 	va_list	szArgs;
 
 	va_start(szArgs, lpszFormat);
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	_vsntprintf_s(szBuffer, COUNT_OF(szBuffer), _TRUNCATE, lpszFormat, szArgs);
 #else	// #if	(_MSC_VER >= 1400)
 	#pragma warning (disable:4995)
@@ -399,11 +399,11 @@ inline VOID CDebugUtil::Trace(LPCTSTR lpszFormat, ...)
 // TYPE : FUNCTION
 // NAME : CDebugUtil::MessageBox
 //*---------------------------------------------------------------
-// DESC : 디버깅 정보를 메시지 박스 로 출력하는 메서드
-// PARM :	1 . hWnd - 표시할 윈도우 핸들
-//			2 . uType - 생성 플래그
-//			3 . lpszCaption - 타이틀
-//			4 . lpszFormat - 출력형식
+// DESC : Method for outputting debugging information to message box
+// PARM :	1 . hWnd - Window handle to display on
+//			2 . uType - Creation flags
+//			3 . lpszCaption - Caption title
+//			4 . lpszFormat - Output format
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -420,7 +420,7 @@ inline VOID CDebugUtil::MessageBox(HWND hWnd, UINT uType, LPCTSTR lpszCaption, L
 	va_list	szArgs;
 
 	va_start(szArgs, lpszFormat);
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	_vsntprintf_s(szBuffer, COUNT_OF(szBuffer), _TRUNCATE, lpszFormat, szArgs);
 #else	// #if	(_MSC_VER >= 1400)
 	#pragma warning (disable:4995)
@@ -449,10 +449,10 @@ inline INT CDebugUtil::CrtDbgReport(LPCSTR lpszFileName, INT iLineNo, LPCSTR lps
 // TYPE : FUNCTION
 // NAME : CDebugUtil::SetProgramName
 //*---------------------------------------------------------------
-// DESC : 로그파일의 접두사가 되는 프로그램 이름을 세팅함
-// PARM :	1 . lpszOutBuffer - 프로그램 이름을 출력할 버퍼
-//			2 . nOutBufferSize - 프로그램 이름을 출력할 버퍼의 크기
-//			3 . lpszProgamName - 사용자가 임의로 지정할 프로그램 이름
+// DESC : Sets the program name used as prefix for log files
+// PARM :	1 . lpszOutBuffer - Buffer to output program name
+//			2 . nOutBufferSize - Program name output buffer size
+//			3 . lpszProgamName - Custom program name specified by user
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -461,10 +461,10 @@ inline VOID CDebugUtil::SetProgramName(LPTSTR lpszOutBuffer, INT nOutBufferSize,
 	if (!lpszProgamName) {
 		TCHAR szDrive[MAX_PATH], szDir[MAX_PATH], szFileName[MAX_PATH], szFileExt[MAX_PATH];
 
-		// 실행파일의 이름을 구함
+		// Get executable file name
 		::GetModuleFileName(NULL, lpszOutBuffer, nOutBufferSize);
 
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 		_tsplitpath_s(lpszOutBuffer, szDrive, szDir, szFileName, szFileExt);
 		_tcsncpy_s(lpszOutBuffer, nOutBufferSize, szFileName, _TRUNCATE);
 #else	// #if	(_MSC_VER >= 1400)
@@ -473,7 +473,7 @@ inline VOID CDebugUtil::SetProgramName(LPTSTR lpszOutBuffer, INT nOutBufferSize,
 #endif	// #if	(_MSC_VER >= 1400)
 	}
 	else {
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 		_tcsncpy_s(lpszOutBuffer, nOutBufferSize, lpszProgamName, _TRUNCATE);
 #else	// #if	(_MSC_VER >= 1400)
 		_tcsncpy(lpszOutBuffer, lpszProgamName, nOutBufferSize);
@@ -486,9 +486,9 @@ inline VOID CDebugUtil::SetProgramName(LPTSTR lpszOutBuffer, INT nOutBufferSize,
 // TYPE : FUNCTION
 // NAME : CDebugUtil::GetProgramName
 //*---------------------------------------------------------------
-// DESC : 현재 실행중인 프로그램의 이름을 반환
+// DESC : Returns the name of the currently running program
 // PARM : N/A
-// RETV : 현재 실행중인 프로그램의 이름
+// RETV : Name of currently running program
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 inline LPCTSTR CDebugUtil::GetProgramName()
@@ -498,10 +498,10 @@ inline LPCTSTR CDebugUtil::GetProgramName()
 	if (_T('\0') == szProgramName[0]) {
 		TCHAR szDrive[MAX_PATH], szDir[MAX_PATH], szFileName[MAX_PATH], szFileExt[MAX_PATH];
 
-		// 실행파일의 이름을 구함
+		// Get executable file name
 		::GetModuleFileName(NULL, szProgramName, COUNT_OF(szProgramName));
 
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 		_tsplitpath_s(szProgramName, szDrive, szDir, szFileName, szFileExt);
 		_tcsncpy_s(szProgramName, COUNT_OF(szProgramName), szFileName, _TRUNCATE);
 #else	// #if	(_MSC_VER >= 1400)
@@ -517,9 +517,9 @@ inline LPCTSTR CDebugUtil::GetProgramName()
 // TYPE : FUNCTION
 // NAME : CDebugUtil::GetProgramPath
 //*---------------------------------------------------------------
-// DESC : 현재 실행중인 프로그램의 경로를 반환
+// DESC : Returns the path of the currently running program
 // PARM : N/A
-// RETV : 현재 실행중인 프로그램의 경로
+// RETV : Path of currently running program
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 inline LPCTSTR CDebugUtil::GetProgramPath()
@@ -529,10 +529,10 @@ inline LPCTSTR CDebugUtil::GetProgramPath()
 	if (_T('\0') == szProgramPath[0]) {
 		TCHAR szDrive[MAX_PATH], szDir[MAX_PATH], szFileName[MAX_PATH], szFileExt[MAX_PATH];
 
-		// 실행파일의 이름을 구함
+		// Get executable file name
 		::GetModuleFileName(NULL, szProgramPath, COUNT_OF(szProgramPath));
 
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 		_tsplitpath_s(szProgramPath, szDrive, szDir, szFileName, szFileExt);
 		_sntprintf_s(szProgramPath, COUNT_OF(szProgramPath), _T("%s%s"), szDrive, szDir);
 #else	// #if	(_MSC_VER >= 1400)
@@ -550,7 +550,7 @@ inline LPCTSTR CDebugUtil::GetProgramPath()
 /*
 inline size_t CDebugUtil::StrLenA(LPCSTR pStr, DWORD pStrSz)
 {
-	// 길이가 0인것은 정상으로 처리한다.
+	// Zero length is treated as valid.
 	size_t	aRv = 0;
 	if ('\0' != *pStr)
 	{
@@ -565,7 +565,7 @@ inline size_t CDebugUtil::StrLenA(LPCSTR pStr, DWORD pStrSz)
 
 inline size_t CDebugUtil::StrLenW(LPCWSTR pStr, DWORD pStrSz)
 {
-	// 길이가 0인것은 정상으로 처리한다.
+	// Zero length is treated as valid.
 	size_t	aRv = 0;
 	if (L'\0' != *pStr)
 	{
@@ -581,7 +581,7 @@ inline size_t CDebugUtil::StrLenW(LPCWSTR pStr, DWORD pStrSz)
 
 inline FILE* CDebugUtil::FOpenA(LPCSTR pPath, LPCSTR pMode)
 {
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	FILE*	aFp = NULL;
 	::fopen_s(&aFp, pPath, pMode);
 	return(aFp);
@@ -593,7 +593,7 @@ inline FILE* CDebugUtil::FOpenA(LPCSTR pPath, LPCSTR pMode)
 
 inline FILE* CDebugUtil::FOpenW(LPCWSTR pPath, LPCWSTR pMode)
 {
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	FILE*	aFp = NULL;
 	::_wfopen_s(&aFp, pPath, pMode);
 	return(aFp);
@@ -610,7 +610,7 @@ inline BOOL CDebugUtil::IsSpaceAllA(LPCSTR pMSG)
 
 	while('\0' != (*pMSG))
 	{
-		if (!::isspace((*pMSG++)&0xFF))		// 0xFF => DCRT 내부의 assert 방지용
+		if (!::isspace((*pMSG++)&0xFF))		// 0xFF => Prevents assertion inside DCRT
 		{
 			return FALSE;
 		}
@@ -625,7 +625,7 @@ inline BOOL CDebugUtil::IsSpaceAllW(LPCWSTR pMSG)
 
 	while(L'\0' != (*pMSG))
 	{
-		if (!::iswspace((*pMSG++)&0xFFFF))	// 0xFFFF => DCRT 내부의 assert 방지용
+		if (!::iswspace((*pMSG++)&0xFFFF))	// 0xFFFF => Prevents assertion inside DCRT
 		{
 			return FALSE;
 		}
@@ -669,7 +669,7 @@ inline BOOL CDebugUtil::IsOverflow(const TTYPE pBase, const TTYPE pPlus)
 template<typename TTYPE>
 inline BOOL CDebugUtil::IsUnderflow(const TTYPE pBase, const TTYPE pMinus)
 {
-//	DN_ASSERT(0 <= pMinus,	"Invalid parameter!");	//pMinus는 빼는 값이다.
+//	DN_ASSERT(0 <= pMinus,	"Invalid parameter!");	// pMinus is subtraction operand
 	return((pMinus <= 0)? FALSE:(pBase<(pBase-pMinus)));
 }
 
@@ -678,7 +678,7 @@ inline BOOL CDebugUtil::IsUnderflow(const TTYPE pBase, const TTYPE pMinus)
 template<typename TTYPE, typename TVAL>
 inline BOOL CDebugUtil::IsAssignable(const TTYPE / *pType* /, const TVAL pVal)
 {
-	// singed와 unsinged를 비교하는 경우엔 오류가 발생하므로 할당이 가능한지 확인하는 경우는 일반적으로 INT64로 하면 모든 것이 해결될 듯 함
+	// Comparing signed and unsigned can cause errors; casting to INT64 resolves range checking
 	return((std::numeric_limits<TTYPE>::min() <= static_cast<INT64>(pVal)) &&
 		(static_cast<INT64>(pVal) <= std::numeric_limits<TTYPE>::max()));
 }

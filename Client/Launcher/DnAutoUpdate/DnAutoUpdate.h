@@ -1,17 +1,16 @@
-// DnAutoUpdate.h : PROJECT_NAME 응용 프로그램에 대한 주 헤더 파일입니다.
+// DnAutoUpdate.h : main header file for the PROJECT_NAME application
 //
 
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error "PCH에 대해 이 파일을 포함하기 전에 'stdafx.h'를 포함합니다."
+	#error "include 'stdafx.h' before including this file for PCH"
 #endif
 
-#include "resource.h"		// 주 기호입니다.
-
+#include "resource.h"		// main symbols
 
 // CDnAutoUpdateApp:
-// 이 클래스의 구현에 대해서는 DnAutoUpdate.cpp을 참조하십시오.
+// See DnAutoUpdate.cpp for the implementation of this class
 //
 
 class CDnAutoUpdateApp : public CWinApp
@@ -19,11 +18,11 @@ class CDnAutoUpdateApp : public CWinApp
 public:
 	CDnAutoUpdateApp();
 
-// 재정의입니다.
-	public:
+// Overrides
+public:
 	virtual BOOL InitInstance();
 
-// 구현입니다.
+// Implementation
 
 	DECLARE_MESSAGE_MAP()
 };

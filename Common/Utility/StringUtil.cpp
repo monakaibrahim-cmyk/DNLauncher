@@ -89,72 +89,72 @@ std::string FormatA( const CHAR* fmt, ... )
 
 void TokenizeA( const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters /* = " " */ )
 {
-	// 맨 첫 글자가 구분자인 경우 무시
+	// Skip if leading character is delimiter
 	std::string::size_type lastPos = str.find_first_not_of( delimiters, 0 );
-	// 구분자가 아닌 첫 글자를 찾는다
+	// Find first non-delimiter character
 	std::string::size_type pos = str.find_first_of( delimiters, lastPos );
 
 	while( std::string::npos != pos || std::string::npos != lastPos )
 	{
-		// token을 찾았으니 vector에 추가한다
+		// Found token, add to vector
 		tokens.push_back( str.substr( lastPos, pos - lastPos ) );
-		// 구분자를 뛰어넘는다.  "not_of"에 주의하라
+		// Skip delimiters (note "not_of")
 		lastPos = str.find_first_not_of( delimiters, pos );
-		// 다음 구분자가 아닌 글자를 찾는다
+		// Find non-delimiter
 		pos = str.find_first_of( delimiters, lastPos );
 	}
 }
 
 void TokenizeW_NewLine( const std::wstring& str, std::vector<std::wstring>& tokens, const std::wstring& delimiters /* = L" "*/ )
 {
-	// 맨 첫 글자가 구분자인 경우 무시
+	// Skip if leading character is delimiter
 	std::wstring::size_type lastPos = str.find_first_not_of( delimiters, 0 );
-	// 구분자가 아닌 첫 글자를 찾는다
+	// Find first non-delimiter character
 	std::wstring::size_type pos = str.find( delimiters, lastPos );
 
 	while( std::wstring::npos != pos || std::wstring::npos != lastPos )
 	{
-		// token을 찾았으니 vector에 추가한다
+		// Found token, add to vector
 		tokens.push_back( str.substr( lastPos, pos - lastPos ) );
-		// 구분자를 뛰어넘는다.  "not_of"에 주의하라
+		// Skip delimiters (note "not_of")
 		lastPos = str.find_first_not_of( delimiters, pos );
-		// 다음 구분자가 아닌 글자를 찾는다
+		// Find non-delimiter
 		pos = str.find( delimiters, lastPos );
 	}
 }
 
 void TokenizeW( const std::wstring& str, std::vector<std::wstring>& tokens, const std::wstring& delimiters /* = L" "*/ )
 {
-	// 맨 첫 글자가 구분자인 경우 무시
+	// Skip if leading character is delimiter
 	std::wstring::size_type lastPos = str.find_first_not_of( delimiters, 0 );
-	// 구분자가 아닌 첫 글자를 찾는다
+	// Find first non-delimiter character
 	std::wstring::size_type pos = str.find_first_of( delimiters, lastPos );
 
 	while( std::wstring::npos != pos || std::wstring::npos != lastPos )
 	{
-		// token을 찾았으니 vector에 추가한다
+		// Found token, add to vector
 		tokens.push_back( str.substr( lastPos, pos - lastPos ) );
-		// 구분자를 뛰어넘는다.  "not_of"에 주의하라
+		// Skip delimiters (note "not_of")
 		lastPos = str.find_first_not_of( delimiters, pos );
-		// 다음 구분자가 아닌 글자를 찾는다
+		// Find non-delimiter
 		pos = str.find_first_of( delimiters, lastPos );
 	}
 }
 
 void TokenizeW( const std::wstring& str, std::deque<std::wstring>& tokens, const std::wstring& delimiters /* = L" "*/ )
 {
-	// 맨 첫 글자가 구분자인 경우 무시
+	// Skip if leading character is delimiter
 	std::wstring::size_type lastPos = str.find_first_not_of( delimiters, 0 );
-	// 구분자가 아닌 첫 글자를 찾는다
+	// Find first non-delimiter character
 	std::wstring::size_type pos = str.find_first_of( delimiters, lastPos );
 
 	while( std::wstring::npos != pos || std::wstring::npos != lastPos )
 	{
-		// token을 찾았으니 vector에 추가한다
+		// Found token, add to vector
 		tokens.push_back( str.substr( lastPos, pos - lastPos ) );
-		// 구분자를 뛰어넘는다.  "not_of"에 주의하라
+		// Skip delimiters (note "not_of")
 		lastPos = str.find_first_not_of( delimiters, pos );
-		// 다음 구분자가 아닌 글자를 찾는다
+		// Find non-delimiter
 		pos = str.find_first_of( delimiters, lastPos );
 	}
 }
@@ -166,7 +166,7 @@ void TokenizeW( std::wstring& str, std::vector<std::wstring>& tokens, std::wstri
 
 	while( std::wstring::npos != pos || std::wstring::npos != lastPos )
 	{
-		// token을 찾았으니 vector에 추가한다
+		// Found token, add to vector
 		if ( bIncludeDelimiters )
 			tokens.push_back( str.substr( (pos), lastPos - pos+1 ) );
 		else
@@ -184,7 +184,7 @@ void TokenizeA( std::string& str, std::vector<std::string>& tokens, std::string&
 
 	while( std::string::npos != pos || std::string::npos != lastPos )
 	{
-		// token을 찾았으니 vector에 추가한다
+		// Found token, add to vector
 		if ( bIncludeDelimiters )
 			tokens.push_back( str.substr( (pos), lastPos - pos+1 ) );
 		else
@@ -196,7 +196,7 @@ void TokenizeA( std::string& str, std::vector<std::string>& tokens, std::string&
 }
 
 
-// 문자열의 모든 공백을 없애준다.
+	// Remove all whitespace
 void RemoveSpaceA(std::string& str)
 {
 	str.erase(remove_if(str.begin(), str.end(), isspace), str.end());	
@@ -237,7 +237,7 @@ void RemoveStringW(std::wstring& str, const std::wstring& del)
 	}
 }
 
-// str 문자열 중에서 szOld 가 있으면 전부 szNew 로 변경한다.
+// Replace all occurrences of szOld in str with szNew
 void AllReplaceW( std::wstring& str, std::wstring& szOld, std::wstring& szNew )
 {
 	while (true)
@@ -253,7 +253,7 @@ void AllReplaceW( std::wstring& str, std::wstring& szOld, std::wstring& szNew )
 }
 
 
-// str 문자열 중에서 szOld 가 있으면 전부 szNew 로 변경한다.
+// Replace all occurrences of szOld in str with szNew
 void AllReplaceA( std::string& str, std::string& szOld, std::string& szNew )
 {
 	while (true)
@@ -290,7 +290,7 @@ void TrimString( char *pString )
 }
 
 
-// 골드 Gold - 3자리마다 콤마 ',' 처리.
+	// Gold currency format (thousands separator ',')
 std::wstring GoldToMoneyString( INT64 nGold )
 {
 	wchar_t buf[64]={0,};
@@ -298,14 +298,14 @@ std::wstring GoldToMoneyString( INT64 nGold )
 	int nGoldSize = (int)strGold.size();
 	if( nGoldSize > 3 )
 	{
-		int comCnt = (nGoldSize - 1) / 3; // 콤마개수.
+		int comCnt = (nGoldSize - 1) / 3; // Calculate number of commas
 		for( int i=1; i<=comCnt; ++i )
 			strGold.insert( (size_t)(nGoldSize - 3 * i), L"," );
 	}
 	return strGold;
 }
 
-// 콤마스트링.
+	// Format string with comma separators
 std::wstring AtoCommaString( int nValue )
 {
 	wchar_t buf[64]={0,};
@@ -313,7 +313,7 @@ std::wstring AtoCommaString( int nValue )
 	int nSize = (int)str.size();
 	if( nSize > 3 )
 	{
-		int comCnt = (nSize - 1) / 3; // 콤마개수.
+		int comCnt = (nSize - 1) / 3; // Calculate number of commas
 		for( int i=1; i<=comCnt; ++i )
 			str.insert( (size_t)(nSize - 3 * i), L"," );
 	}
@@ -321,13 +321,13 @@ std::wstring AtoCommaString( int nValue )
 }
 
 
-// : 골드획득 - 0인 단위는 출력하지 않음. (ex> 1골드0실버1쿠퍼 => 1골드1쿠퍼 ).
+	// Currency format: hide 0 values (e.g. 1 Gold 0 Silver 1 Copper -> 1 Gold 1 Copper)
 void GoldToString( std::wstring & rStr, INT64 coin, const wchar_t * pStrGold, const wchar_t * pStrSilver, const wchar_t * pStrCopper )
 {
 	std::wstring strText;
 	wchar_t str[24] = {0,};
 
-	// 골드.	
+		// Gold
 	INT64 nValue = coin / 10000;
 	if( nValue > 0 )
 	{
@@ -335,7 +335,7 @@ void GoldToString( std::wstring & rStr, INT64 coin, const wchar_t * pStrGold, co
 		strText.assign( str );
 	}
 
-	// 실버.
+		// Silver
 	nValue = (coin % 10000) / 100;
 	if( nValue > 0 )
 	{
@@ -344,7 +344,7 @@ void GoldToString( std::wstring & rStr, INT64 coin, const wchar_t * pStrGold, co
 		strText.append( str );
 	}
 
-	// 코퍼.
+		// Copper
 	nValue = coin % 100;
 	if( nValue > 0 )
 	{

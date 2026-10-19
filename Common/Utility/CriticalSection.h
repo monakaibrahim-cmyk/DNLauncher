@@ -50,7 +50,7 @@ public:
 #if defined(_DEBUG)
 	inline bool IsLock() const
 	{
-		// 현재 스레드가 이미 임계구역에 진입해 있는 상태인지 체크 (20091110 b4nfter)
+		// Check if current thread has already entered critical section (20091110 b4nfter)
 		return((0 < m_Lock.RecursionCount) && (::GetCurrentThreadId() == HandleToUlong(m_Lock.OwningThread)));
 	}
 #endif // #if defined(_DEBUG)
@@ -71,10 +71,10 @@ public:
 			m_MonitorObj->Lock();
 		}
 	}
-	ScopeLock( _T* LockObj, bool bEnable = true )	// 클라에서도 사용합니다. by realgaia
+	ScopeLock( _T* LockObj, bool bEnable = true )	// Also used in client. by realgaia
 		: m_MonitorObj( LockObj ), m_bEnable( (LockObj)?(bEnable):(false) )
 	{
-		// 생성자 인터페이스 추가 (20091110 b4nfter)
+		// Added constructor overload (20091110 b4nfter)
 		if( m_bEnable ) {
 			m_MonitorObj->Lock();
 		}

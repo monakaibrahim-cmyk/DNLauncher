@@ -16,7 +16,7 @@ public:
 #if defined( WIN64 )
 		STATIC_INSTANCE(s_pObj) = static_cast<T*>(this);
 #else 
-		ASSERT( !STATIC_INSTANCE(s_pObj) && "중복 생성 되었습니다." );
+		ASSERT( !STATIC_INSTANCE(s_pObj) && "Duplicate instance created." );
 
 		int offset = ( int )( T * )1 - ( int )( CMultiSingleton < T, MAXCOUNT > * )( T * )1;
 		STATIC_INSTANCE(s_pObj) = ( T * )( ( int )this + offset );

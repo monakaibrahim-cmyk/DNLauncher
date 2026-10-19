@@ -4,14 +4,11 @@
 #include "EtStdFileIO.h"
 #include "EtPackFileIO.h"
 
-
 #ifdef _DEBUG
 #define new new(_NORMAL_BLOCK,__FILE__,__LINE__)
 #endif
 
-
-
-/// 타입에 맞는 파일입출력 객체를 생성해서 돌려준다 ( 해제는 알아서.. )
+/// Factory method to instantiate standard file IO or package archive file IO
 CEtFileIO*
 CEtFileIO::CreateFileIO(FileIOType opt)
 {

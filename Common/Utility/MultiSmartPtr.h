@@ -93,7 +93,7 @@ public:
 		if( !m_pInstance->IsValidSmartPtr( GetRoomID(), m_nHandle, m_pInstance ) )
 		{
 			ASSERT( 0 );
-			// 강제 크래쉬 발생
+			// Force crash
 			int* p = NULL;
 			*p = 0xfefe;
 		}
@@ -106,7 +106,7 @@ public:
 		if( !m_pInstance->IsValidSmartPtr( GetRoomID(), m_nHandle, m_pInstance ) )
 		{
 			ASSERT( 0 );
-			// 강제 크래쉬 발생
+			// Force crash
 			int* p = NULL;
 			*p = 0xfefe;
 		}
@@ -154,7 +154,7 @@ public:
 	}
 	~CMultiSmartPtrMng()
 	{
-		// 외부에서 생성된 포인터들이기 때문에 CMultiSmartPtrMng가 해제의 책임을 질필요는 없는 듯 하다.
+		// Pointers were created externally so CMultiSmartPtrMng does not own deletion.
 /*		int i;
 
 		for( i = 0; i < ( int )m_veCMultiSmartPtrs.size(); i++ )
@@ -215,7 +215,7 @@ public:
 				return i;
 			}
 		}
-		ASSERT( 0 && "이런일이 생기면 안된다" ); 
+		ASSERT( 0 && "Should never happen" ); 
 		return -1;
 	}
 	CMultiSmartPtr< T > GetItem( int nItemIndex )
@@ -309,7 +309,7 @@ public:
 	}
 
 private:
-	static CMultiSmartPtrMng< T > s_SmartPtrMng[MAXCOUNT];	// 상속받은 클래스에서 직접 액세스 하지 못하도록 private로 선언.
+	static CMultiSmartPtrMng< T > s_SmartPtrMng[MAXCOUNT];	// Declared private so derived classes cannot access directly.
 	static CMultiSmartPtr< T > s_Identity;
 	UINT	m_uiRoomIndex;
 
@@ -323,15 +323,15 @@ public:
 	int GetMyItemIndex() { return s_SmartPtrMng[m_uiRoomIndex].GetItemIndex( m_MySmartPtr ); }
 
 	static void SwapItemIndex( CMultiRoom *pRoom, int nItemIndex1, int nItemIndex2 ) { STATIC_INSTANCE_(s_SmartPtrMng).SwapItemIndex( nItemIndex1, nItemIndex2 ); }
-	// 실제로 할당돼 있는 slot의 갯수를 리턴한다.
+	// Returns count of currently allocated slots.
 	static int GetItemCount( CMultiRoom *pRoom ) { return STATIC_INSTANCE_(s_SmartPtrMng).GetItemCount(); }			
-	// 실제 할당돼 있는 slot의 리스트에서 가져온다. 여기의 nItemIndex는 오브젝트 삽입삭제에 의해서 변경될 수 있으므로 주의
+	// Retrieve from allocated slot list. Note: nItemIndex may change upon insertion/deletion.
 	static CMultiSmartPtr< T >GetItem( CMultiRoom *pRoom, int nItemIndex ) { return STATIC_INSTANCE_(s_SmartPtrMng).GetItem( nItemIndex ); }	
 	static bool  IsValidItem( CMultiRoom* pRoom, int nItemIndex ){ return STATIC_INSTANCE_(s_SmartPtrMng).IsValidItem( nItemIndex ); }
 
 	int GetMyIndex() { return m_MySmartPtr.GetIndex(); }
 	CMultiSmartPtr< T > GetMySmartPtr() { return m_MySmartPtr; }
-	// 전체 리스트에서 아이템을 가져온다. 여기의 nIndex는 오브젝트 삽입삭제와 상관없이 불변이다. 위의 GetItem() 함수와 구별해서 사용.
+	// Retrieve from full list. nIndex remains invariant regardless of insert/delete.
 	static CMultiSmartPtr< T > GetSmartPtr( CMultiRoom *pRoom, int nIndex ) { 
 		if( nIndex < 0 || nIndex >= STATIC_INSTANCE_(s_SmartPtrMng).BufferSize() ) return Identity();
 		return STATIC_INSTANCE_(s_SmartPtrMng)[ nIndex ]; 

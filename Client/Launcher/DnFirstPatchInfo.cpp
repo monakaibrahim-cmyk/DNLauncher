@@ -36,9 +36,9 @@ DnFirstPatchInfo& DnFirstPatchInfo::GetInstance()
 
 int DnFirstPatchInfo::SetPatchInfo()
 {
-	LogWnd::TraceLog(_T("모듈패치 - 스레드 시작."));
+	LogWnd::TraceLog(_T("First Patch - Starting download."));
 
-	// [!] txt파싱에 성공하면, 스레드 시작.
+	// [!] Download txt file and begin processing.
 	if( g_pFirstPatchDownloadThread == NULL )
 	{
 		g_pFirstPatchDownloadThread = new CDnFistPatchDownloadThread();
@@ -48,7 +48,7 @@ int DnFirstPatchInfo::SetPatchInfo()
 		}
 	}
 
-	LogWnd::TraceLog(_T("모듈패치 실패."), FIRSTPATCHLIST_NAME);
+	LogWnd::TraceLog(_T("First Patch Failed: %s"), FIRSTPATCHLIST_NAME);
 	LogWnd::Log( LogLevel::Error, _T("g_pFirstPatchDownloadThread Create Failed") );
 	return false;
 }

@@ -3,14 +3,14 @@
 	<< EXCEPTION REPORT >>
 
 	FILE : EXCEPTIONREPORT.H, EXCEPTIONREPORT.CPP
-	DESC : 예외 처리 클래스
+	DESC : Exception handler class
 	INIT BUILT DATE : 2007. 10. 28
 	LAST BUILT DATE : 2007. 11. 20
 
 	P.S.> 
-		- 본 클래스는 Debuggin Application for Windows.NET 의 BugSlayer 의 CrashHandler 를 기반으로 제작되었음을 알립니다.
+		- Note: Based on CrashHandler from BugSlayer in Debugging Applications for Microsoft .NET and Microsoft Windows.
 
-	Copyrightⓒ 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -49,7 +49,7 @@
 // TYPE : CLASS
 // NAME : CExceptionReport
 //*---------------------------------------------------------------
-// DESC : 예외 처리 클래스
+// DESC : Exception handler class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CExceptionReport
@@ -65,7 +65,7 @@ protected:
 	typedef DWORD	(WINAPI * LPFN_GETMODULEFILENAMEEX)(HANDLE, HMODULE, LPTSTR, DWORD);
 
 public:
-	typedef VOID (*LPFN_OUTPUT_LOGPROC)(LPCTSTR /*텍스트버퍼*/, UINT /*텍스트길이*/, LPVOID /*사용자파라메터*/);		// 외부의 로그출력 함수로 이 로그출력 객체의 결과를 보내기 위한 함수포인터 선언
+	typedef VOID (*LPFN_OUTPUT_LOGPROC)(LPCTSTR /*TextBuffer*/, UINT /*TextLength*/, LPVOID /*UserParam*/);		// Function pointer for routing log output to external logger
 
 private:
 	enum EF_WRITEFLAGE 
@@ -76,7 +76,7 @@ private:
 	};
 
 private:
-//	DISABLE_COPY_ASSIGN(CExceptionReport);		// 객체간 복사, 대입 금지
+//	DISABLE_COPY_ASSIGN(CExceptionReport);		// Prevent copy and assignment
 	DECLARE_SINGLETON_CLASS(CExceptionReport);
 
 private:

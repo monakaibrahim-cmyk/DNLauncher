@@ -24,7 +24,7 @@
 // TYPE : FUNCTION
 // NAME : CMemoryMap::CMemoryMap
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -40,7 +40,7 @@ CMemoryMap::CMemoryMap() :
 // TYPE : FUNCTION
 // NAME : CMemoryMap::~CMemoryMap
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -55,15 +55,15 @@ CMemoryMap::~CMemoryMap()
 // TYPE : FUNCTION
 // NAME : CMemoryMap::Open
 //*---------------------------------------------------------------
-// DESC : Memory Map으로 사용할 파일을 접근, 개방
-// PARM :	1 . lpszFileName - Memory Map으로 사용할 파일의 이름
-//			2 . dwFileOffsetHigh - 접근하고자 하는 파일위치 (상위DWORD)
-//			3 . dwFileOffsetLow - 접근하고자 하는 파일위치 (하위DWORD)
-//			4 . dwNumberOfBytesToMap - 매핑하고자 하는 바이트 수
-//			5 . lpszMemoryMapName - Memory Map의 이름
-//			6 . dwDesiredAccess - 접근하고자 하는 모드
-//			7 . dwCreationDisposition - 파일을 생성할 방식 (ex> CREATE_ALWAYS, OPEN_EXISTING 등)
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Open file for memory-mapped access
+// PARM :	1 . lpszFileName - File name to map
+//			2 . dwFileOffsetHigh - Target file offset (high DWORD)
+//			3 . dwFileOffsetLow - Target file offset (low DWORD)
+//			4 . dwNumberOfBytesToMap - Number of bytes to map
+//			5 . lpszMemoryMapName - Memory map object name
+//			6 . dwDesiredAccess - Desired access protection
+//			7 . dwCreationDisposition - File creation disposition (e.g. CREATE_ALWAYS, OPEN_EXISTING)
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CMemoryMap::Open(
@@ -108,7 +108,7 @@ BOOL CMemoryMap::Open(
 // TYPE : FUNCTION
 // NAME : CMemoryMap::Close
 //*---------------------------------------------------------------
-// DESC : Memory Map으로 사용할 파일을 닫음
+// DESC : Close memory-mapped file
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -139,11 +139,11 @@ VOID CMemoryMap::Close()
 // TYPE : FUNCTION
 // NAME : CMemoryMap::ChangeMapView
 //*---------------------------------------------------------------
-// DESC : Memory Map의 뷰의 위치만 변경
-// PARM :	1 . dwFileOffsetHigh - 접근하고자 하는 파일위치 (상위DWORD)
-//			2 . dwFileOffsetLow - 접근하고자 하는 파일위치 (하위DWORD)
-//			3 . dwNumberOfBytesToMap - 매핑하고자 하는 바이트 수
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Reposition memory map view offset
+// PARM :	1 . dwFileOffsetHigh - Target file offset (high DWORD)
+//			2 . dwFileOffsetLow - Target file offset (low DWORD)
+//			3 . dwNumberOfBytesToMap - Number of bytes to map
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CMemoryMap::ChangeMapView(
@@ -177,9 +177,9 @@ BOOL CMemoryMap::ChangeMapView(
 // TYPE : FUNCTION
 // NAME : CMemoryMap::Flush
 //*---------------------------------------------------------------
-// DESC : Memory Map의 버퍼를 비움 (I/O 처리)
+// DESC : Flush memory map buffer (I/O flush)
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CMemoryMap::Flush()
@@ -197,9 +197,9 @@ BOOL CMemoryMap::Flush()
 // TYPE : FUNCTION
 // NAME : CMemoryMap::GetBaseAddress
 //*---------------------------------------------------------------
-// DESC : Memory Map 파일의 기본 주소를 얻음
+// DESC : Get memory map base pointer
 // PARM : N/A
-// RETV : Memory Map 파일의 기본 주소
+// RETV : Memory map base address
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 LPVOID CMemoryMap::GetBaseAddress()
@@ -212,9 +212,9 @@ LPVOID CMemoryMap::GetBaseAddress()
 // TYPE : FUNCTION
 // NAME : CMemoryMap::GetSize
 //*---------------------------------------------------------------
-// DESC : Memory Map 파일의 크기를 얻음
+// DESC : Get memory map file size
 // PARM : N/A
-// RETV : Memory Map 파일의 크기 (INT64)
+// RETV : Memory map file size (INT64)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 UINT64 CMemoryMap::GetSize()

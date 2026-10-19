@@ -134,7 +134,7 @@ void CxSkinButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 		}
 		else if( m_dwFormat == FORMAT_JPG )
 		{
-			if( !m_xDisabled.IsEnabled() )	// no skin selected for selected state -> standard button
+			if( m_xDisabled.IsNull() )	// no skin selected for selected state -> standard button
 				pDC->FillSolidRect(&r,GetSysColor(COLOR_BTNFACE));
 			else	// paint the skin
 				m_xDisabled.Draw( lpDrawItemStruct->hDC, r );
@@ -162,7 +162,7 @@ void CxSkinButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			}
 			else if( m_dwFormat == FORMAT_JPG )
 			{
-				if( !m_xDown.IsEnabled() )	// no skin selected for selected state -> standard button
+				if( m_xDown.IsNull() )	// no skin selected for selected state -> standard button
 					pDC->FillSolidRect(&r,GetSysColor(COLOR_BTNFACE));
 				else	// paint the skin
 					m_xDown.Draw( lpDrawItemStruct->hDC, r );
@@ -189,9 +189,9 @@ void CxSkinButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			}
 			else if( m_dwFormat == FORMAT_JPG )
 			{
-				if( !m_xNormal.IsEnabled() )
+				if( m_xNormal.IsNull() )
 					pDC->FillSolidRect(&r,GetSysColor(COLOR_BTNFACE));	// no skin selected for normal state -> standard button
-				else if( m_tracking && m_xOver.IsEnabled() )		// paint the skin
+				else if( m_tracking && !m_xOver.IsNull() )		// paint the skin
 					m_xOver.Draw( lpDrawItemStruct->hDC, r );
 				else
 					m_xNormal.Draw( lpDrawItemStruct->hDC, r );
@@ -344,6 +344,40 @@ void CxSkinButton::SetSkin(UINT normal,UINT down,UINT over,UINT disabled, UINT f
 	m_dwFormat = FORMAT_BMP;
 }
 /////////////////////////////////////////////////////////////////////////////
+void CxSkinButton::LoadJpg( CImage& xImage, UINT uiResourceId )
+{
+	xImage.Destroy();
+	HRSRC hRes = FindResource( NULL, MAKEINTRESOURCE( uiResourceId ), L"JPG" );
+	if( !hRes )
+		hRes = FindResource( NULL, MAKEINTRESOURCE( uiResourceId ), L"PNG" );
+	if( !hRes )
+		return;
+
+	DWORD dwSize = SizeofResource( NULL, hRes );
+	HGLOBAL hGlob = LoadResource( NULL, hRes );
+	if( !hGlob || dwSize == 0 )
+		return;
+
+	LPVOID pData = LockResource( hGlob );
+	HGLOBAL hMem = GlobalAlloc( GMEM_MOVEABLE, dwSize );
+	if( !hMem )
+		return;
+
+	void* pMem = GlobalLock( hMem );
+	if( pMem )
+	{
+		memcpy( pMem, pData, dwSize );
+		GlobalUnlock( hMem );
+	}
+
+	IStream* pStream = NULL;
+	if( SUCCEEDED( CreateStreamOnHGlobal( hMem, TRUE, &pStream ) ) )
+	{
+		xImage.Load( pStream );
+		pStream->Release();
+	}
+}
+
 void CxSkinButton::SetSkinJpg( UINT normal, UINT down, UINT over, UINT disabled )
 {
 	m_xNormal.Destroy();

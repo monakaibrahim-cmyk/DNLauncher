@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
-    <!-- Enforce all intermediate build garbage to folder Build in project root -->
-    <IntDir>$(MSBuildThisFileDirectory)Build\Intermediate\$(MSBuildProjectName)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(ConfigurationType)'!='Application'">$(MSBuildThisFileDirectory)Build\Lib\$(Configuration)\</OutDir>
+    <!-- Enforce all intermediate build garbage to folder Build in project root, separated by Platform and Configuration -->
+    <IntDir>$(MSBuildThisFileDirectory)Build\Intermediate\$(Platform)\$(MSBuildProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(ConfigurationType)'!='Application'">$(MSBuildThisFileDirectory)Build\Lib\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
 
-  <!-- Copy application outputs to Build folder as well -->
+  <!-- Copy application outputs to Build folder as well, separated by Platform and Configuration -->
   <ItemDefinitionGroup Condition="'$(ConfigurationType)'=='Application'">
     <PostBuildEvent>
-      <Command>xcopy /Y /I "$(OutDir)$(TargetName)$(TargetExt)" "$(MSBuildThisFileDirectory)Build\$(Configuration)\" &amp; if exist "$(OutDir)$(TargetName).pdb" xcopy /Y /I "$(OutDir)$(TargetName).pdb" "$(MSBuildThisFileDirectory)Build\$(Configuration)\"</Command>
+      <Command>xcopy /Y /I "$(OutDir)$(TargetName)$(TargetExt)" "$(MSBuildThisFileDirectory)Build\$(Platform)\$(Configuration)\" &amp; if exist "$(OutDir)$(TargetName).pdb" xcopy /Y /I "$(OutDir)$(TargetName).pdb" "$(MSBuildThisFileDirectory)Build\$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
 </Project>

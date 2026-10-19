@@ -2,8 +2,8 @@
 #include "MtRandom.h"
 #include <time.h>
 
-// 생성자, 파괴자 등이 있는 클래스는 TLS에 할당되지 못하며,
-// 전역 구조체의 변수는 모두 0 으로 초기화되는데 그것에 대한 처리도 해주어야 된다.
+// Classes with constructors/destructors cannot be placed directly in TLS,
+// and TLS variables initialize to 0 so explicit initialization must be handled.
 
 #ifdef _DEBUG
 #define new new(_NORMAL_BLOCK,__FILE__,__LINE__)

@@ -56,8 +56,8 @@ public:
 	int rand(void);
 	int rand(unsigned long range);
 
-	// 이 함수는 genrand_real2() 함수의 정규화 과정에 문제가 있어서 제대로 동작하지 않습니다.
-	// rand_float 함수로 대체 사용 부탁드립니다. by kalliste
+	// Note: Issue in genrand_real2() normalization; use rand_float instead.
+	// Please use rand_float instead. by kalliste
 	//float rand(float smallVal, float largeVal);
 
 	int rand(int smallVal, int largeVal);

@@ -58,7 +58,7 @@ public:
 		Destroy();
 	}
 
-	// 예약공간을 할당한다.
+	// Allocate reserved space.
 	void	Reserve(int nSize)
 	{
 		SyncObjectGuard<SyncObject> Sync(m_CS);
@@ -86,7 +86,7 @@ public:
 		m_FreeData.reserve(m_nInitCapacity);
 	}
 
-	// 예약공간 제거
+	// Clear reserved space
 	void	Destroy()
 	{
 		SyncObjectGuard<SyncObject> Sync(m_CS);
@@ -114,13 +114,13 @@ public:
 
 		if ( m_FreeData.empty() )
 		{
-			// 예약공간에 남아있다면 
+			// If remaining in reserved space 
 			if ( m_nUsedReserveSize < m_nReserveSize )
 			{
 				pData = ((_T*)m_pReserveData) + (m_nUsedReserveSize++);
 			}
 
-			// 없다면 생성해서 준다.
+			// Allocate new if exhausted.
 			else
 			{
 				pData = __AllocateData();
@@ -164,23 +164,23 @@ private:
 	}
 
 private:
-	// 미리 할당한 공간 
+	// Pre-allocated pool storage 
 	BYTE*	m_pReserveData;
 
-	// 추가 할당분 
+	// Additional dynamic allocations 
 	std::list<_T*>   m_AllocateData;
 	std::vector<_T*> m_FreeData;
 
-	// 예약공간 크기
+	// Reserved pool capacity
 	DWORD m_nReserveSize;
-	// 사용한 예약공간 크기 
+	// Used reserved count 
 	DWORD m_nUsedReserveSize;
-	// 추가 할당분을 위한 예약공간초기화 크기..-_-
+	// Initial reserved chunk size for additional allocations
 	DWORD m_nInitCapacity;
-	// 전체 Alloc 갯수
+	// Total allocation count
 	DWORD m_nTotalAllocatedSize;
 
-	// 멀티쓰레드 락
+	// Multi-threading synchronization lock
 	SyncObject	m_CS;
 
 };

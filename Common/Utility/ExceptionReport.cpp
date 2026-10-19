@@ -23,7 +23,7 @@
 
 DEFINE_SINGLETON_CLASS(CExceptionReport);
 
-// 잘못된 STL Container index 참조
+// Invalid STL container index reference
 static void myInvalidParameterHandler(const wchar_t* expression,
 									  const wchar_t* function, 
 									  const wchar_t* file, 
@@ -33,7 +33,7 @@ static void myInvalidParameterHandler(const wchar_t* expression,
 	RaiseException( EXCEPTION_ACCESS_VIOLATION, EXCEPTION_NONCONTINUABLE , 0, 0);
 }
 
-// 잘못된 Pure virtual function call
+// Invalid pure virtual function call
 static void myPurecallHandler()
 {
 	RaiseException( EXCEPTION_ACCESS_VIOLATION, EXCEPTION_NONCONTINUABLE , 0, 0);
@@ -44,7 +44,7 @@ static void myPurecallHandler()
 // TYPE : FUNCTION
 // NAME : CExceptionReport::CExceptionReport
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -71,7 +71,7 @@ CExceptionReport::CExceptionReport() : m_MiniDumpType(MiniDumpNormal), m_bDoSetF
 // TYPE : FUNCTION
 // NAME : CExceptionReport::~CExceptionReport
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -86,12 +86,12 @@ CExceptionReport::~CExceptionReport()
 // TYPE : FUNCTION
 // NAME : CExceptionReport::Open
 //*---------------------------------------------------------------
-// DESC : 객체자원 초기화
-// PARM :	1 . lpszFilePath - 예외 레포트와 미니덤프 파일이 저장될 폴더 경로
-//			2 . bDoSetFilter - 처리되지 않은 예외처리 필터 설정여부 (기본값 TRUE)
-//			3 . bDoCallStack - 콜스택 저장 여부 (기본값 TRUE)
-//			4 . pMiniDumpType - 미니덤프 기록형태
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Initialize object resources
+// PARM :	1 . lpszFilePath - Directory path where crash report and minidump are saved
+//			2 . bDoSetFilter - Set unhandled exception filter (default TRUE)
+//			3 . bDoCallStack - Save callstack (default TRUE)
+//			4 . pMiniDumpType - Minidump type flags
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CExceptionReport::Open(LPCTSTR lpszFilePath, BOOL bDoSetFilter, BOOL bDoCallStack, MINIDUMP_TYPE pMiniDumpType)
@@ -130,7 +130,7 @@ DWORD CExceptionReport::Open(LPCTSTR lpszFilePath, BOOL bDoSetFilter, BOOL bDoCa
 // TYPE : FUNCTION
 // NAME : CExceptionReport::Close
 //*---------------------------------------------------------------
-// DESC : 객체자원 해제
+// DESC : Release object resources
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -150,8 +150,8 @@ VOID CExceptionReport::Close()
 // TYPE : FUNCTION
 // NAME : CExceptionReport::SetUserMessage
 //*---------------------------------------------------------------
-// DESC : 미니덤프에 남게될 사용자 메시지를 지정
-// PARM :	1 . lpszUserMessage - 사용자 메시지
+// DESC : Set user message for minidump
+// PARM :	1 . lpszUserMessage - User message
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -165,9 +165,9 @@ VOID CExceptionReport::SetUserMessage(LPCTSTR lpszUserMessage)
 // TYPE : FUNCTION
 // NAME : CExceptionReport::SetOutputLogProc
 //*---------------------------------------------------------------
-// DESC : 예외 레포트를 출력할 외부 프로시저를 등록
-// PARM :	1 . lpfnOutputLogProc - 로그 출력 프로시저 포인터
-//			2 . lpOutputLogProcParam - 파라메터
+// DESC : Register external callback for exception report output
+// PARM :	1 . lpfnOutputLogProc - Log output procedure pointer
+//			2 . lpOutputLogProcParam - Callback parameter
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -186,8 +186,8 @@ DWORD WINAPI CExceptionReport::_StackOverflowException( LPVOID pParam )
 // TYPE : FUNCTION
 // NAME : CExceptionReport::Proc
 //*---------------------------------------------------------------
-// DESC : 예외처리 필터에서 예외를 수신했을 때 실제로 이를 처리할 콜백함수 (잠금있음)
-// PARM :	1 . lpstExceptionPointers - EXCEPTION_POINTERS 구조체 포인터
+// DESC : Callback to handle exception received from exception filter (with lock)
+// PARM :	1 . lpstExceptionPointers - Pointer to EXCEPTION_POINTERS structure
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -208,9 +208,9 @@ LONG WINAPI CExceptionReport::Proc(LPEXCEPTION_POINTERS lpstExceptionPointers)
 // TYPE : FUNCTION
 // NAME : CExceptionReport::Proc
 //*---------------------------------------------------------------
-// DESC : 예외처리 필터에서 예외를 수신했을 때 실제로 이를 처리할 콜백함수 (잠금있음)
-// PARM :	1 . lpstExceptionPointers - EXCEPTION_POINTERS 구조체 포인터
-//			2 . pMiniDumpType - 미니덤프 기록형태
+// DESC : Callback to handle exception received from exception filter (with lock)
+// PARM :	1 . lpstExceptionPointers - Pointer to EXCEPTION_POINTERS structure
+//			2 . pMiniDumpType - Minidump type flags
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -226,9 +226,9 @@ LONG WINAPI CExceptionReport::Proc(LPEXCEPTION_POINTERS lpstExceptionPointers, M
 // TYPE : FUNCTION
 // NAME : CExceptionReport::ProcNoLock
 //*---------------------------------------------------------------
-// DESC : 예외처리 필터에서 예외를 수신했을 때 실제로 이를 처리할 콜백함수 (잠금없음)
-// PARM :	1 . lpstExceptionPointers - EXCEPTION_POINTERS 구조체 포인터
-//			2 . pMiniDumpType - 미니덤프 기록형태
+// DESC : Callback to handle exception received from exception filter (without lock)
+// PARM :	1 . lpstExceptionPointers - Pointer to EXCEPTION_POINTERS structure
+//			2 . pMiniDumpType - Minidump type flags
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -257,7 +257,7 @@ LONG WINAPI CExceptionReport::ProcNoLock(LPEXCEPTION_POINTERS lpstExceptionPoint
 		DN_READ(lpstExceptionPointers, sizeof(LPEXCEPTION_POINTERS));
 
 #if defined(_DEBUG)
-		// BreakPoint()에 의한 예외는 Debugger에게 통보되도록 넘김
+		// Pass breakpoint exceptions to debugger
 		if (EXCEPTION_BREAKPOINT == lpstExceptionPointers->ExceptionRecord->ExceptionCode) {
 			return(EXCEPTION_CONTINUE_SEARCH);
 		}
@@ -293,14 +293,14 @@ LONG WINAPI CExceptionReport::ProcNoLock(LPEXCEPTION_POINTERS lpstExceptionPoint
 			DN_ASSERT(0,		"Invalid!");
 		}
 
-		// 1 . 기본 사유
+		// 1 . Basic reason
 		GetInstancePtr()->Write(_T("------------------------------------------------------------------------------\r\n"), EV_WF_FILE);
 		GetInstancePtr()->Write(_T("    Basic Information\r\n"), EV_WF_FILE);
 		GetInstancePtr()->Write(_T("------------------------------------------------------------------------------\r\n\r\n"), EV_WF_FILE);
 
 		LPTSTR szText = GetInstancePtr()->GetFaultReason(szPrefix);
 		if (szText) {
-			// 출력
+			// Output
 			GetInstancePtr()->Write(szText, EV_WF_ALL);
 			GetInstancePtr()->Write(_T("\r\n"), EV_WF_FILE);
 		}
@@ -310,7 +310,7 @@ LONG WINAPI CExceptionReport::ProcNoLock(LPEXCEPTION_POINTERS lpstExceptionPoint
 		GetInstancePtr()->Write(GetInstancePtr()->GetMiniDump().GetFileName(), EV_WF_FILE);
 		GetInstancePtr()->Write(_T("\r\n\r\n\r\n"), EV_WF_FILE);
 
-		// 2 . 레지스터
+		// 2 . Registers
 		GetInstancePtr()->Write(_T("------------------------------------------------------------------------------\r\n"), EV_WF_FILE);
 #if defined(_X86_)
 		GetInstancePtr()->Write(_T("    Registers (X86)\r\n"), EV_WF_FILE);
@@ -327,12 +327,12 @@ LONG WINAPI CExceptionReport::ProcNoLock(LPEXCEPTION_POINTERS lpstExceptionPoint
 
 		szText = GetInstancePtr()->GetRegisterString();
 		if (szText) {
-			// 출력
+			// Output
 			GetInstancePtr()->Write(szText, EV_WF_FILE);
 		}
 		GetInstancePtr()->Write(_T("\r\n\r\n\r\n"), EV_WF_FILE);
 
-		// 3 . 콜스택
+		// 3 . Callstack
 		GetInstancePtr()->Write(_T("------------------------------------------------------------------------------\r\n"), EV_WF_FILE);
 		GetInstancePtr()->Write(_T("    Call Stack\r\n"), EV_WF_FILE);
 		GetInstancePtr()->Write(_T("------------------------------------------------------------------------------\r\n\r\n"), EV_WF_FILE);
@@ -340,12 +340,12 @@ LONG WINAPI CExceptionReport::ProcNoLock(LPEXCEPTION_POINTERS lpstExceptionPoint
 		if (GetInstancePtr()->DoCallStack()) {
 			szText = GetInstancePtr()->GetFirstStackTraceString(szPrefix);
 			if (szText) {
-				// 출력
+				// Output
 				GetInstancePtr()->Write(szText, EV_WF_ALL);
 				GetInstancePtr()->Write(_T("\r\n"), EV_WF_FILE);
 			}
 			WHILE((szText = GetInstancePtr()->GetNextStackTraceString(szPrefix)), 1000) {
-				// 출력
+				// Output
 				GetInstancePtr()->Write(szText, EV_WF_ALL);
 				GetInstancePtr()->Write(_T("\r\n"), EV_WF_FILE);
 				}
@@ -353,7 +353,7 @@ LONG WINAPI CExceptionReport::ProcNoLock(LPEXCEPTION_POINTERS lpstExceptionPoint
 
 		GetInstancePtr()->Write(_T("\r\n\r\n\r\n"), EV_WF_FILE);
 
-		// 4. 유저메모리
+		// 4 . User memory
 		GetInstancePtr()->Write(_T("------------------------------------------------------------------------------\r\n"), EV_WF_FILE);
 		GetInstancePtr()->Write(_T("    User Memory\r\n"), EV_WF_FILE);
 		GetInstancePtr()->Write(_T("------------------------------------------------------------------------------\r\n\r\n"), EV_WF_FILE);
@@ -378,7 +378,7 @@ LONG WINAPI CExceptionReport::ProcNoLock(LPEXCEPTION_POINTERS lpstExceptionPoint
 // TYPE : FUNCTION
 // NAME : CExceptionReport::InitSymbolEngine
 //*---------------------------------------------------------------
-// DESC : 심볼엔진 초기화
+// DESC : Initialize symbol engine
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -401,13 +401,13 @@ VOID CExceptionReport::InitSymbolEngine()
 // TYPE : FUNCTION
 // NAME : CExceptionReport::ReadProcessMemoryWork
 //*---------------------------------------------------------------
-// DESC : 프로세스 메모리의 특정 번지에서 데이터를 읽어들임
-// PARM :	1 . hModule - 모듈핸들
-//			2 . dw64BaseAddr - 읽어들일 프로세스 메모리
-//			3 . lpBuffer - 읽은 메모리 데이터를 저장할 버퍼
-//			4 . dwBufferSize - 버퍼의 크기
-//			5 . lpReadBytesSize - 읽은 데이터의 크기
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Read data from specific address in process memory
+// PARM :	1 . hModule - Module handle
+//			2 . dw64BaseAddr - Process memory address to read
+//			3 . lpBuffer - Buffer for read memory data
+//			4 . dwBufferSize - Buffer size
+//			5 . lpReadBytesSize - Read data byte count
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL __stdcall CExceptionReport::ReadProcessMemoryWork(HANDLE /*hModule*/, DWORD64 dw64BaseAddr, LPVOID lpBuffer, DWORD dwBufferSize, LPDWORD lpReadBytesSize)
@@ -420,9 +420,9 @@ BOOL __stdcall CExceptionReport::ReadProcessMemoryWork(HANDLE /*hModule*/, DWORD
 // TYPE : FUNCTION
 // NAME : CExceptionReport::GetFaultReason
 //*---------------------------------------------------------------
-// DESC : 실패사유 정보를 얻어옴
-// PARM :	1 . lpszPrefix - 선행정보 문자열
-// RETV : 결과문자열
+// DESC : Get failure reason description
+// PARM :	1 . lpszPrefix - Prefix info string
+// RETV : Result string
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 #pragma warning(disable:4995 4996)
@@ -466,7 +466,7 @@ const LPTSTR CExceptionReport::GetFaultReason(LPCTSTR lpszPrefix)
 											m_szText+nOffset, COUNT_OF(m_szText)-nOffset);
 		}
 
-		// 출력내용이 많고, 별의미가 없다.
+		// Excessive output without significant value
 		#if (0)
 		#if defined(_WIN64)
 		nOffset += ::wsprintf(m_szText+nOffset, _T(" at %016X"),
@@ -502,7 +502,7 @@ const LPTSTR CExceptionReport::GetFaultReason(LPCTSTR lpszPrefix)
 				__leave;
 			}
 			else {
-				// 함수명만으로도 충분하다.
+				// Function name alone is sufficient
 				#if (0)
 				if (n64LineDisp > 0) {
 					nOffset += ::wsprintf(m_szText+nOffset, _T(" %s()+%04d Byte(s)"), A2T(lpSymbol->Name), n64LineDisp);
@@ -546,7 +546,7 @@ const LPTSTR CExceptionReport::GetFaultReason(LPCTSTR lpszPrefix)
 				__leave;
 			}
 			else {
-				// full-path가 아닌 file명과 line번호만 출력한다.
+				// Output only file name and line number instead of full path
 				#if (0)
 				if (nLineDisp > 0) {
 					nOffset += ::wsprintf(m_szText+nOffset, _T(" %s, line %04d+%04d Byte(s)"),
@@ -585,9 +585,9 @@ const LPTSTR CExceptionReport::GetFaultReason(LPCTSTR lpszPrefix)
 // TYPE : FUNCTION
 // NAME : CExceptionReport::GetStackTraceString
 //*---------------------------------------------------------------
-// DESC : 예외 발생 시 저장된 EXCEPTION_POINTERS 포인터에서 호출스택 추적정보를 읽어서 처리함 
-// PARM :	1 . lpszPrefix - 선행정보 문자열
-// RETV : 결과문자열
+// DESC : Read and process callstack trace from stored EXCEPTION_POINTERS on exception
+// PARM :	1 . lpszPrefix - Prefix info string
+// RETV : Result string
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 #pragma warning(disable:4995 4996)
@@ -632,7 +632,7 @@ const LPTSTR CExceptionReport::GetStackTraceString(LPCTSTR lpszPrefix)
 
 		nOffset += ::wsprintf(m_szText,	_T("CallStack(%s) : "), lpszPrefix);
 
-		// 출력내용만 많고, 사용방법이 확실하지 않기에 일단 막음
+		// Disabled: excessive output and unclear usage
 		#if (0)
 		// At a minimum, put in the address.
 		#ifdef _WIN64
@@ -654,7 +654,7 @@ const LPTSTR CExceptionReport::GetStackTraceString(LPCTSTR lpszPrefix)
 
 		// Output the module name.
 		DN_ASSERT(nOffset < (COUNT_OF(m_szText) - MAX_PATH), "error!");
-		//nOffset += ::wsprintf(m_szText+nOffset, _T(" "));	// 앞의 기능이 OFF 됐으므로 막음
+		//nOffset += ::wsprintf(m_szText+nOffset, _T(" "));	// Disabled because previous feature is OFF
 		nOffset += ::GetModuleBaseName(::GetCurrentProcess(), (HINSTANCE)dwModBase,
 									  m_szText+nOffset, COUNT_OF(m_szText)-nOffset);
 
@@ -683,7 +683,7 @@ const LPTSTR CExceptionReport::GetStackTraceString(LPCTSTR lpszPrefix)
 			}
 			else
 			{
-				// 밑에서 소스명과 line번호를 출력하므로 이곳에서는 이름만 출력
+				// Output name only here since source filename and line number are output below
 				#if (1)
 //				#if (0)
 				if (n64LineDisp > 0)
@@ -719,7 +719,7 @@ const LPTSTR CExceptionReport::GetStackTraceString(LPCTSTR lpszPrefix)
 		{
 			USES_CONVERSION;
 
-			// m_Line.FileName은 full-path이므로 그냥 file명과 line번호만 출력
+			// m_Line.FileName is full path, so output only file name and line number
 			#if (0)
 			// Copy no more of the source file and line number
 			// information than there's room for.
@@ -770,9 +770,9 @@ const LPTSTR CExceptionReport::GetStackTraceString(LPCTSTR lpszPrefix)
 // TYPE : FUNCTION
 // NAME : CExceptionReport::GetFirstStackTraceString
 //*---------------------------------------------------------------
-// DESC : 호출스택 추적정보 얻기 시작
-// PARM :	1 . lpszPrefix - 선행정보 문자열
-// RETV : 결과문자열
+// DESC : Begin retrieving callstack trace information
+// PARM :	1 . lpszPrefix - Prefix info string
+// RETV : Result string
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 const LPTSTR CExceptionReport::GetFirstStackTraceString(LPCTSTR lpszPrefix)
@@ -816,9 +816,9 @@ const LPTSTR CExceptionReport::GetFirstStackTraceString(LPCTSTR lpszPrefix)
 // TYPE : FUNCTION
 // NAME : CExceptionReport::GetNextStackTraceString
 //*---------------------------------------------------------------
-// DESC : 호출스택 추적정보 얻기 진행
-// PARM :	1 . lpszPrefix - 선행정보 문자열
-// RETV : 결과문자열
+// DESC : Continue retrieving callstack trace information
+// PARM :	1 . lpszPrefix - Prefix info string
+// RETV : Result string
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 const LPTSTR CExceptionReport::GetNextStackTraceString(LPCTSTR lpszPrefix)
@@ -833,9 +833,9 @@ const LPTSTR CExceptionReport::GetNextStackTraceString(LPCTSTR lpszPrefix)
 // TYPE : FUNCTION
 // NAME : CExceptionReport::GetRegisterString
 //*---------------------------------------------------------------
-// DESC : 예외 발생 시 저장된 EXCEPTION_POINTERS 포인터에서 레지스터 정보를 얻어옴
+// DESC : Retrieve register state from EXCEPTION_POINTERS
 // PARM : N/A
-// RETV : 결과문자열
+// RETV : Result string
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 #pragma warning(disable:4995)
@@ -908,9 +908,9 @@ const LPTSTR CExceptionReport::GetRegisterString()
 // TYPE : FUNCTION
 // NAME : CExceptionReport::Write
 //*---------------------------------------------------------------
-// DESC : 기록이 필요한 텍스트를 특정한 방법으로 저장
-// PARM :	1 . lpszText - 저장할 문자열
-//			2 . eWriteFlag - 저장 플래그
+// DESC : Save log text using specified method
+// PARM :	1 . lpszText - String to save
+//			2 . eWriteFlag - Output flags
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -930,7 +930,7 @@ VOID CExceptionReport::Write(LPCTSTR lpszText, EF_WRITEFLAGE eWriteFlag)
 	{
 		m_lpfnOutputLogProc(lpszText, uTextSize, m_lpOutputLogProcParam);
 	}	
-	::OutputDebugString(lpszText);	// !!! 임시
+	::OutputDebugString(lpszText);	// !!! Temporary
 }
 
 const LPTSTR CExceptionReport::GetUserMemoryString()

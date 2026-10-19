@@ -1,9 +1,8 @@
 //
-// DnHtmlView.h : 런처에서 사용되는 가이드 페이지를 표시하기 위한 레퍼 클래스
+// DnHtmlView.h : HTML view wrapper for launcher UI and web display
 //
 
 #pragma once
-
 
 // CDnView Class
 class CDnView : public CView
@@ -49,8 +48,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-
-// 데이타 받기 가능한 HtmlView
+// Extended HtmlView implementation
 /********************************************************************
 /*  2005-2006 (C)Webmote & luo31, All Rights Reserved.
 /*	created:	2005-5-12   10:51
@@ -74,7 +72,6 @@ public:
 protected:
 	IHTMLDocument2* m_pDocHtml;
 };
-
 
 // CDHtmlViewSpec Html view
 class CDHtmlViewSpec : public CHtmlView, public CDHtmlSpecEventSink
@@ -109,7 +106,6 @@ public:
 	void DDX_DHtml_SelectIndex(CDataExchange* pDX, LPCTSTR szId, long& value);
 	void DDX_DHtml_AxControl(CDataExchange *pDX, LPCTSTR szId, DISPID dispid, VARIANT& var);
 	void DDX_DHtml_AxControl(CDataExchange *pDX, LPCTSTR szId, LPCTSTR szPropName, VARIANT& var);
-
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
@@ -195,4 +191,3 @@ public:
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
-

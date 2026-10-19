@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
-// Http를 사용한 이어받기 클래스
+// CHttpDownload - HTTP File Download Class
 //////////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -33,13 +33,13 @@ private:
 private:
 	HINTERNET m_hHttpConnection;	// Http Connection Handle
 
-	DWORD m_dwTempFileLength;		// 다운 받은 파일의 양
-	DWORD m_dwDownloadFileLength;	// 다운 받아야할 파일의 양
-	DWORD m_dwTotalFileLength;		// 총 파일의 양
-	DWORD m_dwTotalBytes;			// 총 받은 파일의 양
+	DWORD m_dwTempFileLength;		// Currently downloaded temp file size
+	DWORD m_dwDownloadFileLength;	// Remaining file size to download
+	DWORD m_dwTotalFileLength;		// Total file size
+	DWORD m_dwTotalBytes;			// Total downloaded bytes
 
-	CString m_strHttpPath;			// Http 파일 주소
-	CString m_strLocalPath;			// 로컬의 파일 위치
+	CString m_strHttpPath;			// HTTP source URL
+	CString m_strLocalPath;			// Local target path
 
 	float m_fRate;					// Download Rate
 	float m_fPercent;				// Download Percent

@@ -28,7 +28,7 @@
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::CMiniDumpSet
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -50,7 +50,7 @@ CMiniDumpSet::CMiniDumpSet() : m_hDebugHelp(NULL), m_lpMapping(NULL), m_hMap(NUL
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::~CMiniDumpSet
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -65,16 +65,16 @@ CMiniDumpSet::~CMiniDumpSet()
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::Open
 //*---------------------------------------------------------------
-// DESC : 객체자원 초기화
+// DESC : Initialize object resources
 // PARM : N/A
-// RETV : NOERROR - 성공 / 그외 - 실패
+// RETV : NOERROR on success, otherwise failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CMiniDumpSet::Open()
 {
 	DN_ASSERT(!IsOpen(),	"Already Opened!");
 
-	// DBGHELP.DLL 6.1.17.1 이후 버젼을 사용해야 함
+	// Requires DBGHELP.DLL 6.1.17.1 or later
 	m_hDebugHelp = ::LoadLibrary(_T("dbghelp.dll"));
 	if (!m_hDebugHelp) {
 		DN_RETURN(::GetLastError());
@@ -97,7 +97,7 @@ DWORD CMiniDumpSet::Open()
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::Close
 //*---------------------------------------------------------------
-// DESC : 객체자원 해제
+// DESC : Release object resources
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -129,9 +129,9 @@ VOID CMiniDumpSet::Close()
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::Read
 //*---------------------------------------------------------------
-// DESC : 특정 경로에 있는 미니덤프 파일을 열어서 정보들을 읽어들임
-// PARM :	1 . lpszFilePath - 미니덤프 파일경로
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Open minidump file at specified path and read info
+// PARM :	1 . lpszFilePath - Minidump file path
+// RETV : NOERROR on success, otherwise failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CMiniDumpSet::Read(LPCTSTR lpszFilePath)
@@ -191,11 +191,11 @@ DWORD CMiniDumpSet::Read(LPCTSTR lpszFilePath)
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::Write
 //*---------------------------------------------------------------
-// DESC : 특정 경로에 미니덤프 파일을 생성
-// PARM :	1 . lpstExceptionPointers - EXCEPTION_POINTERS 구조체 포인터
-//			2 . pMiniDumpType - 미니덤프 기록형태
-//			3 . lpszFilePath - 미니덤프 파일 저장경로
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Create minidump file at specified path
+// PARM :	1 . lpstExceptionPointers - EXCEPTION_POINTERS pointer
+//			2 . pMiniDumpType - Minidump type flags
+//			3 . lpszFilePath - Minidump output file path
+// RETV : NOERROR on success, otherwise failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CMiniDumpSet::Write(LPEXCEPTION_POINTERS lpstExceptionPointers, MINIDUMP_TYPE pMiniDumpType, LPCTSTR lpszFilePath)
@@ -217,9 +217,9 @@ DWORD CMiniDumpSet::Write(LPEXCEPTION_POINTERS lpstExceptionPointers, MINIDUMP_T
 
 	HANDLE hFile = ::CreateFile(m_szFileName, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (INVALID_HANDLE_VALUE != hFile) {
-		// 기존의 내용이 있다면 삭제를 해야 한다.
+		// Truncate existing file content if present.
 		//if (::SetEndOfFile(hFile))
-		DN_VERIFY(::SetEndOfFile(hFile), TRUE,	"무슨 오류지?");
+		DN_VERIFY(::SetEndOfFile(hFile), TRUE,	"SetEndOfFile failed!");
 		{
 			MINIDUMP_EXCEPTION_INFORMATION stExclpModuleList;
 			stExclpModuleList.ThreadId = ::GetCurrentThreadId();
@@ -240,7 +240,7 @@ DWORD CMiniDumpSet::Write(LPEXCEPTION_POINTERS lpstExceptionPointers, MINIDUMP_T
 				stUserMsgData.Buffer = const_cast<TCHAR*>(m_szUserMessage);
 			}
 
-			// 사용자용 메세지는 Dump file의 중간부분에 위치하는데 Hexa Editor로 열어서 "dbghelp.pdb" 를 찾으면 다음에 위치
+			// User message is placed after "dbghelp.pdb" in dump file
 			if (!m_lpfnMiniDumpWriteDump(::GetCurrentProcess(), ::GetCurrentProcessId(), hFile, pMiniDumpType, &stExclpModuleList, ((_T('\0') != m_szUserMessage[0])?(&stUserMsgHead):(NULL)), NULL)) {
 				dwRetVal = ::GetLastError();
 				DN_ASSERT(0, "error occured!");
@@ -261,8 +261,8 @@ DWORD CMiniDumpSet::Write(LPEXCEPTION_POINTERS lpstExceptionPointers, MINIDUMP_T
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::SetUserMessage
 //*---------------------------------------------------------------
-// DESC : 미니덤프에 남게될 사용자 메시지를 지정
-// PARM :	1 . lpszUserMessage - 사용자 메시지
+// DESC : Set user message to embed in minidump
+// PARM :	1 . lpszUserMessage - User message string
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -283,10 +283,10 @@ VOID CMiniDumpSet::SetUserMessage(LPCTSTR lpszUserMessage)
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::GetExceptionCause
 //*---------------------------------------------------------------
-// DESC : 예외 코드로 예외의 발생원인을 찾아서 반환
-// PARM :	1 . dwExceptionCode - 예외 코드
-//			2 . lpszDesc - 결과를 반환받을 버퍼 포인터
-//			3 . nDescSize - 버퍼 크기
+// DESC : Look up exception description by exception code
+// PARM :	1 . dwExceptionCode - Exception code
+//			2 . lpszDesc - Buffer to receive description
+//			3 . nDescSize - Buffer size
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -330,9 +330,9 @@ VOID CMiniDumpSet::GetExceptionCause(DWORD dwExceptionCode, LPTSTR lpszDesc, DWO
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::GetDumpInfo
 //*---------------------------------------------------------------
-// DESC : MiniDumpReadDumpStream 로 열려진 미니덤프 파일에서 특정 정보를 쿼리하기 위한 래핑 메서드
-// PARM :	1 . eInfoType - 특정 정보타입
-// RETV : 쿼리결과 (정보타입에 따라 다름)
+// DESC : Wrapper method for querying stream info via MiniDumpReadDumpStream
+// PARM :	1 . eInfoType - Stream info type
+// RETV : Query result pointer
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 LPVOID CMiniDumpSet::GetDumpInfo(ULONG eInfoType)
@@ -358,9 +358,9 @@ LPVOID CMiniDumpSet::GetDumpInfo(ULONG eInfoType)
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::ReadMiscInfo
 //*---------------------------------------------------------------
-// DESC : 열려진 미니덤프 파일에서 기타 정보를 얻음
+// DESC : Get miscellaneous info from opened minidump file
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CMiniDumpSet::ReadMiscInfo()
@@ -382,9 +382,9 @@ BOOL CMiniDumpSet::ReadMiscInfo()
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::ReadMouleName
 //*---------------------------------------------------------------
-// DESC : 열려진 미니덤프 파일에서 모듈 리스트 정보를 얻음
+// DESC : Get module list info from opened minidump file
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CMiniDumpSet::ReadMouleName()
@@ -415,9 +415,9 @@ BOOL CMiniDumpSet::ReadMouleName()
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::ReadSystemInfo
 //*---------------------------------------------------------------
-// DESC : 열려진 미니덤프 파일에서 시스템 정보를 얻음
+// DESC : Get system info from opened minidump file
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 #pragma warning(disable:4996)
@@ -644,9 +644,9 @@ BOOL CMiniDumpSet::ReadSystemInfo()
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::ReadException
 //*---------------------------------------------------------------
-// DESC : 열려진 미니덤프 파일에서 예외관련 정보를 얻음
+// DESC : Get exception info from opened minidump file
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CMiniDumpSet::ReadException()
@@ -668,9 +668,9 @@ BOOL CMiniDumpSet::ReadException()
 // TYPE : FUNCTION
 // NAME : CMiniDumpSet::ReadUserData
 //*---------------------------------------------------------------
-// DESC : 열려진 미니덤프 파일에서 사용자 데이터 정보를 얻음
+// DESC : Get user data info from opened minidump file
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CMiniDumpSet::ReadUserData()
@@ -684,7 +684,7 @@ BOOL CMiniDumpSet::ReadUserData()
 #else	// _UNICODE
 	if (!::MiniDumpReadDumpStream(m_lpMapping, CommentStreamA, &lpMiniDumpDirectory, &lpStream, &nSize)) {
 #endif	// _UNICODE
-		// UserStream 을 입력하지 않았을 경우도 성공
+		// Treat as success even if UserStream was not supplied
 		return TRUE;
 	}
 
@@ -705,7 +705,7 @@ BOOL CMiniDumpSet::ReadUserData()
 /*
 	for (INT iCount = 1 ; iCount < 3 ; ++iCount)	{
 		if (!::MiniDumpReadDumpStream(m_lpMapping, LastReservedStream + iCount, &lpMiniDumpDirectory, &lpStream, &nSize)) {
-			// UserStream을 입력하지 않았을경우도 성공
+			// Treat as success even if UserStream was not supplied
 			return TRUE;
 		}
 		else {

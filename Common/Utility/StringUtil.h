@@ -2,17 +2,17 @@
 
 #include <deque>
 
-// std::string 은 크기가 16이상인 문자열은 전부 동적할당을 해버려서 
-// 파일명의 대부분이 16길이를 넘기므로 파일명 체크시 마다의 잦은 동적할당의 부담이 크다.
-// 파일명 스트링에는 버퍼크기가 적당히 큰 클래스를 직접 만들어서 사용하도록 한다.
+// std::string dynamically allocates strings >= 16 characters; 
+// since most filenames exceed 16 characters, frequent allocations cause high overhead.
+// CFileNameString uses an internal buffer to avoid frequent dynamic allocations.
 
-// typedef std::string CFileNameString;		// 사용시 문제가 생겼을때는 이것을 킨다.
+// typedef std::string CFileNameString;		// Fallback typedef if issues arise
 
 class CFileNameString
 {
 public:
 	enum {
-		INTERNAL_BUFFER_SIZE = 50,			// 대부분의 파일명의 길이가 100이하이며, 100이넘는것만 동적 할당 한다.
+		INTERNAL_BUFFER_SIZE = 50,			// Internal buffer size; files exceeding 100 characters allocate dynamically.
 	};
 	typedef size_t size_type;
 
@@ -233,12 +233,12 @@ bool ToWideString(IN std::string& str, OUT std::wstring& wstr );
 bool ToMultiString(IN WCHAR* wstr, OUT std::string& str );
 bool ToWideString(IN CHAR* str, OUT std::wstring& wstr );
 
-// 소문자로 변환
+// Convert to lowercase
 void ToLowerA(std::string& str);
 void ToLowerA( CFileNameString& str);
 void ToLowerW(std::wstring& str);
 
-// 대문자로 변환
+// Convert to uppercase
 void ToUpperA(std::string& str);
 void ToUpperW(std::wstring& str);
 
@@ -246,7 +246,7 @@ std::wstring FormatW( const WCHAR* fmt, ... );
 std::string FormatA( const CHAR* fmt, ... );
 
 /*
-	공백으로 문자를 나눌 경우.. 대충 이런식으로 쓴다.
+	Example usage for whitespace splitting.
 	std::vector<std::string> tokens;
 	std::string str("-IP 127.0.0.1 -Port 5000", );
 	Tokenize( str, tokens, " ");
@@ -260,35 +260,35 @@ void TokenizeW_NewLine( const std::wstring& str, std::vector<std::wstring>& toke
 /*
 	std::vector<std::string> tokens;
 	std::string str("{user_nick} {user_class}", );
-	Tokenize( str, tokens, "{", "}" ); 마지막 인자는 검색구분자를 포함할것인지 여부
+	Tokenize( str, tokens, "{", "}" ); Last parameter specifies whether to include delimiters in tokens.
 */
 void TokenizeW( std::wstring& str, std::vector<std::wstring>& tokens, std::wstring& szBegin, std::wstring& szEnd, bool bIncludeDelimiters );
 void TokenizeA( std::string& str, std::vector<std::string>& tokens, std::string& szBegin, std::string& szEnd, bool bIncludeDelimiters  );
 
 
-// 문자열의 모든 공백을 없애준다.
+// Remove all whitespace from string.
 void RemoveSpaceA(std::string& str);
 void RemoveSpaceW(std::wstring& str);
 
-// 문자열에서 del 을 지운다.
+// Remove delimiter occurrences from string.
 void RemoveStringA(std::string& str, const std::string& del);
 void RemoveStringW(std::wstring& str, const std::wstring& del);
 
-// str 문자열 중에서 szOld 가 있으면 전부 szNew 로 변경한다.
+// Replace all occurrences of szOld in str with szNew.
 void AllReplaceW( std::wstring& str, std::wstring& szOld, std::wstring& szNew );
 void AllReplaceA( std::string& str, std::string& szOld, std::string& szNew );
 
-// 문자열 앞뒤 공백 제거
+// Trim leading and trailing whitespace from string.
 void TrimString( char *pString );
 
 
-// 골드 Gold - 3자리마다 콤마 ',' 처리.
+// Format Gold currency with thousand separators (',').
 std::wstring GoldToMoneyString( INT64 nGold );
 
-// 콤마스트링.
+// Thousand separator format string.
 std::wstring AtoCommaString( int nValue );
 
 
-// : 골드획득 - 0인 단위는 출력하지 않음. (ex> 1골드0실버1쿠퍼 => 1골드1쿠퍼 ).
+// Format currency hiding zero-value units (e.g. 1 Gold 0 Silver 1 Copper -> 1 Gold 1 Copper).
 void GoldToString( std::wstring & rStr, INT64 coin, const wchar_t * pStrGold, const wchar_t * pStrSilver, const wchar_t * pStrCopper );
 bool IsExistString( const std::wstring& wszString, const std::wstring& wszFindString );

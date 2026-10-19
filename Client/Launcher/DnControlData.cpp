@@ -19,14 +19,14 @@ HRESULT CDnControlData::SetControlDataFromLocalFile( CString szFilePath, CRect* 
 	strncpy(pBuff, CT2A(szFilePath), szFilePath.GetLength() + 1);
 	HRESULT hResult = S_OK;
 
-	// xml파일을 읽어온다.
+	// Load XML file.
 	if( !LoadXMLFile(pBuff) )
 	{
-		LogWnd::TraceLog(_T("ControlData XML파일 불러오기 실패!!"));
+		LogWnd::TraceLog(_T("ControlData XML Load Failed!!"));
 		hResult = E_FAIL;
 	}
 
-	// 컨트롤에 위치를 잡아준다.
+	// Set control positions.
 	if (hResult == S_OK)
 	{
 		if( !SetPositionData( pRect, nMaxCnt ) )
@@ -45,14 +45,14 @@ HRESULT CDnControlData::SetControlDataFromLocalFile( CString szFilePath, CRect* 
 
 HRESULT CDnControlData::SetControlDataFromResource( int nResourceID, LPCTSTR szFileName, CRect* pRect, int nMaxCnt )
 {
-	// xml파일을 읽어온다.
+	// Load XML from resource.
 	if( !LoadResourceFromXMLFile(nResourceID, szFileName) )
 	{
-		LogWnd::TraceLog(_T("ControlData ResourceXML파일 불러오기 실패!!"));
+		LogWnd::TraceLog(_T("ControlData ResourceXML Load Failed!!"));
 		return E_FAIL;
 	}
 
-	// 컨트롤에 위치를 잡아준다.
+	// Set control positions.
 	if( !SetPositionData( pRect, nMaxCnt ) )
 	{
 		LogWnd::TraceLog(_T("ControlData Position Set Failed"));
@@ -69,7 +69,7 @@ bool CDnControlData::LoadXMLFile( char* szFilePath )
 		return false;
 	}
 
-	// 버퍼 클리어.
+	// First, clear existing data.
 	m_vecCtrlPosData.clear();
 
 	CXMLParser aParser;
@@ -122,7 +122,7 @@ bool CDnControlData::LoadXMLFile( char* szFilePath )
 
 bool CDnControlData::LoadResourceFromXMLFile(int nID, LPCTSTR szFileName)
 {
-	// 리소스 읽어오기.
+	// Load resource.
 	HMODULE hModule = ::GetModuleHandle(NULL);
 	HRSRC	hSrc	= ::FindResource( hModule, MAKEINTRESOURCE(nID), _T("XML"));
 	HGLOBAL hGlobal = ::LoadResource( hModule, hSrc );
@@ -138,7 +138,7 @@ bool CDnControlData::LoadResourceFromXMLFile(int nID, LPCTSTR szFileName)
 	char szOpenFileName[_MAX_PATH] = { 0 , };
 	strncpy(szOpenFileName , CT2A(strFileName), _MAX_PATH);
 
-	// 버퍼 클리어.
+	// First, clear existing data.
 	m_vecCtrlPosData.clear();
 
 	CXMLParser aParser;

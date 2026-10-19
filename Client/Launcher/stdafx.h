@@ -47,7 +47,8 @@
 #include <MMSystem.h>
 #include "Define.h"
 #include "DnUtil.h"
-#include "ximage.h"
+#include <atlimage.h>
+//#include "ximage.h"
 #include "LogWnd.h"
 #include "DnPatchInfo.h"
 #include "DnFirstPatchInfo.h"

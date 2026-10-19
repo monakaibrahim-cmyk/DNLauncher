@@ -141,7 +141,7 @@ namespace CommonUtil
 	};
 
 #ifdef PRE_ADD_ACADEMIC
-	//	note by kalliste : DNServerDef.h / ext 에 있는 클래스 인덱스와 동일한 값이 필요한 경우 사용하기 위한 인덱스 추가
+	//	note by kalliste : Index added when identical value to class index in DNServerDef.h / ext is needed
 	enum eClassIndex   //[OK]
 	{
 		eCLASS_NONE,
@@ -191,10 +191,10 @@ namespace CommonUtil
 	bool	IsIntersect(int sourcePointStart, int sourcePointEnd, int targetPointStart, int targetPointEnd);
 
 
-	// job의 상위 직업 반환.
+	// Return parent job class.
 	int GetParentJob( int job );
 
-	// 직업의 직종 구하기( 디스트로이어 => 워리어,  셀레아나 => 소서리스 )
+	// Get base job class (Destroyer => Warrior, Saleana => Sorceress)
 	int GetClassByJob( int job );
 
 #if defined( PRE_FIX_CLIENT_FREEZING )
@@ -204,7 +204,7 @@ namespace CommonUtil
 
 #if defined _CLIENT || defined _SERVER
 #ifdef PRE_FIX_MEMOPT_SIGNALH
-//	todo : server util.h와 통합
+//	todo : Unify with server util.h
 #include "SignalHeader.h"
 
 void CopyShallow_ProjectileStruct(ProjectileStruct& dest, const ProjectileStruct* pSource);

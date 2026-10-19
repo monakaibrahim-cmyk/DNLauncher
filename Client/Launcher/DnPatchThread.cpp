@@ -19,7 +19,7 @@ extern HANDLE g_hMutex;
 #endif // _DEBUG
 
 
-stDownloadInfoUpdateData g_DownloadInfoData;	// 프로세스에서 다운로드 쓰레드의 상태값을 읽기 위한 전역 데이타
+stDownloadInfoUpdateData g_DownloadInfoData;	// Process patch data
 
 //////////////////////////////////////////////////////////////////////////
 // Thread Base Class
@@ -143,17 +143,17 @@ void CDnFistPatchDownloadThread::Run()
 	{
 	case FPR_OK:
 		{
-			// * 딱 한번 Pak파일에 저장한다 *
+			// Apply PAK patch
 			if( !SaveModuleVersionToPak(DNFIRSTPATCHINFO.GetLocalModuleVersion()) )
 			{
-				ErrorMessageBoxLog( _S( STR_PATCH_FAILED + DNPATCHINFO.GetLanguageOffset() ) ); // 패치 실패.
+				ErrorMessageBoxLog( _S( STR_PATCH_FAILED + DNPATCHINFO.GetLanguageOffset() ) ); // Process patch data
 			}
 		}
 		break;
 
 	case FPR_FAIL:
 		{
-			ErrorMessageBoxLog( _S( STR_PATCH_FAILED + DNPATCHINFO.GetLanguageOffset() ) ); // 패치 실패.
+			ErrorMessageBoxLog( _S( STR_PATCH_FAILED + DNPATCHINFO.GetLanguageOffset() ) ); // Process patch data
 			CloseThread();
 		}
 		break;
@@ -171,20 +171,20 @@ void CDnFistPatchDownloadThread::Run()
 		break;
 	}
 
-	// 스레드 닫기
+	// Process patch data
 	//CloseThread();
 }
 void CDnFistPatchDownloadThread::ProcessRebootLauncher()
 {
-	// * 딱 한번 Pak파일에 저장한다 *
+	// Apply PAK patch
 	BOOL bSaveResult = SaveModuleVersionToPak(DNFIRSTPATCHINFO.GetLocalModuleVersion());
 
 	if(bSaveResult)
 	{
-		//if( AfxMessageBox(_T("런처가 패치되었습니다.\n런처를 재실행합니다."), MB_OK, MB_ICONINFORMATION) == IDOK )
+		// Process patch data
 		{
-			CString strParam	= DNPATCHINFO.GetTotalParameter();	// 파라매터
-			CString strExeFile	= DNPATCHINFO.GetClientPath();		// 다운로드 경로
+			CString strParam	= DNPATCHINFO.GetTotalParameter();	// Process patch data
+			CString strExeFile	= DNPATCHINFO.GetClientPath();		// Process patch data
 			strExeFile += DNLAUNCHER_NAME;
 
 #ifdef _USE_COMMAND_LINE
@@ -192,7 +192,7 @@ void CDnFistPatchDownloadThread::ProcessRebootLauncher()
 #else
 			ShellExecute( m_hWnd, NULL, strExeFile, strParam.GetBuffer(), NULL, SW_SHOWNORMAL );
 #endif
-			KillMyProcess(_T(DNLAUNCHER_NAME)); // old프로세스 kill.
+			KillMyProcess(_T(DNLAUNCHER_NAME)); // Process patch data
 		}
 	}
 	else
@@ -206,19 +206,19 @@ FirstPatchReturn CDnFistPatchDownloadThread::BegineModulePatch()
 	BOOL bModuleResult	 = FALSE;
 	BOOL bLauncherResult = FALSE;
 
-	// "서버" 버전.
+	// Process patch data
 	int nDownServerVersion = DNPATCHINFO.GetServerVersion();
 	
-	// "모듈" 버전.
+	// Process patch data
 	int nLocalModuleVersion  = DNFIRSTPATCHINFO.GetLocalModuleVersion();
-	LogWnd::TraceLog(_T("서버버전: [%d] / 모듈버전: [%d]"), nDownServerVersion, nLocalModuleVersion );
+	LogWnd::TraceLog(_T("Server Version: [%d] / Local Module Version: [%d]"), nDownServerVersion, nLocalModuleVersion );
 
-	if( nLocalModuleVersion == nDownServerVersion )		// * 버전이 같다면, 더이상 진행할 이유가 없음 *
+	if( nLocalModuleVersion == nDownServerVersion )		// Process patch data
 	{
 		LogWnd::Log(LogLevel::Error, _T("ModulePatch - Version is Concur"));
 		return FPR_OK;
 	}
-	else if( nLocalModuleVersion > nDownServerVersion ) // * 버전 꼬임. 풀패치로 넘김 *
+	else if( nLocalModuleVersion > nDownServerVersion ) // Process patch data
 	{
 		LogWnd::Log(LogLevel::Error, _T("ModulePatch - Version Check Failed, Go to FullPatch"));
 		return FPR_NEED_FULLPATCH;
@@ -229,47 +229,47 @@ FirstPatchReturn CDnFistPatchDownloadThread::BegineModulePatch()
 		return FPR_NEED_FULLPATCH;
 	}
 	
-	// * 패치 시작! * 
+	// Process patch data
 	for( int i = nLocalModuleVersion ; i < nDownServerVersion ;  )
 	{
 		if( i < nDownServerVersion )
 		{
 			i++;
 
-			// 모듈 패치
-			bModuleResult = DownLoadModulePatch(i);	// FirstPatchList.txt 다운로드.
+			// Process patch data
+			bModuleResult = DownLoadModulePatch(i);	// Process patch data
 
-			if(bModuleResult) // FirstPatchList.txt파일이 존재한다면 실행.
+			if(bModuleResult) // Process patch data
 			{
-				if( !ParsingModuleList() )	// "FirstPatchList.txt" 파싱
+				if( !ParsingModuleList() )	// Process patch data
 				{
 					return FPR_FAIL;
 				}
 
-				if( !ChangeModuleFiles(i) )	// 모듈 파일 변경.
+				if( !ChangeModuleFiles(i) )	// Process patch data
 				{
 					return FPR_FAIL;
 				}
 			}
 
-			// 런처 패치
-			bLauncherResult = PatchLauncherFiles(i); // * Launcher.exe파일 다운로드 & 적용 *
+			// Process patch data
+			bLauncherResult = PatchLauncherFiles(i); // Process patch data
 
-			// 현재 모듈 버전을 저장. ( 변수에 저장.. )
+			// Process patch data
 			DNFIRSTPATCHINFO.SetLocalModuleVersion(i);
 
-			// 버전 변경
+			// Process patch data
 			CString szPath;
 			szPath = DNPATCHINFO.GetClientPath();
 			szPath += CLIENT_VERSION_NAME;
 
-			// version.cfg파일에만 저장.
+			// Save Version.cfg
 			if( !SaveModuleVersionFileWithOutPakSave(szPath, i) )
 			{
 				return FPR_FAIL;
 			}
 
-			// DnLuancher.exe가 패치됬다면, 런처 재구동.
+			// Process patch data
 			if( bLauncherResult )
 			{
 				return FPR_LAUNCHER_PATCH;
@@ -296,13 +296,13 @@ BOOL CDnFistPatchDownloadThread::DownLoadModulePatch( int nVersion )
 	CString szPatchListUrl; // PatchURL / FirstPatch / FirstPatchList.txt
 	szPatchListUrl.Format( _T( "%s%s" ), strUrl.GetBuffer(), FIRSTPATCHLIST_NAME );
 	
-	// 클라이언트 로컬 파일저장 경로
+	// Process patch data
 	m_strPatchListFile.Format( _T( "%s%s" ), DNPATCHINFO.GetClientPath().GetBuffer() , FIRSTPATCHLIST_NAME);
 	
 	BOOL	bResult = DeleteUrlCacheEntry( szPatchListUrl.GetBuffer() );
 	HRESULT hr		= DownloadToFile( szPatchListUrl.GetBuffer(), m_strPatchListFile.GetBuffer() );
 
-	// 다운로드에 실패했다면.
+	// Process patch data
 	if( hr != S_OK )
 	{
 		LogWnd::TraceLog( _T("FirstPatch.txt Download Failed!") );
@@ -310,7 +310,7 @@ BOOL CDnFistPatchDownloadThread::DownLoadModulePatch( int nVersion )
 	}
 	LogWnd::TraceLog( L"FirstPatch.txt File Download Success" );
 	
-	// 파일 속성 체크.
+	// Process patch data
 	if( ::GetFileAttributes( m_strPatchListFile.GetBuffer() ) == -1 )
 	{
 		LogWnd::TraceLog( L"Failed! GetFileAttributes=[%s]", m_strPatchListFile.GetBuffer() );
@@ -333,17 +333,17 @@ BOOL CDnFistPatchDownloadThread::PatchLauncherFiles( int nVersion )
 	strUrl += strVersion;
 	strUrl += _T("/FirstPatch/");
 	
-	// Down URL 주소.
+	// Process patch data
 	CString szPatchListUrl;
 	szPatchListUrl.Format( _T( "%s%s" ), strUrl.GetBuffer(), _T(DNLAUNCHER_NAME));
 	
 	if( !IsExistFile( szPatchListUrl ) )
 		return FALSE;
 
-	// Client 로컬 경로 (저장되는 장소)
+	// Process patch data
 	m_strPatchListFile.Format( _T( "%s%s" ), DNPATCHINFO.GetClientPath().GetBuffer() , _T(DNLAUNCHER_NAME));
 	
-	// 기존의 확장자 exe를 tmp로 변경한다.
+	// Temporary file handling
 	if( _access(DNLAUNCHER_NAME , 0) == 0 )
 	{
 		MoveFile(_T(DNLAUNCHER_NAME), _T(DNLAUNCHER_NAME_TMP));
@@ -362,15 +362,15 @@ BOOL CDnFistPatchDownloadThread::PatchLauncherFiles( int nVersion )
 	}
 	LogWnd::TraceLog( _T("DnLauncher.exe FIle Download Success") );
 
-	// 다운로드에 실패했다면.
+	// Process patch data
 	if( hr != S_OK )
 	{
-		MoveFile(_T(DNLAUNCHER_NAME_TMP), _T(DNLAUNCHER_NAME)); // 'tmp' ---> 'exe'로 다시 복구.
+		MoveFile(_T(DNLAUNCHER_NAME_TMP), _T(DNLAUNCHER_NAME)); // Temporary file handling
 		LogWnd::TraceLog( _T("Download DnLauncher.exe File Failed!") );
 		return FALSE;
 	}
 	
-	// 파일 속성 체크.
+	// Process patch data
 	if( ::GetFileAttributes( m_strPatchListFile.GetBuffer() ) == -1 )
 	{
 		LogWnd::TraceLog( L"Failed! GetFileAttributes=[%s]", m_strPatchListFile.GetBuffer() );
@@ -385,7 +385,7 @@ int CDnFistPatchDownloadThread::ParsingModuleList()
 	m_vecCopyList.clear();
 	m_vecDeleteList.clear();
 
-	//m_strPostPatchList.Format( _T( "%sFirstPatch%08d.txt" ), DNPATCHINFO.GetClientPath(), m_nServerModuleVersion ); // testLauncher/FirstPatch00000007.txt 이런식.
+	// Process patch data
 	HANDLE hFile = CreateFile( m_strPatchListFile.GetBuffer(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
 	if( hFile == INVALID_HANDLE_VALUE )
 	{
@@ -395,7 +395,7 @@ int CDnFistPatchDownloadThread::ParsingModuleList()
 
 	char	cPatchCode, szString[1024], *pFindPtr;
 	int		nFileSize	= GetFileSize( hFile, NULL );
-	char*	pBuffer		= new char [ nFileSize + 3 ]; // 파일 끝이 없을경우 pBuffer + 2 한 후에 pBuffer 가 쓰레기값이여서 strchr 에서 뻑날 수 있다.
+	char*	pBuffer		= new char [ nFileSize + 3 ]; // Process patch data
 	memset( pBuffer, 0, nFileSize + 3 );
 
 	char*	pBufferBackup = pBuffer;
@@ -443,7 +443,7 @@ int CDnFistPatchDownloadThread::ParsingModuleList()
 	CloseHandle( hFile );
 	SAFE_DELETE_ARRAY( pBufferBackup );
 
-	// PostPatchList.txt. 파일삭제
+	// Process patch data
 	DeleteFile(m_strPatchListFile);
 
 	return true;
@@ -459,21 +459,21 @@ int CDnFistPatchDownloadThread::ChangeModuleFiles(int nVer)
 	std::vector<std::string>::iterator it = m_vecCopyList.begin();
 	for( ; it != m_vecCopyList.end() ; ++it )
 	{
-		// WCHAR로 변환.
+		// Process patch data
 		MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, (*it).c_str(), -1, wszFileName, _MAX_PATH);
 		
-		// "DnLauncher.exe"는 여기서 처리하지 않는다.
+		// Process patch data
 		if( wcscmp(wszFileName, _T("DnLauncher.exe")) == 0 )
 		{
 			continue;
 		}
 		
-		// 1. 원본파일이름 변경.
+		// Process patch data
 		strOriginalFileName.Format(_T("%s%s"),	DNPATCHINFO.GetClientPath(), wszFileName);
 		strBackUpFileName.Format(_T("%s%s%s"),	DNPATCHINFO.GetClientPath(), _T("BackUp_"), wszFileName);
 		rename(CT2A(strOriginalFileName), CT2A(strBackUpFileName));
 
-		// 2. 새로운 파일 다운로드.
+		// Process patch data
 		m_strFirstPatchURLPath.Format(_T("%s%08d%s%s"), DNPATCHINFO.GetPatchUrl(), nVer, _T("/FirstPatch/"),wszFileName);
 
 		HRESULT hr;
@@ -484,21 +484,21 @@ int CDnFistPatchDownloadThread::ChangeModuleFiles(int nVer)
 
 			if(hr == S_OK)
 			{
-				ClientDeleteFile(strBackUpFileName); // "BackUp_파일" 삭제.
+				ClientDeleteFile(strBackUpFileName); // Process patch data
 				break;
 			}
 		}
 
-		// 3. 실패 : 기존파일 이름 복원.
+		// Process patch data
 		if( hr != S_OK )
 		{
-			rename(CT2A(strBackUpFileName), CT2A(strOriginalFileName)); // 원래 이름으로 복구
+			rename(CT2A(strBackUpFileName), CT2A(strOriginalFileName)); // Process patch data
 		}
 	}
 
 	
 	//-------------------------------------------
-	// 삭제목록 처리
+	// Process patch data
 	//-------------------------------------------
 	std::vector<std::string>::iterator itDelete = m_vecDeleteList.begin();
 	for( ; itDelete != m_vecDeleteList.end() ; ++itDelete )
@@ -528,7 +528,7 @@ BOOL CDnFistPatchDownloadThread::SaveModuleVersionToPak( int nVersion )
 	char StrVersionName[32]= "\\version.cfg";
 	WideCharToMultiByte( CP_ACP, 0, szFindPackingFile.GetBuffer(), -1, szTemp, _MAX_PATH, NULL, NULL );
 
-	// 어쩔수 없다. 512M 넘어가는것중에 골라서 추가하자. 
+	// Process patch data
 	if( pPackingFile->OpenFileSystem( szTemp ) )
 	{
 		pPackingFile->Remove( StrVersionName );
@@ -651,7 +651,7 @@ void CDnPatchDownloadThread::SendStatusMsg( DownloadPatchState nPatchState )
 
 void CDnPatchDownloadThread::Run()
 {
-	LogWnd::TraceLog( L"★Patch Start!" );
+	LogWnd::TraceLog( L"Patch Start!" );
 	if( m_hWnd == NULL )
 		return;
 
@@ -666,13 +666,13 @@ PatchReturn nRet = PR_FAIL;
 	{
 	case PR_OK:
 		{
-			LogWnd::TraceLog( L"★Patch Success!" );
+			LogWnd::TraceLog( L"Patch Success!" );
 			SendStatusMsg( PATCH_COMPLETE );
 }
 		break;
 	case PR_LAUNCHER_PATCH:
 		{
-			LogWnd::TraceLog( _T( "★Launcher Restart because Launcher Patched."));
+			LogWnd::TraceLog( _T( "Launcher Restart because Launcher Patched." ));
 #ifndef _DEBUG
 			if( g_hMutex )
 			{
@@ -694,13 +694,13 @@ PatchReturn nRet = PR_FAIL;
 		break;
 	case PR_FAIL:
 		{
-			LogWnd::TraceLog( L"★Patch Failed!" );
+			LogWnd::TraceLog( L"Patch Failed!" );
 			SendStatusMsg( PATCH_FAILED );
 		}
 		break;
 	case PR_TERMINATE:
 		{
-			LogWnd::TraceLog( L"★Patch Terminate!" );
+			LogWnd::TraceLog( L"Patch Terminate!" );
 			SendStatusMsg( PATCH_TERMINATE );
 		}
 		break;
@@ -720,18 +720,18 @@ PatchReturn CDnPatchDownloadThread::BeginPatch()
 
 	LogWnd::Log( LogLevel::Info, L"Patch Check Version (Client Ver:%d, Server Ver:%d)", nCurClientVersion, nCurServerVersion );
 
-	if( nCurClientVersion == -1 || nCurServerVersion == -1 )	// 현재 버전과 서버 버전을 확인을 못했다. 풀패치로 넘어가야한다.
+	if( nCurClientVersion == -1 || nCurServerVersion == -1 )	// Process patch data
 	{
 		LogWnd::TraceLog( _T("Version Check Failed Run Fullpatch Process"));
 		SendStatusMsg( PATCH_CHECK_VERSION_FAILED );
 		return PR_FULLPATCH;
 	}
 
-if( nCurClientVersion == nCurServerVersion )			// 서버와 클라이언트 버전이 같으면 패치할 필요가 없다.
+if( nCurClientVersion == nCurServerVersion )			// Process patch data
 		return PR_OK;
-	else if( nCurClientVersion > nCurServerVersion )		// 클라이언트 버전이 서버 버전보다 크면 풀패치
+	else if( nCurClientVersion > nCurServerVersion )		// Process patch data
 		return PR_FULLPATCH;
-	else													// 클라이언트 버전이 낮을 경우 패치 진행
+	else													// Process patch data
 	{
 		int nDownVersion = nCurClientVersion + 1;
 for( int i=nDownVersion; i<=nCurServerVersion; i++ )
@@ -741,7 +741,7 @@ for( int i=nDownVersion; i<=nCurServerVersion; i++ )
 			g_DownloadInfoData.m_nDownloadProgressMin = 0;
 			g_DownloadInfoData.m_nDownloadProgressMax = 100;
 			
-			// 롤백패치 대응 다운받을 버젼을 항시 체크 해서 스킵할 버전이면 스킵한다.
+			// Process patch data
 			std::vector<int>::iterator itSkip = std::find( DNPATCHINFO.GetSkipVersion().begin(), DNPATCHINFO.GetSkipVersion().end(), i );
 			if( itSkip != DNPATCHINFO.GetSkipVersion().end() )
 			{
@@ -750,7 +750,7 @@ for( int i=nDownVersion; i<=nCurServerVersion; i++ )
 				szPath += CLIENT_VERSION_NAME;
 				
 				int gap = nCurServerVersion - i;
-				if( gap >= 1 )	//버젼 차이가 2이상 나면 롤백한 버젼까지 바로 이동
+				if( gap >= 1 )	// Process patch data
 				{
 					DNPATCHINFO.SetClientVersion( i+1 );
 					SaveVersionFile( szPath, i+1 );
@@ -767,7 +767,7 @@ for( int i=nDownVersion; i<=nCurServerVersion; i++ )
 			SendStatusMsg( PATCH_DOWNLOAD_DATA );
 			int nFailCount = 0;
 #ifdef _FIRST_PATCH
-			BOOL bOnlyFirstPatch = FALSE;	// 모듈패치만 있는 경우
+			BOOL bOnlyFirstPatch = FALSE;	// Process patch data
 #endif // _FIRST_PATCH
 
 			while(1)
@@ -775,11 +775,11 @@ for( int i=nDownVersion; i<=nCurServerVersion; i++ )
 				BOOL bResult = DownLoadPatch( i );
 				if( bResult )
 				{
-					if( m_bTerminateThread ) return PR_TERMINATE; // 다운로드 완료 시 종료 처리 안되면 packing까지 넘어가기 때문에 종료가 오래 걸림
+					if( m_bTerminateThread ) return PR_TERMINATE; // Process patch data
 					break;
 				}
 #ifdef _FIRST_PATCH
-				if( CheckExistFirstPatch( i ) )	// 모듈패치만 있는 패치버전인지 체크
+				if( CheckExistFirstPatch( i ) )	// Process patch data
 				{
 					bOnlyFirstPatch = TRUE;
 					break;
@@ -795,8 +795,8 @@ for( int i=nDownVersion; i<=nCurServerVersion; i++ )
 				{
 					if( i != nCurServerVersion )
 					{
-						// 패치 다운로드 실패했고.. 가장 최신패치 다운로드해서 성공하면
-						// 너무 오래된 버전이라서 이버전의 패치가 삭제 됐으므로 풀버전 다운로드로 넘긴다.
+						// Process patch data
+						// Process patch data
 						CString strPatchFileUrl;
 						strPatchFileUrl.Format( _T( "%s%08d/Patch%08d.txt" ), DNPATCHINFO.GetPatchUrl().GetBuffer(), nCurServerVersion, nCurServerVersion );
 						BOOL bResult = DeleteUrlCacheEntry( strPatchFileUrl.GetBuffer() );
@@ -826,22 +826,22 @@ for( int i=nDownVersion; i<=nCurServerVersion; i++ )
 
 			g_DownloadInfoData.m_nDownloadProgressMin = 0;
 			g_DownloadInfoData.m_nDownloadProgressMax = 100;
-			SendStatusMsg( PATCH_APPLY_PAK_FILE );	// 설치 프로그래스 진행을 위해 프로그래스 Min/Max 초기화
+			SendStatusMsg( PATCH_APPLY_PAK_FILE );	// Process patch data
 
-			// 받은 패치를 적용한다.
+			// Process patch data
 			nRetValue = ApplyPakPatch();
 
 			if( nRetValue == PR_TERMINATE )
 				break;
 #ifdef _USE_RTPATCH
-			DeleteFolder( m_strRTPatchTempFolder.c_str() );			// RTPatch적용 임시 폴더 삭제
+			DeleteFolder( m_strRTPatchTempFolder.c_str() );			// RTPatch processing
 #endif // _USE_RTPATCH
 
-			ClientDeleteFile( m_strPatchListFile.GetBuffer() );		// ApplyPak완료 후 txt파일은 바로 삭제
+			ClientDeleteFile( m_strPatchListFile.GetBuffer() );		// Apply PAK patch
 
 			if( nRetValue == PR_OK || nRetValue == PR_LAUNCHER_PATCH )
 			{
-				ClientDeleteFile( m_strPatchFile.GetBuffer() );		// 다운로드 받은 Pak파일은 Apply 성공시에만 삭제
+				ClientDeleteFile( m_strPatchFile.GetBuffer() );		// Apply PAK patch
 
 				LogWnd::TraceLog( _T( "%d Version Patch Apply Success!"), i );
 				DNPATCHINFO.SetClientVersion( i );
@@ -851,16 +851,16 @@ for( int i=nDownVersion; i<=nCurServerVersion; i++ )
 				szPath = DNPATCHINFO.GetClientPath();
 				szPath += CLIENT_VERSION_NAME;
 				
-				if( !SaveVersionFile( szPath, i ) )	// Version.cfg에 바뀐 버전 저장
+				if( !SaveVersionFile( szPath, i ) )	// Save Version.cfg
 				{
 					nRetValue = PR_FAIL;
 					break;
 				}
 
-				if( nRetValue == PR_LAUNCHER_PATCH )	// 런처 패치가 되었다면 중단하고 새 런처를 띄우고 패치한다.
+				if( nRetValue == PR_LAUNCHER_PATCH )	// Process patch data
 					break;
 			}
-			else	// 패치하다가 에러 났다.. 첨부터 다시 깔아야 겠다..
+			else	// Process patch data
 			{
 				SendStatusMsg( PATCH_APPLY_PAK_FILE_FAILED );
 				LogWnd::TraceLog( _T( "%d Version Patch Apply Failed!"), i );
@@ -952,7 +952,7 @@ HRESULT CDnPatchDownloadThread::URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR st
 	LogWnd::TraceLog( L"URLDownload Start" );
 
 	HINTERNET hInternetSession;
-	// 세션 열기
+	// Process patch data
 	LogWnd::TraceLog( L"Open Internet Session" );
 	hInternetSession = InternetOpen( NULL, INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0 );
 
@@ -966,7 +966,7 @@ HRESULT CDnPatchDownloadThread::URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR st
 	m_strPatchFile.Format( L"%s%s", strFilePath, strFileName );
 	m_strPatchFileLocal.Format( L"%s.tmp", m_strPatchFile );
 
-	// 다운로드 받기 전 파일은 먼저 체크
+	// Process patch data
 	CFile file;
 	FileCheck filecheck;
 	DWORD dwDownloadFileSize;
@@ -983,7 +983,7 @@ HRESULT CDnPatchDownloadThread::URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR st
 
 	if( m_dwTempFileLength < dwDownloadFileSize )
 	{
-		// Http 열기
+		// Open HTTP connection
 		LogWnd::TraceLog( L"Open Http Connection" );
 		CString strAddHeader;
 		strAddHeader.Format( L"Range:bytes=%d-\nCache-Control:no-cache\nPragma:no-cache", m_dwTempFileLength );
@@ -1003,7 +1003,7 @@ HRESULT CDnPatchDownloadThread::URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR st
 		DWORD dwBufferSize = MAX_PATH;
 		DWORD dwIndex = 0;
 
-		// 다운받아야 할 파일 크기 구하기
+		// Process patch data
 		if( HttpQueryInfo( m_hHttpConnection, HTTP_QUERY_CONTENT_LENGTH, (LPVOID)&szBuffer, &dwBufferSize, &dwIndex ) != FALSE )
 		{
 			m_dwDownloadFileLength = (DWORD)_wtoi( szBuffer );
@@ -1015,7 +1015,7 @@ HRESULT CDnPatchDownloadThread::URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR st
 		}
 
 		LogWnd::TraceLog( L"DownLoad Left File Size : %d", m_dwDownloadFileLength );
-		// 다운로드 시작 (이어받기)
+		// Process patch data
 		if( m_dwDownloadFileLength > 0 )
 		{
 			LogWnd::TraceLog( L"Download File Start" );
@@ -1073,7 +1073,7 @@ HRESULT CDnPatchDownloadThread::URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR st
 
 			} while( dwRead != 0 );
 
-			if( m_bTerminateThread || bError )	// 터미네이트 되었거나 패킷전송 받을 때 오류가 있을 경우
+			if( m_bTerminateThread || bError )	// Process patch data
 			{
 				file.Close();
 				InternetCloseHandle( m_hHttpConnection );
@@ -1091,7 +1091,7 @@ HRESULT CDnPatchDownloadThread::URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR st
 	if( !bSplitDownload )
 	{
 		LogWnd::TraceLog( L"MD5 Check Start" );
-		// 올바르게 다운로드 되었는지 MD5 Check
+		// Verify MD5 checksum
 		if( !GetMD5Checksum() )
 		{
 			LogWnd::Log( LogLevel::Error, L"MD5 Check Failed!" );
@@ -1104,7 +1104,7 @@ HRESULT CDnPatchDownloadThread::URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR st
 	}
 #else // _USE_SPLIT_COMPRESS_FILE
 	LogWnd::TraceLog( L"MD5 Check Start" );
-	// 올바르게 다운로드 되었는지 MD5 Check
+	// Verify MD5 checksum
 	if( !GetMD5Checksum() )
 	{
 		LogWnd::Log( LogLevel::Error, L"MD5 Check Failed!" );
@@ -1116,7 +1116,7 @@ HRESULT CDnPatchDownloadThread::URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR st
 	LogWnd::TraceLog( L"MD5 Check Success" );
 #endif // _USE_SPLIT_COMPRESS_FILE
 
-	// 정리 tmp -> 원래 파일명
+	// Temporary file handling
 	CString strNewPatchFileLocal = m_strPatchFileLocal.Left( m_strPatchFileLocal.GetLength() - 4 );
 	CFile::Rename( m_strPatchFileLocal, strNewPatchFileLocal );
 
@@ -1134,7 +1134,7 @@ FileCheck CDnPatchDownloadThread::CheckPatchFile( HINTERNET hInternetSession, LP
 												 CFile& file, DWORD& dwDownloadFileSize )
 #endif // _USE_SPLIT_COMPRESS_FILE
 {
-	// 다운 받을 파일 크기 구하기
+	// Process patch data
 	dwDownloadFileSize = GetDownloadFileSize( hInternetSession, m_strPatchFileUrl );
 
 	if( dwDownloadFileSize == 0 )
@@ -1157,7 +1157,7 @@ FileCheck CDnPatchDownloadThread::CheckPatchFile( HINTERNET hInternetSession, LP
 	g_DownloadInfoData.m_nFileSize = dwDownloadFileSize;
 #endif // _USE_SPLIT_COMPRESS_FILE
 
-	// 다운 완료된 파일이 있을 경우 유효성 검사
+	// Process patch data
 	LogWnd::TraceLog( L"Check Downloaded Temp File" );
 	CFileException e;
 
@@ -1165,13 +1165,13 @@ FileCheck CDnPatchDownloadThread::CheckPatchFile( HINTERNET hInternetSession, LP
 	{
 		DWORD dwFileLength = static_cast<DWORD>( file.GetLength() );
 		file.Close();
-		if( dwFileLength == dwDownloadFileSize )	// 이미 다 받아진 파일이 있음
+		if( dwFileLength == dwDownloadFileSize )	// Process patch data
 		{
 			LogWnd::Log( LogLevel::Error, L"Already Exist Download Temp File!" );
 			InternetCloseHandle( hInternetSession );
 			return FIlE_EXIST;
 		}
-		else	// 받았으나 서버의 파일 정보와 상이할 경우 삭제 후 다시 받음
+		else	// Process patch data
 		{
 			LogWnd::Log( LogLevel::Error, L"Already Exist Download Temp File But Delete Wrong File!" );
 			if( !ClientDeleteFile( m_strPatchFile ) )
@@ -1187,12 +1187,12 @@ FileCheck CDnPatchDownloadThread::CheckPatchFile( HINTERNET hInternetSession, LP
 			RecordFileExceptionLog( e );
 	}
 
-	// 기존 다운받던 tmp 파일 체크
+	// Temporary file handling
 	FILE* fp;
 	fp = _wfopen( m_strPatchFileLocal, _T("r") );
 	UINT uiFileModeFlag = CFile::modeCreate | CFile::modeWrite | CFile::shareDenyNone;
 
-	if( fp != NULL )	// 다운받던 tmp파일이 있을 경우
+	if( fp != NULL )	// Temporary file handling
 	{
 		fclose( fp );
 		uiFileModeFlag |= CFile::modeNoTruncate;
@@ -1234,7 +1234,7 @@ DWORD CDnPatchDownloadThread::GetDownloadFileSize( HINTERNET hInternetSession, C
 	DWORD dwIndex = 0;
 	DWORD dwFileSize = 0;
 
-	// 다운받아야 할 파일 크기 구하기
+	// Process patch data
 	if( HttpQueryInfo( m_hHttpConnection, HTTP_QUERY_CONTENT_LENGTH, (LPVOID)&szBuffer, &dwBufferSize, &dwIndex ) != FALSE )
 		dwFileSize = (DWORD)_wtoi( szBuffer );
 
@@ -1281,7 +1281,7 @@ BOOL CDnPatchDownloadThread::GetMD5Checksum()
 	strDownloadChecksum = strDownloadChecksum.Left( nIndex - 1 );
 
 	CString strLocalChecksum = CMD5Checksum::GetMD5( m_strPatchFileLocal );
-	// MD5 비교
+	// Verify MD5 checksum
 	return wcscmp( strLocalChecksum, strDownloadChecksum ) == 0 ? TRUE : FALSE;
 }
 
@@ -1300,7 +1300,7 @@ BOOL CDnPatchDownloadThread::LoadPatchList()
 	}
 	char cPatchCode, szString[1024], *pFindPtr;
 	int nFileSize = GetFileSize( hFile, NULL );
-	char *pBuffer = new char [ nFileSize + 3 ]; // 파일 끝이 없을경우 pBuffer + 2 한 후에 pBuffer 가 쓰레기값이여서 strchr 에서 뻑날 수 있다.
+	char *pBuffer = new char [ nFileSize + 3 ]; // Process patch data
 	memset( pBuffer, 0, nFileSize + 3 );
 
 	char *pBufferBackup = pBuffer;
@@ -1354,14 +1354,14 @@ PatchReturn CDnPatchDownloadThread::PreApplyPakPatch()
 {
 	LogWnd::TraceLog( L"Patch Step 2 - PreApplyPakPatch Start" );
 
-	//패치 상태 리스트 정보를 읽어온다. 
+	// Process patch data
 	if( !LoadPatchList() )
 	{
 		ErrorMessageBoxLog( _S( STR_PATCH_STATE_LIST_NOT_READ + DNPATCHINFO.GetLanguageOffset() ) );
 		return PR_FAIL;
 	}
 
-	PatchReturn nRetValue = GetPackingFile();	// 리소스 패킹 파일을 찾고 정보를 가져옴
+	PatchReturn nRetValue = GetPackingFile();	// Process patch data
 
 	if( m_vecPackingFile.empty() )
 	{
@@ -1524,7 +1524,7 @@ PatchReturn CDnPatchDownloadThread::ApplyDeleteList( CEtPackingFile& PatchSource
 
 			if( m_vecPackingFile[j]->Remove( szFileName ) )
 			{
-				// 삭제 했으면 다음 파일로 넘어간다.
+				// Process patch data
 				m_nCurPatchCount++;
 				g_DownloadInfoData.m_nDownloadProgressMin = m_nCurPatchCount;
 				g_DownloadInfoData.m_nDownloadProgressMax = m_nTotalPatchCount;
@@ -1535,7 +1535,7 @@ PatchReturn CDnPatchDownloadThread::ApplyDeleteList( CEtPackingFile& PatchSource
 
 		if( bIsNoramlFile )
 		{
-//일반 디렉토리 삭제 가능 추가. 
+// Process patch data
 			char CheckExe[256]={0 ,};
 			_GetExt( CheckExe, sizeof(CheckExe), m_vecDeleteList[i].c_str() );
 			if( strlen( CheckExe ) == 0 )
@@ -1586,7 +1586,7 @@ PatchReturn CDnPatchDownloadThread::PatchFileExist( int nPatchFileCount, CEtPack
 
 				m_vecPackingFile[i]->RemoveFileInfo( nFindIndex );
 				int nFindEmptyIndex = m_vecPackingFile[i]->FindSuitableEmptySpace( pFileInfo->dwCompressSize );
-				if( nFindEmptyIndex == -1 )	// 적당한 공간이 없으면 예약걸기
+				if( nFindEmptyIndex == -1 )	// Process patch data
 				{
 					stFileIndexSet fileIndex;
 					fileIndex.m_dwPakFileNum = i;
@@ -1595,7 +1595,7 @@ PatchReturn CDnPatchDownloadThread::PatchFileExist( int nPatchFileCount, CEtPack
 
 					m_vecReserveIndex.push_back( fileIndex );
 				}
-				else	// 적당한 공간이 있다면 패치
+				else	// Process patch data
 				{
 					if( !m_vecPackingFile[i]->PatchFileIndex( pFileHandle, nFindEmptyIndex ) )
 					{
@@ -1607,9 +1607,9 @@ PatchReturn CDnPatchDownloadThread::PatchFileExist( int nPatchFileCount, CEtPack
 				PatchSource.CloseFile( pFileHandle );
 				bPatch = TRUE;
 			}
-			else	// 패치 파일의 크기가 더 클 경우 지우고 빠짐
+			else	// Process patch data
 			{
-				// 전채 패킹 파일에서 삭제 시도하도록 바꿈
+				// Process patch data
 				BOOL bRemove = FALSE;
 				for( int j=0; j<(int)m_vecPackingFile.size(); j++ )
 				{
@@ -1662,13 +1662,13 @@ PatchReturn CDnPatchDownloadThread::PatchFileSuitableSpace( CEtPackingFile& Patc
 
 void CDnPatchDownloadThread::PatchFileReserve( int nPatchFileCount, SPackingFileInfo* pFileInfo )
 {
-	// 패치할 위치를 찾지 못했으면 제일 적당한 위치를 찾아서 넣어준다
+	// Process patch data
 	int nBestIndex = -1;
 	DWORD dwMinSize = ULONG_MAX;
 	for( int j=0; j<(int)m_vecPackingFile.size(); j++ )
 	{
 		DWORD dwPackingFileSize = m_vecPackingFile[j]->GetFileSystemSize();
-		// 512메가 보다는 작아야 밀어 넣을 수 있다
+		// Process patch data
 		if( ( dwPackingFileSize < dwMinSize ) && ( dwPackingFileSize < (DWORD)DEFAULT_PACKING_FILE_SIZE ) )
 		{
 			dwMinSize = dwPackingFileSize;
@@ -1678,7 +1678,7 @@ void CDnPatchDownloadThread::PatchFileReserve( int nPatchFileCount, SPackingFile
 
 	if( nBestIndex == -1 )
 	{
-		// 패치할 적당한 파일을 못찾았으면 새로운 패치파일을 만든다.
+		// Process patch data
 		int nStartFileIndex = ( int )m_vecPackingFile.size();
 		while( 1 )
 		{
@@ -1730,8 +1730,8 @@ PatchReturn CDnPatchDownloadThread::ApplyPatchList( CEtPackingFile& PatchSource 
 
 		for( int j=0; j<(int)m_vecCopyList.size(); j++ )
 		{
-			// 파일이름 앞에.. \ 붙어 있어서 그거 제외한 이름으로 비교해야 제대로 된다.
-			// 카피리스트에 있는것은 팩에 들어가면 안됨 패스
+			// Process patch data
+			// Process patch data
 			if( _stricmp( m_vecCopyList[j].c_str(), pFileInfo->szFileName + 1 ) == 0 )
 			{
 				bSkip = TRUE;
@@ -1743,14 +1743,14 @@ PatchReturn CDnPatchDownloadThread::ApplyPatchList( CEtPackingFile& PatchSource 
 			continue;
 
 		BOOL bPatch = FALSE;
-		if( PatchFileExist( i, PatchSource, pFileInfo, bPatch ) == PR_FAIL )	// 기존에 존재하는 파일인지 검사해서 패치가능하면 패치
+		if( PatchFileExist( i, PatchSource, pFileInfo, bPatch ) == PR_FAIL )	// Process patch data
 			return PR_FAIL;
 		if( !bPatch )
 		{
-			if( PatchFileSuitableSpace( PatchSource, pFileInfo, bPatch ) == PR_FAIL )	// 적당한 공간이 있다면 그곳에 패치
+			if( PatchFileSuitableSpace( PatchSource, pFileInfo, bPatch ) == PR_FAIL )	// Process patch data
 				return PR_FAIL;
 			if( !bPatch )
-				PatchFileReserve( i, pFileInfo );	// 기존에 존재하지도 적당한 공간도 없다면 공간이 남은 Pak파일의 뒤에 붙이기 위해서 예약만 걸어둠
+				PatchFileReserve( i, pFileInfo );	// Apply PAK patch
 		}
 		
 		if( bPatch )
@@ -1772,11 +1772,11 @@ PatchReturn CDnPatchDownloadThread::ApplyPatchList( CEtPackingFile& PatchSource 
 		}
 	}
 
-	// 예약된 공간을 비워두고 헤더를 Write
+	// Process patch data
 	for( int j=0; j<(int)m_vecPackingFile.size(); j++ )
 		m_vecPackingFile[ j ]->WriteReserveFileInfo();
 
-	// 예약된 패치파일들 패치
+	// Process patch data
 	std::vector<stFileIndexSet>::iterator iter = m_vecReserveIndex.begin();
 	for( ; iter != m_vecReserveIndex.end(); iter++ )
 	{
@@ -1786,7 +1786,7 @@ PatchReturn CDnPatchDownloadThread::ApplyPatchList( CEtPackingFile& PatchSource 
 		if( pFileHandle == NULL )
 			return PR_FAIL;
 
-		if( !m_vecPackingFile[ (*iter).m_dwPakFileNum ]->PatchFileIndex( pFileHandle, (*iter).m_dwReserveFileIndex, FALSE ) )	// 이미 예약된 FileInfo이므로 FileInfo 갱신하지 않음
+		if( !m_vecPackingFile[ (*iter).m_dwPakFileNum ]->PatchFileIndex( pFileHandle, (*iter).m_dwReserveFileIndex, FALSE ) )	// Process patch data
 		{
 			LogWnd::Log( LogLevel::Error, L"Patch File Failed!" );
 			PatchSource.CloseFile( pFileHandle );
@@ -1809,7 +1809,7 @@ PatchReturn CDnPatchDownloadThread::ApplyCopyList( CEtPackingFile& PatchSource )
 
 for( int i=0; i<(int)m_vecCopyList.size(); i++ )
 	{
-		//팩안에는 \ 파일앞에 붙기떔시 비교를위해서 붙여준다. 
+		// Process patch data
 		char szAddCopyListName[_MAX_PATH]={0,};
 		sprintf_s( szAddCopyListName, "\\%s", m_vecCopyList[ i ].c_str() );
 		CEtFileHandle *pFileHandle = PatchSource.OpenFile( szAddCopyListName );
@@ -1833,8 +1833,8 @@ for( int i=0; i<(int)m_vecCopyList.size(); i++ )
 			{
 				ClientDeleteFile( _T( DNLAUNCHER_NAME_TMP ) );
 				
-				// DNLAUNCHER_NAME가 존재해야하며, DNLAUNCHER_NAME를 DNLAUNCHER_NAME_TMP로 변경한다.
-				if( _access( DNLAUNCHER_NAME, 0 ) == 0 && MoveFile( _T( DNLAUNCHER_NAME ), _T( DNLAUNCHER_NAME_TMP ) ) == 0 )	// 런처 파일명을 바꾸고 실행하더라도 런처패치가 되도록 함
+				// Temporary file handling
+				if( _access( DNLAUNCHER_NAME, 0 ) == 0 && MoveFile( _T( DNLAUNCHER_NAME ), _T( DNLAUNCHER_NAME_TMP ) ) == 0 )	// Process patch data
 				{
 					CString strError;
 					strError.Format( L"%s %d", _S( STR_LAUNCHER_PATCH_FAIL + DNPATCHINFO.GetLanguageOffset() ), 1 );
@@ -1931,7 +1931,7 @@ BOOL CDnPatchDownloadThread::SaveNewVersionToPak( int nVersion )
 	char StrVersionName[32]= "\\version.cfg";
 	WideCharToMultiByte( CP_ACP, 0, szFindPackingFile.GetBuffer(), -1, szTemp, _MAX_PATH, NULL, NULL );
 
-	// 어쩔수 없다. 512M 넘어가는것중에 골라서 추가하자. 
+	// Process patch data
 	if( pPackingFile->OpenFileSystem( szTemp ) )
 	{
 		pPackingFile->Remove( StrVersionName );
@@ -2036,7 +2036,7 @@ void CDnPatchDownloadThread::RecordFileExceptionLog( CFileException& e )
 static void far* g_pCallBackParam = NULL;
 static BOOL g_bInCallBack = FALSE;
 static BOOL g_bAbortPatch = FALSE;
-static char g_strOriginFileName[_MAX_PATH] = {0,};	// 원본 파일 명 ( ApplyPatch32 실행시 CallBack Function에서 셋팅한다. )
+static char g_strOriginFileName[_MAX_PATH] = {0,};	// Process patch data
 
 LPVOID CALLBACK EXPORT CDnPatchDownloadThread::RTPatchCALLBACK( UINT Id, LPVOID Param )
 {
@@ -2168,7 +2168,7 @@ PatchReturn CDnPatchDownloadThread::ApplyRTPatch( CEtPackingFile& PatchSource, C
 		if( pFileInfo == NULL )
 			continue;
 
-		// rtp파일 export
+		// Process patch data
 		if( !ExportFile( PatchSource, pFileInfo->szFileName, m_strRTPatchTempFolder.c_str() ) )
 		{
 			CString strFileName( pFileInfo->szFileName );
@@ -2193,7 +2193,7 @@ PatchReturn CDnPatchDownloadThread::ApplyRTPatch( CEtPackingFile& PatchSource, C
 		{
 			int nFindIndex = m_vecPackingFile[i]->FindFile( strFullPathOriginFileName.c_str() );
 			
-			if( nFindIndex != -1 )	// rtp파일에 해당하는 파일이 있다면 추출
+			if( nFindIndex != -1 )	// Process patch data
 			{
 				if( !ExportFile( *m_vecPackingFile[i], strFullPathOriginFileName.c_str(), m_strRTPatchTempFolder.c_str() ) )
 				{
@@ -2209,7 +2209,7 @@ PatchReturn CDnPatchDownloadThread::ApplyRTPatch( CEtPackingFile& PatchSource, C
 
 		strFullPathOriginFileName.erase( 0, 1 );	// path/xxx.exe
 
-		if( !bFindFile )	// pak파일에서 못찾았다면 클라이언트 폴더에서 찾아본다.
+		if( !bFindFile )	// Apply PAK patch
 		{
 			char strClientPath[_MAX_PATH];
 			WideCharToMultiByte( CP_ACP, 0, DNPATCHINFO.GetClientPath().GetBuffer(), -1, strClientPath, __MAX_PATH, NULL, NULL );
@@ -2249,7 +2249,33 @@ PatchReturn CDnPatchDownloadThread::ApplyRTPatch( CEtPackingFile& PatchSource, C
 		char szBuildCommand[_MAX_PATH];
 		sprintf( szBuildCommand, "%s \"%s\\%s\" /u", m_strRTPatchTempFolder.c_str(), m_strRTPatchTempFolder.c_str(), strRTPFileName );
 
-		int ret = RTPatchApply32( szBuildCommand, CDnPatchDownloadThread::RTPatchCALLBACK, TRUE );
+		typedef UINT (CALLBACK *PFN_RTPatchApply)(LPSTR, LPVOID (CALLBACK *)(UINT, LPVOID), BOOL);
+		PFN_RTPatchApply pfnRTPatch = NULL;
+		HMODULE hPatchDll = ::LoadLibrary( _T("patchw32.dll") );
+#ifdef _WIN64
+		if( !hPatchDll )
+			hPatchDll = ::LoadLibrary( _T("patchw64.dll") );
+#endif
+		if( hPatchDll )
+		{
+			pfnRTPatch = (PFN_RTPatchApply)::GetProcAddress( hPatchDll, "RTPatchApply32" );
+			if( !pfnRTPatch )
+				pfnRTPatch = (PFN_RTPatchApply)::GetProcAddress( hPatchDll, "RTPatchApply" );
+		}
+
+		int ret = -1;
+		if( pfnRTPatch )
+		{
+			ret = pfnRTPatch( szBuildCommand, CDnPatchDownloadThread::RTPatchCALLBACK, TRUE );
+		}
+		else
+		{
+			LogWnd::Log( LogLevel::Error, _T("RTPatch DLL not found or entry point missing!") );
+		}
+
+		if( hPatchDll )
+			::FreeLibrary( hPatchDll );
+
 		if( ret != 0 )
 			return PR_FAIL;
 
@@ -2259,7 +2285,7 @@ PatchReturn CDnPatchDownloadThread::ApplyRTPatch( CEtPackingFile& PatchSource, C
 			RTPatchSource.ChangeDir( strPath );
 		}
 
-		// RTPatch 적용된 파일을 새 파일시스템에 넣는다.
+		// RTPatch processing
 		char szApplyPatchFileName[_MAX_PATH];
 		sprintf_s( szApplyPatchFileName, _MAX_PATH, "%s\\%s", m_strRTPatchTempFolder.c_str(), g_strOriginFileName );
 		if( !RTPatchSource.AddFile( szApplyPatchFileName ) )
@@ -2331,7 +2357,7 @@ HRESULT CDnPatchDownloadThread::DownLoadSplitFile( CString strUrl, int nVersion 
 		int nSplitCountCipher = 1;
 		if( nSplitCount >= 10 && nSplitCount < 100 )
 			nSplitCountCipher = 2;
-		else if( nSplitCount >= 100 )	// 분할파일 100개 넘어갈 일은 없을 것
+		else if( nSplitCount >= 100 )	// Process patch data
 			nSplitCountCipher = 3;
 
 		std::vector<DWORD> vecDwSplitFileSizeList;
@@ -2424,7 +2450,7 @@ HRESULT CDnPatchDownloadThread::DownLoadSplitFile( CString strUrl, int nVersion 
 			m_strPatchFile.Format( L"%s%s", DNPATCHINFO.GetClientPath(), m_strPatchFileLocal );
 
 			LogWnd::TraceLog( L"MD5 Check Start" );
-			// 올바르게 다운로드 되었는지 MD5 Check
+			// Verify MD5 checksum
 			if( !GetMD5Checksum() )
 			{
 				LogWnd::Log( LogLevel::Error, L"MD5 Check Failed!" );

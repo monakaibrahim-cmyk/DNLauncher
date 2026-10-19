@@ -28,7 +28,7 @@
 // TYPE : FUNCTION
 // NAME : CTimeSet::CTimeSet
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -43,7 +43,7 @@ CTimeSet::CTimeSet()
 // TYPE : FUNCTION
 // NAME : CTimeSet::CTimeSet
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -99,7 +99,7 @@ CTimeSet::CTimeSet(const char* szTime, bool pIsLocal)
 // TYPE : FUNCTION
 // NAME : CTimeSet::CTimeSet
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -114,7 +114,7 @@ CTimeSet::CTimeSet(const FILETIME& stTime)
 // TYPE : FUNCTION
 // NAME : CTimeSet::CTimeSet
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -129,7 +129,7 @@ CTimeSet::CTimeSet(const SYSTEMTIME& stTime)
 // TYPE : FUNCTION
 // NAME : CTimeSet::CTimeSet
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -144,7 +144,7 @@ CTimeSet::CTimeSet(const DBTIMESTAMP& stTime)
 // TYPE : FUNCTION
 // NAME : CTimeSet::Reset
 //*---------------------------------------------------------------
-// DESC : 시간 객체 정보를 리셋 (현재시간으로 세팅)
+// DESC : Reset time object info (set to current time)
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -161,13 +161,13 @@ VOID CTimeSet::Reset()
 // TYPE : FUNCTION
 // NAME : CTimeSet::Set
 //*---------------------------------------------------------------
-// DESC : 시간 정보를 세팅
-// PARM :	1 . wYear - 년
-//			2 . wMonth - 월
-//			3 . wDay - 일
-//			4 . wHour - 시
-//			5 . wMinute - 분
-//			6 . wSecond - 초
+// DESC : Set time info
+// PARM :	1 . wYear - Year
+//			2 . wMonth - Month
+//			3 . wDay - Day
+//			4 . wHour - Hour
+//			5 . wMinute - Minute
+//			6 . wSecond - Second
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -186,7 +186,7 @@ VOID CTimeSet::Set(WORD wYear, WORD wMonth, WORD wDay, WORD wHour, WORD wMinute,
 VOID CTimeSet::Set(const __time32_t& pTime, bool pIsLocal)
 {
 	tm stTm;
-//	::memset(&stTm, 0, sizeof(stTm));	// 영향 없음 (헤더 주석 참조할 것)
+//	::memset(&stTm, 0, sizeof(stTm));	// No effect (see header comments)
 
 	if (pIsLocal) {
 		ConvertTimeT32ToTm_LC(pTime, &stTm);
@@ -208,7 +208,7 @@ VOID CTimeSet::Set(const __time32_t& pTime, bool pIsLocal)
 VOID CTimeSet::Set(const __time64_t& pTime, bool pIsLocal)
 {
 	tm stTm;
-//	::memset(&stTm, 0, sizeof(stTm));	// 영향 없음 (헤더 주석 참조할 것)
+//	::memset(&stTm, 0, sizeof(stTm));	// No effect (see header comments)
 
 	if (pIsLocal) {
 		ConvertTimeT64ToTm_LC(pTime, &stTm);
@@ -231,8 +231,8 @@ VOID CTimeSet::Set(const __time64_t& pTime, bool pIsLocal)
 // TYPE : FUNCTION
 // NAME : CTimeSet::Set
 //*---------------------------------------------------------------
-// DESC : 시간 정보를 세팅
-// PARM :	1 . stTime - FILETIME 시간정보
+// DESC : Set time info
+// PARM :	1 . stTime - FILETIME time info
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -248,8 +248,8 @@ VOID CTimeSet::Set(const FILETIME& stTime)
 // TYPE : FUNCTION
 // NAME : CTimeSet::Set
 //*---------------------------------------------------------------
-// DESC : 시간 정보를 세팅
-// PARM :	1 . stTime - SYSTEMTIME 시간정보
+// DESC : Set time info
+// PARM :	1 . stTime - SYSTEMTIME time info
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -263,8 +263,8 @@ VOID CTimeSet::Set(const SYSTEMTIME& stTime)
 // TYPE : FUNCTION
 // NAME : CTimeSet::Set
 //*---------------------------------------------------------------
-// DESC : 시간 정보를 세팅
-// PARM :	1 . stTime - DBTIMESTAMP 시간정보
+// DESC : Set time info
+// PARM :	1 . stTime - DBTIMESTAMP time info
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -281,12 +281,12 @@ VOID CTimeSet::Set(const DBTIMESTAMP& stTime)
 // TYPE : FUNCTION
 // NAME : CTimeSet::GetTimeTo
 //*---------------------------------------------------------------
-// DESC : 현재 객체에 지정된 시간에서 인자로 전달된 특정 시간까지의 남은 초 반환
-// PARM :	1 . eDayOfWeek - 주
-//			2 . wHour - 시
-//			3 . wMinute - 분
-//			4 . wSecond - 초
-// RETV : 인자로 전달된 특정 시간까지의 남은 초
+// DESC : Return remaining seconds until specified target time
+// PARM :	1 . eDayOfWeek - Day of week
+//			2 . wHour - Hour
+//			3 . wMinute - Minute
+//			4 . wSecond - Second
+// RETV : Remaining seconds until specified target time
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CTimeSet::GetTimeTo(EF_DAYOFWEEK eDayOfWeek, WORD wHour, WORD wMinute, WORD wSecond)
@@ -315,11 +315,11 @@ DWORD CTimeSet::GetTimeTo(EF_DAYOFWEEK eDayOfWeek, WORD wHour, WORD wMinute, WOR
 // TYPE : FUNCTION
 // NAME : CTimeSet::GetTimeTo
 //*---------------------------------------------------------------
-// DESC : 현재 객체에 지정된 시간에서 인자로 전달된 특정 시간까지의 남은 초 반환
-// PARM :	1 . wHour - 시
-//			2 . wMinute - 분
-//			3 . wSecond - 초
-// RETV : 인자로 전달된 특정 시간까지의 남은 초
+// DESC : Return remaining seconds until specified target time
+// PARM :	1 . wHour - Hour
+//			2 . wMinute - Minute
+//			3 . wSecond - Second
+// RETV : Remaining seconds until specified target time
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CTimeSet::GetTimeTo(WORD wHour, WORD wMinute, WORD wSecond)
@@ -347,10 +347,10 @@ DWORD CTimeSet::GetTimeTo(WORD wHour, WORD wMinute, WORD wSecond)
 // TYPE : FUNCTION
 // NAME : CTimeSet::GetTimeTo
 //*---------------------------------------------------------------
-// DESC : 현재 객체에 지정된 시간에서 인자로 전달된 특정 시간까지의 남은 초 반환
-// PARM :	1 . wMinute - 분
-//			2 . wSecond - 초
-// RETV : 인자로 전달된 특정 시간까지의 남은 초
+// DESC : Return remaining seconds until specified target time
+// PARM :	1 . wMinute - Minute
+//			2 . wSecond - Second
+// RETV : Remaining seconds until specified target time
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CTimeSet::GetTimeTo(WORD wMinute, WORD wSecond)
@@ -377,10 +377,10 @@ DWORD CTimeSet::GetTimeTo(WORD wMinute, WORD wSecond)
 // TYPE : FUNCTION
 // NAME : CTimeSet::CompareFileTime
 //*---------------------------------------------------------------
-// DESC : 두 개의 FILETIME 시간 중 어느쪽이 큰지 반환
-// PARM :	1 . stFileTime1 - FILETIME 시간정보 1
-//			2 . stFileTime2 - FILETIME 시간정보 2
-// RETV : -1 : stFileTime1 이 큼 / 0 : 둘 다 같음 / 1 : stFileTime2 가 큼
+// DESC : Compare two FILETIME structures and return comparison result
+// PARM :	1 . stFileTime1 - FILETIME time info 1
+//			2 . stFileTime2 - FILETIME time info 2
+// RETV : -1 : stFileTime1 is greater / 0 : equal / 1 : stFileTime2 is greater
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 INT CTimeSet::CompareFileTime(const FILETIME& stFileTime1, const FILETIME& stFileTime2)
@@ -393,9 +393,9 @@ INT CTimeSet::CompareFileTime(const FILETIME& stFileTime1, const FILETIME& stFil
 // TYPE : FUNCTION
 // NAME : CTimeSet::CheckIntegrity
 //*---------------------------------------------------------------
-// DESC : 객체의 현재 시간정보의 무결성 체크
+// DESC : Check integrity of object's current time info
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CTimeSet::CheckIntegrity()
@@ -415,8 +415,8 @@ BOOL CTimeSet::CheckIntegrity()
 // TYPE : FUNCTION
 // NAME : CTimeSet::AddSecond
 //*---------------------------------------------------------------
-// DESC : 현재 객체의 시간정보에 N 초만큼 더함
-// PARM :	1 . i64Second - 초 (±)
+// DESC : Add N seconds to current time info
+// PARM :	1 . i64Second - Seconds (+/-)
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -429,7 +429,7 @@ VOID CTimeSet::AddSecond(INT64 i64Second)
 	ULARGE_INTEGER uValue;
 	uValue.LowPart = stFileTime.dwLowDateTime;
 	uValue.HighPart = stFileTime.dwHighDateTime;
-	uValue.QuadPart += (i64Second * 10000000);		// 100-nano로 변환
+	uValue.QuadPart += (i64Second * 10000000);		// Convert to 100-nanoseconds
 	stFileTime.dwLowDateTime = uValue.LowPart;
 	stFileTime.dwHighDateTime = uValue.HighPart;
 	::FileTimeToSystemTime(&stFileTime, &m_stLocalTime);
@@ -440,9 +440,9 @@ VOID CTimeSet::AddSecond(INT64 i64Second)
 // TYPE : FUNCTION
 // NAME : CTimeSet::operator-
 //*---------------------------------------------------------------
-// DESC : 현재 객체의 시간정보에 다른 시간객체의 시간정보를 뺌
-// PARM :	1 . Time - 시간객체
-// RETV : 현재 객체에서 다른 객체의 시간정보를 뺀 값 (단위:초)
+// DESC : Subtract another time object info from current time info
+// PARM :	1 . Time - Time object
+// RETV : Difference from other time object (in seconds)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 INT64 CTimeSet::operator-(const CTimeSet& pTime) const
@@ -459,7 +459,7 @@ INT64 CTimeSet::operator-(const CTimeSet& pTime) const
 	lValue2.LowPart = stFileTime.dwLowDateTime;
 	lValue2.HighPart = static_cast<LONG>(stFileTime.dwHighDateTime);
 
-	lValue1.QuadPart /= 10000000;	// 100-nano를 초로 변환.
+	lValue1.QuadPart /= 10000000;	// Convert 100-nanoseconds to seconds.
 	lValue2.QuadPart /= 10000000;
 	return(static_cast<INT64>(lValue1.QuadPart - lValue2.QuadPart));
 }
@@ -469,18 +469,18 @@ INT64 CTimeSet::operator-(const CTimeSet& pTime) const
 // TYPE : FUNCTION
 // NAME : CTimeSet::GetTimeT32_LC
 //*---------------------------------------------------------------
-// DESC : 현재 시간정보를 __time32_t 시간정보로 변환
+// DESC : Convert current time info to __time32_t
 // PARM : N/A
-// RETV : __time32_t 시간정보
+// RETV : __time32_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mktime32() 을 사용하며 이것은 현재 시스템의 달력시간을 기준으로 변환
-//		- 달력시간 (Calendar Value) 은 환경변수 TZ 의 영향을 받음 (ex> 대한민국 TZ = GMT - 09:00:00)
+//		- Converted based on local calendar time via _mktime32()
+//		- Calendar time is affected by TZ environment variable (e.g. KST TZ = GMT - 09:00:00)
 //*---------------------------------------------------------------
 __time32_t CTimeSet::GetTimeT32_LC() const
 {
 	tm stTm;
-//	::memset(&stTm, 0, sizeof(stTm));	// 영향 없음 (헤더 주석 참조할 것)
+//	::memset(&stTm, 0, sizeof(stTm));	// No effect (see header comments)
 
 	stTm.tm_year	= m_stLocalTime.wYear - DF_TM_YEAR_EPOCH;
 	stTm.tm_mon		= m_stLocalTime.wMonth - 1;
@@ -504,18 +504,18 @@ __time32_t CTimeSet::GetTimeT32_LC() const
 // TYPE : FUNCTION
 // NAME : CTimeSet::GetTimeT64_LC
 //*---------------------------------------------------------------
-// DESC : 현재 시간정보를 __time64_t 시간정보로 변환
+// DESC : Convert current time info to __time64_t
 // PARM : N/A
-// RETV : __time64_t 시간정보
+// RETV : __time64_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mktime64() 을 사용하며 이것은 현재 시스템의 달력시간을 기준으로 변환
-//		- 달력시간 (Calendar Value) 은 환경변수 TZ 의 영향을 받음 (ex> 대한민국 TZ = GMT - 09:00:00)
+//		- Converted based on local calendar time via _mktime64()
+//		- Calendar time is affected by TZ environment variable (e.g. KST TZ = GMT - 09:00:00)
 //*---------------------------------------------------------------
 __time64_t CTimeSet::GetTimeT64_LC() const
 {
 	tm stTm;
-//	::memset(&stTm, 0, sizeof(stTm));	// 영향 없음 (헤더 주석 참조할 것)
+//	::memset(&stTm, 0, sizeof(stTm));	// No effect (see header comments)
 
 	stTm.tm_year	= m_stLocalTime.wYear - DF_TM_YEAR_EPOCH;
 	stTm.tm_mon		= m_stLocalTime.wMonth - 1;
@@ -538,18 +538,18 @@ __time64_t CTimeSet::GetTimeT64_LC() const
 // TYPE : FUNCTION
 // NAME : CTimeSet::GetTimeT32_GM
 //*---------------------------------------------------------------
-// DESC : 현재 시간정보를 __time32_t 시간정보로 변환
+// DESC : Convert current time info to __time32_t
 // PARM : N/A
-// RETV : __time32_t 시간정보
+// RETV : __time32_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mkgmtime32() 을 사용하며 이것은 GMT 기준으로 변환
-//		- GMT (Greenwich Mean Time) 은 영국 그리니치 천문대 기준의 세계 표준시 (시간관련 C 런타임 라이브러리에서는 UTC (Coodinated Universal Time, 협정 세계시) 와 사실상 같은 의미로 사용됨)
+//		- Converted to GMT via _mkgmtime32()
+//		- GMT is Greenwich Mean Time, virtually equivalent to UTC in the C runtime library
 //*---------------------------------------------------------------
 __time32_t CTimeSet::GetTimeT32_GM() const
 {
 	tm stTm;
-//	::memset(&stTm, 0, sizeof(stTm));	// 영향 없음 (헤더 주석 참조할 것)
+//	::memset(&stTm, 0, sizeof(stTm));	// No effect (see header comments)
 
 	stTm.tm_year	= m_stLocalTime.wYear - DF_TM_YEAR_EPOCH;
 	stTm.tm_mon		= m_stLocalTime.wMonth - 1;
@@ -566,18 +566,18 @@ __time32_t CTimeSet::GetTimeT32_GM() const
 // TYPE : FUNCTION
 // NAME : CTimeSet::GetTimeT64_GM
 //*---------------------------------------------------------------
-// DESC : 현재 시간정보를 __time64_t 시간정보로 변환
+// DESC : Convert current time info to __time64_t
 // PARM : N/A
-// RETV : __time64_t 시간정보
+// RETV : __time64_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mkgmtime64() 을 사용하며 이것은 GMT 기준으로 변환
-//		- GMT (Greenwich Mean Time) 은 영국 그리니치 천문대 기준의 세계 표준시 (시간관련 C 런타임 라이브러리에서는 UTC (Coodinated Universal Time, 협정 세계시) 와 사실상 같은 의미로 사용됨)
+//		- Converted to GMT via _mkgmtime64()
+//		- GMT is Greenwich Mean Time, virtually equivalent to UTC in the C runtime library
 //*---------------------------------------------------------------
 __time64_t CTimeSet::GetTimeT64_GM() const
 {
 	tm stTm;
-//	::memset(&stTm, 0, sizeof(stTm));	// 영향 없음 (헤더 주석 참조할 것)
+//	::memset(&stTm, 0, sizeof(stTm));	// No effect (see header comments)
 
 	stTm.tm_year	= m_stLocalTime.wYear - DF_TM_YEAR_EPOCH;
 	stTm.tm_mon		= m_stLocalTime.wMonth - 1;
@@ -607,9 +607,9 @@ TIMESTAMP_STRUCT& CTimeSet::GetDBTimeStampStruct()
 // TYPE : FUNCTION
 // NAME : CTimeSet::GetDbTimeStamp
 //*---------------------------------------------------------------
-// DESC : 현재 객체에 지정된 시간정보를 DBTIMESTAMP 형태로 반환
+// DESC : Return time info in DBTIMESTAMP format
 // PARM : N/A
-// RETV : DBTIMESTAMP 시간정보
+// RETV : DBTIMESTAMP time info
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DBTIMESTAMP& CTimeSet::GetDbTimeStamp()
@@ -637,9 +637,9 @@ DBDATE& CTimeSet::GetDBDate()
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertFileTimeToDbTimeStamp
 //*---------------------------------------------------------------
-// DESC : 특정 FILETIME 시간정보를 DBTIMESTAMP 시간정보로 변환
-// PARM :	1 . lpFileTime - 시간정보
-//			2 . lpDbTime - DBTIMESTAMP 시간정보 출력버퍼
+// DESC : Convert FILETIME to DBTIMESTAMP
+// PARM :	1 . lpFileTime - Time info
+//			2 . lpDbTime - DBTIMESTAMP output buffer
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -669,9 +669,9 @@ VOID CTimeSet::ConvertFileTimeToDbTimeStamp(const FILETIME* lpFileTime, DBTIMEST
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertDbTimeStampToFileTime
 //*---------------------------------------------------------------
-// DESC : 특정 DBTIMESTAMP 시간정보를 FILETIME 시간정보로 변환
-// PARM :	1 . lpDbTime - DBTIMESTAMP 시간정보
-//			2 . lpFileTime - FILETIME 시간정보 출력버퍼
+// DESC : Convert DBTIMESTAMP to FILETIME
+// PARM :	1 . lpDbTime - DBTIMESTAMP time info
+//			2 . lpFileTime - FILETIME output buffer
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -681,7 +681,7 @@ VOID CTimeSet::ConvertDbTimeStampToFileTime(const DBTIMESTAMP* lpDbTime, FILETIM
 	DN_ASSERT(NULL != lpFileTime,	"Invalid!");
 
 	SYSTEMTIME stSystemTime;
-//	::memset(&stSystemTime, 0, sizeof(stSystemTime));	// 아래 모든 멤버를 세팅하고 있음
+//	::memset(&stSystemTime, 0, sizeof(stSystemTime));	// All members are populated below
 
 	stSystemTime.wDayOfWeek    = 0;
 	stSystemTime.wYear         = lpDbTime->year;
@@ -700,13 +700,13 @@ VOID CTimeSet::ConvertDbTimeStampToFileTime(const DBTIMESTAMP* lpDbTime, FILETIM
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTmToTimeT32_LC
 //*---------------------------------------------------------------
-// DESC : 특정 tm 시간정보를 __time32_t 시간정보로 변환
-// PARM :	1 . lpTm - tm 시간정보
-// RETV : __time32_t 시간정보
+// DESC : Convert tm to __time32_t
+// PARM :	1 . lpTm - tm time info
+// RETV : __time32_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mktime32() 을 사용하며 이것은 현재 시스템의 달력시간을 기준으로 변환
-//		- 달력시간 (Calendar Value) 은 환경변수 TZ 의 영향을 받음 (ex> 대한민국 TZ = GMT - 09:00:00)
+//		- Converted based on local calendar time via _mktime32()
+//		- Calendar time is affected by TZ environment variable (e.g. KST TZ = GMT - 09:00:00)
 //*---------------------------------------------------------------
 __time32_t CTimeSet::ConvertTmToTimeT32_LC(tm* lpTm)
 {
@@ -720,13 +720,13 @@ __time32_t CTimeSet::ConvertTmToTimeT32_LC(tm* lpTm)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTmToTimeT64_LC
 //*---------------------------------------------------------------
-// DESC : 특정 tm 시간정보를 __time64_t 시간정보로 변환
-// PARM :	1 . lpTm - tm 시간정보
-// RETV : __time64_t 시간정보
+// DESC : Convert tm to __time64_t
+// PARM :	1 . lpTm - tm time info
+// RETV : __time64_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mktime64() 을 사용하며 이것은 현재 시스템의 달력시간을 기준으로 변환
-//		- 달력시간 (Calendar Value) 은 환경변수 TZ 의 영향을 받음 (ex> 대한민국 TZ = GMT - 09:00:00)
+//		- Converted based on local calendar time via _mktime64()
+//		- Calendar time is affected by TZ environment variable (e.g. KST TZ = GMT - 09:00:00)
 //*---------------------------------------------------------------
 __time64_t CTimeSet::ConvertTmToTimeT64_LC(tm* lpTm)
 {
@@ -740,13 +740,13 @@ __time64_t CTimeSet::ConvertTmToTimeT64_LC(tm* lpTm)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTmToTimeT32_GM
 //*---------------------------------------------------------------
-// DESC : 특정 tm 시간정보를 __time32_t 시간정보로 변환
-// PARM :	1 . lpTm - tm 시간정보
-// RETV : __time32_t 시간정보
+// DESC : Convert tm to __time32_t
+// PARM :	1 . lpTm - tm time info
+// RETV : __time32_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mkgmtime32() 을 사용하며 이것은 GMT 기준으로 변환
-//		- GMT (Greenwich Mean Time) 은 영국 그리니치 천문대 기준의 세계 표준시 (시간관련 C 런타임 라이브러리에서는 UTC (Coodinated Universal Time, 협정 세계시) 와 사실상 같은 의미로 사용됨)
+//		- Converted to GMT via _mkgmtime32()
+//		- GMT is Greenwich Mean Time, virtually equivalent to UTC in the C runtime library
 //*---------------------------------------------------------------
 __time32_t CTimeSet::ConvertTmToTimeT32_GM(tm* lpTm)
 {
@@ -760,13 +760,13 @@ __time32_t CTimeSet::ConvertTmToTimeT32_GM(tm* lpTm)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTmToTimeT64_GM
 //*---------------------------------------------------------------
-// DESC : 특정 tm 시간정보를 __time64_t 시간정보로 변환
-// PARM :	1 . lpTm - tm 시간정보
-// RETV : __time64_t 시간정보
+// DESC : Convert tm to __time64_t
+// PARM :	1 . lpTm - tm time info
+// RETV : __time64_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mkgmtime64() 을 사용하며 이것은 GMT 기준으로 변환
-//		- GMT (Greenwich Mean Time) 은 영국 그리니치 천문대 기준의 세계 표준시 (시간관련 C 런타임 라이브러리에서는 UTC (Coodinated Universal Time, 협정 세계시) 와 사실상 같은 의미로 사용됨)
+//		- Converted to GMT via _mkgmtime64()
+//		- GMT is Greenwich Mean Time, virtually equivalent to UTC in the C runtime library
 //*---------------------------------------------------------------
 __time64_t CTimeSet::ConvertTmToTimeT64_GM(tm* lpTm)
 {
@@ -780,20 +780,20 @@ __time64_t CTimeSet::ConvertTmToTimeT64_GM(tm* lpTm)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertDbTimeStampToTimeT32_LC
 //*---------------------------------------------------------------
-// DESC : 특정 DBTIMESTAMP 시간정보를 __time32_t 시간정보로 변환
-// PARM :	1 . lpDbTime - DBTIMESTAMP 시간정보
-// RETV : __time32_t 시간정보
+// DESC : Convert DBTIMESTAMP to __time32_t
+// PARM :	1 . lpDbTime - DBTIMESTAMP time info
+// RETV : __time32_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mktime32() 을 사용하며 이것은 현재 시스템의 달력시간을 기준으로 변환
-//		- 달력시간 (Calendar Value) 은 환경변수 TZ 의 영향을 받음 (ex> 대한민국 TZ = GMT - 09:00:00)
+//		- Converted based on local calendar time via _mktime32()
+//		- Calendar time is affected by TZ environment variable (e.g. KST TZ = GMT - 09:00:00)
 //*---------------------------------------------------------------
 __time32_t CTimeSet::ConvertDbTimeStampToTimeT32_LC(const DBTIMESTAMP*lpDbTime)
 {
 	DN_ASSERT(NULL != lpDbTime,	"Invalid!");
 
 	tm stTm;
-//	::memset(&stTm, 0, sizeof(stTm));	// 영향 없음 (헤더 주석 참조할 것)
+//	::memset(&stTm, 0, sizeof(stTm));	// No effect (see header comments)
 
 	stTm.tm_year	= lpDbTime->year - DF_TM_YEAR_EPOCH;
 	stTm.tm_mon		= lpDbTime->month - 1;
@@ -816,20 +816,20 @@ __time32_t CTimeSet::ConvertDbTimeStampToTimeT32_LC(const DBTIMESTAMP*lpDbTime)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertDbTimeStampToTimeT64_LC
 //*---------------------------------------------------------------
-// DESC : 특정 DBTIMESTAMP 시간정보를 __time64_t 시간정보로 변환
-// PARM :	1 . lpDbTime - DBTIMESTAMP 시간정보
-// RETV : __time64_t 시간정보
+// DESC : Convert DBTIMESTAMP to __time64_t
+// PARM :	1 . lpDbTime - DBTIMESTAMP time info
+// RETV : __time64_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mktime64() 을 사용하며 이것은 현재 시스템의 달력시간을 기준으로 변환
-//		- 달력시간 (Calendar Value) 은 환경변수 TZ 의 영향을 받음 (ex> 대한민국 TZ = GMT - 09:00:00)
+//		- Converted based on local calendar time via _mktime64()
+//		- Calendar time is affected by TZ environment variable (e.g. KST TZ = GMT - 09:00:00)
 //*---------------------------------------------------------------
 __time64_t CTimeSet::ConvertDbTimeStampToTimeT64_LC(const DBTIMESTAMP* lpDbTime)
 {
 	DN_ASSERT(NULL != lpDbTime,	"Invalid!");
 
 	tm stTm;
-//	::memset(&stTm, 0, sizeof(stTm));	// 영향 없음 (헤더 주석 참조할 것)
+//	::memset(&stTm, 0, sizeof(stTm));	// No effect (see header comments)
 
 	stTm.tm_year	= lpDbTime->year - DF_TM_YEAR_EPOCH;
 	stTm.tm_mon		= lpDbTime->month - 1;
@@ -852,20 +852,20 @@ __time64_t CTimeSet::ConvertDbTimeStampToTimeT64_LC(const DBTIMESTAMP* lpDbTime)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertDbTimeStampToTimeT32_GM
 //*---------------------------------------------------------------
-// DESC : 특정 DBTIMESTAMP 시간정보를 __time32_t 시간정보로 변환
-// PARM :	1 . lpDbTime - DBTIMESTAMP 시간정보
-// RETV : __time32_t 시간정보
+// DESC : Convert DBTIMESTAMP to __time32_t
+// PARM :	1 . lpDbTime - DBTIMESTAMP time info
+// RETV : __time32_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mkgmtime32() 을 사용하며 이것은 GMT 기준으로 변환
-//		- GMT (Greenwich Mean Time) 은 영국 그리니치 천문대 기준의 세계 표준시 (시간관련 C 런타임 라이브러리에서는 UTC (Coodinated Universal Time, 협정 세계시) 와 사실상 같은 의미로 사용됨)
+//		- Converted to GMT via _mkgmtime32()
+//		- GMT is Greenwich Mean Time, virtually equivalent to UTC in the C runtime library
 //*---------------------------------------------------------------
 __time32_t CTimeSet::ConvertDbTimeStampToTimeT32_GM(const DBTIMESTAMP*lpDbTime)
 {
 	DN_ASSERT(NULL != lpDbTime,	"Invalid!");
 
 	tm stTm;
-//	::memset(&stTm, 0, sizeof(stTm));	// 영향 없음 (헤더 주석 참조할 것)
+//	::memset(&stTm, 0, sizeof(stTm));	// No effect (see header comments)
 
 	stTm.tm_year	= lpDbTime->year - DF_TM_YEAR_EPOCH;
 	stTm.tm_mon		= lpDbTime->month - 1;
@@ -882,20 +882,20 @@ __time32_t CTimeSet::ConvertDbTimeStampToTimeT32_GM(const DBTIMESTAMP*lpDbTime)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertDbTimeStampToTimeT64_GM
 //*---------------------------------------------------------------
-// DESC : 특정 DBTIMESTAMP 시간정보를 __time64_t 시간정보로 변환
-// PARM :	1 . lpDbTime - DBTIMESTAMP 시간정보
-// RETV : __time64_t 시간정보
+// DESC : Convert DBTIMESTAMP to __time64_t
+// PARM :	1 . lpDbTime - DBTIMESTAMP time info
+// RETV : __time64_t time info
 // PRGM : B4nFter
 // P.S.>
-//		- _mkgmtime64() 을 사용하며 이것은 GMT 기준으로 변환
-//		- GMT (Greenwich Mean Time) 은 영국 그리니치 천문대 기준의 세계 표준시 (시간관련 C 런타임 라이브러리에서는 UTC (Coodinated Universal Time, 협정 세계시) 와 사실상 같은 의미로 사용됨)
+//		- Converted to GMT via _mkgmtime64()
+//		- GMT is Greenwich Mean Time, virtually equivalent to UTC in the C runtime library
 //*---------------------------------------------------------------
 __time64_t CTimeSet::ConvertDbTimeStampToTimeT64_GM(const DBTIMESTAMP* lpDbTime)
 {
 	DN_ASSERT(NULL != lpDbTime,	"Invalid!");
 
 	tm stTm;
-//	::memset(&stTm, 0, sizeof(stTm));	// 영향 없음 (헤더 주석 참조할 것)
+//	::memset(&stTm, 0, sizeof(stTm));	// No effect (see header comments)
 
 	stTm.tm_year	= lpDbTime->year - DF_TM_YEAR_EPOCH;
 	stTm.tm_mon		= lpDbTime->month - 1;
@@ -912,14 +912,14 @@ __time64_t CTimeSet::ConvertDbTimeStampToTimeT64_GM(const DBTIMESTAMP* lpDbTime)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTimeT32ToTm_LC
 //*---------------------------------------------------------------
-// DESC : 특정 __time32_t 시간정보를 tm 시간정보로 변환
-// PARM :	1 . pTimeT32 - __time32_t 시간정보
-//			2 . lpTm - tm 시간정보 출력버퍼
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Convert __time32_t to tm
+// PARM :	1 . pTimeT32 - __time32_t time info
+//			2 . lpTm - tm output buffer
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 // P.S.>
-//		- _localtime32_s() 을 사용하며 이것은 현재 시스템의 달력시간을 기준으로 변환
-//		- 달력시간 (Calendar Value) 은 환경변수 TZ 의 영향을 받음 (ex> 대한민국 TZ = GMT - 09:00:00)
+//		- Converted based on local calendar time via _localtime32_s()
+//		- Calendar time is affected by TZ environment variable (e.g. KST TZ = GMT - 09:00:00)
 //*---------------------------------------------------------------
 BOOL CTimeSet::ConvertTimeT32ToTm_LC(__time32_t pTimeT32, tm* lpTm)
 {
@@ -941,14 +941,14 @@ BOOL CTimeSet::ConvertTimeT32ToTm_LC(__time32_t pTimeT32, tm* lpTm)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTimeT64ToTm_LC
 //*---------------------------------------------------------------
-// DESC : 특정 __time64_t 시간정보를 tm 시간정보로 변환
-// PARM :	1 . pTimeT64 - __time64_t 시간정보
-//			2 . lpTm - tm 시간정보 출력버퍼
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Convert __time64_t to tm
+// PARM :	1 . pTimeT64 - __time64_t time info
+//			2 . lpTm - tm output buffer
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 // P.S.>
-//		- _localtime64_s() 을 사용하며 이것은 현재 시스템의 달력시간을 기준으로 변환
-//		- 달력시간 (Calendar Value) 은 환경변수 TZ 의 영향을 받음 (ex> 대한민국 TZ = GMT - 09:00:00)
+//		- Converted based on local calendar time via _localtime64_s()
+//		- Calendar time is affected by TZ environment variable (e.g. KST TZ = GMT - 09:00:00)
 //*---------------------------------------------------------------
 BOOL CTimeSet::ConvertTimeT64ToTm_LC(__time64_t pTimeT64, tm* lpTm)
 {
@@ -970,14 +970,14 @@ BOOL CTimeSet::ConvertTimeT64ToTm_LC(__time64_t pTimeT64, tm* lpTm)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTimeT32ToTm_GM
 //*---------------------------------------------------------------
-// DESC : 특정 __time32_t 시간정보를 tm 시간정보로 변환
-// PARM :	1 . pTimeT32 - __time32_t 시간정보
-//			2 . lpTm - tm 시간정보 출력버퍼
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Convert __time32_t to tm
+// PARM :	1 . pTimeT32 - __time32_t time info
+//			2 . lpTm - tm output buffer
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 // P.S.>
-//		- _gmtime32_s() 을 사용하며 이것은 GMT 기준으로 변환
-//		- GMT (Greenwich Mean Time) 은 영국 그리니치 천문대 기준의 세계 표준시 (시간관련 C 런타임 라이브러리에서는 UTC (Coodinated Universal Time, 협정 세계시) 와 사실상 같은 의미로 사용됨)
+//		- Converted to GMT via _gmtime32_s()
+//		- GMT is Greenwich Mean Time, virtually equivalent to UTC in the C runtime library
 //*---------------------------------------------------------------
 BOOL CTimeSet::ConvertTimeT32ToTm_GM(__time32_t pTimeT32, tm* lpTm)
 {
@@ -999,14 +999,14 @@ BOOL CTimeSet::ConvertTimeT32ToTm_GM(__time32_t pTimeT32, tm* lpTm)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTimeT64ToTm_GM
 //*---------------------------------------------------------------
-// DESC : 특정 __time64_t 시간정보를 tm 시간정보로 변환
-// PARM :	1 . pTimeT64 - __time64_t 시간정보
-//			2 . lpTm - tm 시간정보 출력버퍼
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Convert __time64_t to tm
+// PARM :	1 . pTimeT64 - __time64_t time info
+//			2 . lpTm - tm output buffer
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 // P.S.>
-//		- _gmtime32_s() 을 사용하며 이것은 GMT 기준으로 변환
-//		- GMT (Greenwich Mean Time) 은 영국 그리니치 천문대 기준의 세계 표준시 (시간관련 C 런타임 라이브러리에서는 UTC (Coodinated Universal Time, 협정 세계시) 와 사실상 같은 의미로 사용됨)
+//		- Converted to GMT via _gmtime32_s()
+//		- GMT is Greenwich Mean Time, virtually equivalent to UTC in the C runtime library
 //*---------------------------------------------------------------
 BOOL CTimeSet::ConvertTimeT64ToTm_GM(__time64_t pTimeT64, tm* lpTm)
 {
@@ -1028,14 +1028,14 @@ BOOL CTimeSet::ConvertTimeT64ToTm_GM(__time64_t pTimeT64, tm* lpTm)
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTimeT32ToDbTimeStamp_LC
 //*---------------------------------------------------------------
-// DESC : 특정 __time32_t 시간정보를 DBTIMESTAMP 시간정보로 변환
-// PARM :	1 . pTimeT32 - __time32_t 시간정보
-//			2 . lpDbTime - DBTIMESTAMP 시간정보 출력버퍼
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Convert __time32_t to DBTIMESTAMP
+// PARM :	1 . pTimeT32 - __time32_t time info
+//			2 . lpDbTime - DBTIMESTAMP output buffer
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 // P.S.>
-//		- _localtime32_s() 을 사용하며 이것은 현재 시스템의 달력시간을 기준으로 변환
-//		- 달력시간 (Calendar Value) 은 환경변수 TZ 의 영향을 받음 (ex> 대한민국 TZ = GMT - 09:00:00)
+//		- Converted based on local calendar time via _localtime32_s()
+//		- Calendar time is affected by TZ environment variable (e.g. KST TZ = GMT - 09:00:00)
 //*---------------------------------------------------------------
 BOOL CTimeSet::ConvertTimeT32ToDbTimeStamp_LC(__time32_t pTimeT32, DBTIMESTAMP* lpDbTime)
 {
@@ -1063,14 +1063,14 @@ BOOL CTimeSet::ConvertTimeT32ToDbTimeStamp_LC(__time32_t pTimeT32, DBTIMESTAMP* 
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTimeT64ToDbTimeStamp_LC
 //*---------------------------------------------------------------
-// DESC : 특정 __time64_t 시간정보를 DBTIMESTAMP 시간정보로 변환
-// PARM :	1 . pTimeT64 - __time64_t 시간정보
-//			2 . lpDbTime - DBTIMESTAMP 시간정보 출력버퍼
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Convert __time64_t to DBTIMESTAMP
+// PARM :	1 . pTimeT64 - __time64_t time info
+//			2 . lpDbTime - DBTIMESTAMP output buffer
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 // P.S.>
-//		- _localtime64_s() 을 사용하며 이것은 현재 시스템의 달력시간을 기준으로 변환
-//		- 달력시간 (Calendar Value) 은 환경변수 TZ 의 영향을 받음 (ex> 대한민국 TZ = GMT - 09:00:00)
+//		- Converted based on local calendar time via _localtime64_s()
+//		- Calendar time is affected by TZ environment variable (e.g. KST TZ = GMT - 09:00:00)
 //*---------------------------------------------------------------
 BOOL CTimeSet::ConvertTimeT64ToDbTimeStamp_LC(__time64_t pTimeT64, DBTIMESTAMP* lpDbTime)
 {
@@ -1098,14 +1098,14 @@ BOOL CTimeSet::ConvertTimeT64ToDbTimeStamp_LC(__time64_t pTimeT64, DBTIMESTAMP* 
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTimeT32ToDbTimeStamp_GM
 //*---------------------------------------------------------------
-// DESC : 특정 __time32_t 시간정보를 DBTIMESTAMP 시간정보로 변환
-// PARM :	1 . pTimeT32 - __time32_t 시간정보
-//			2 . lpDbTime - DBTIMESTAMP 시간정보 출력버퍼
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Convert __time32_t to DBTIMESTAMP
+// PARM :	1 . pTimeT32 - __time32_t time info
+//			2 . lpDbTime - DBTIMESTAMP output buffer
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 // P.S.>
-//		- _gmtime32_s() 을 사용하며 이것은 GMT 기준으로 변환
-//		- GMT (Greenwich Mean Time) 은 영국 그리니치 천문대 기준의 세계 표준시 (시간관련 C 런타임 라이브러리에서는 UTC (Coodinated Universal Time, 협정 세계시) 와 사실상 같은 의미로 사용됨)
+//		- Converted to GMT via _gmtime32_s()
+//		- GMT is Greenwich Mean Time, virtually equivalent to UTC in the C runtime library
 //*---------------------------------------------------------------
 BOOL CTimeSet::ConvertTimeT32ToDbTimeStamp_GM(__time32_t pTimeT32, DBTIMESTAMP* lpDbTime)
 {
@@ -1133,14 +1133,14 @@ BOOL CTimeSet::ConvertTimeT32ToDbTimeStamp_GM(__time32_t pTimeT32, DBTIMESTAMP* 
 // TYPE : FUNCTION
 // NAME : CTimeSet::ConvertTimeT64ToDbTimeStamp_GM
 //*---------------------------------------------------------------
-// DESC : 특정 __time64_t 시간정보를 DBTIMESTAMP 시간정보로 변환
-// PARM :	1 . pTimeT64 - __time64_t 시간정보
-//			2 . lpDbTime - DBTIMESTAMP 시간정보 출력버퍼
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Convert __time64_t to DBTIMESTAMP
+// PARM :	1 . pTimeT64 - __time64_t time info
+//			2 . lpDbTime - DBTIMESTAMP output buffer
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 // P.S.>
-//		- _gmtime32_s() 을 사용하며 이것은 GMT 기준으로 변환
-//		- GMT (Greenwich Mean Time) 은 영국 그리니치 천문대 기준의 세계 표준시 (시간관련 C 런타임 라이브러리에서는 UTC (Coodinated Universal Time, 협정 세계시) 와 사실상 같은 의미로 사용됨)
+//		- Converted to GMT via _gmtime32_s()
+//		- GMT is Greenwich Mean Time, virtually equivalent to UTC in the C runtime library
 //*---------------------------------------------------------------
 BOOL CTimeSet::ConvertTimeT64ToDbTimeStamp_GM(__time64_t pTimeT64, DBTIMESTAMP* lpDbTime)
 {

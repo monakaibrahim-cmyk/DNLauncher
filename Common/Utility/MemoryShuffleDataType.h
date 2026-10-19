@@ -10,33 +10,33 @@
 	LAST BUILT DATE : 2010. 07. 21
 
 	P.S.>
-		- 사용 전에 별도 문서로 설명되어있는 사용방법과 주의사항을 반드시 숙지해야 함
+		- Review usage documentation before using this memory-shuffle class
 
-		- 주의사항에 소개되어있는 기본 데이터 타입 별 지원하지 않는 연산들에 대해서 컴파일 에러나 경고가 발생하지 않도록 템플릿 전문화 되어있으나 고의로 컴파일 에러나 경고를 원할 경우 본 헤더를 #include 하기 전 상단에 아래의 #define 을 선언할 것
+		- Template specialization is provided to prevent unsupported operation compiler errors
 
 			SW_MSDT_NOTINCLUDE_COMPILESAFETY
 
-		- C++ 예약어 중 'export' 를 지원하는 컴파일러 사용 시 .h 와 .inl 을 .h 와 .cpp 의 형태로 분리하는 작업 필요 (참고 : http://www.comeaucomputing.com/4.0/docs/userman/export.html)
+		- If using compiler supporting C++ export, separate .h and .inl into .h and .cpp
 
-		- 지원하지 않는 데이터 타입 (2009.11.23> 포인터, 참조) 사용 시 컴파일 에러 발생 (의도적임)
+		- Intentionally triggers compile error on unsupported types (pointers, references)
 
-		- 추후 C++ 예약어 'export' 지원 후 본 모듈의 구조변경에 대비한 링크 에러 'error LNK2001' 유발 기능 추가 필요
+		- If using compiler supporting C++ export, separate .h and .inl into .h and .cpp
 
-		- 예외상황 발생 시 오류체크를 위해 아래와 같은 기능들을 제공하니 지원을 원할 경우 본 헤더를 #include 하기 전 상단에 아래의 #define 을 선언할 것
+		- Error checking features available via preprocessor definitions
 
 			SW_MSDT_ERRORCHECK_ORIGINVALUE
-				: TDATA 형의 복제 변수를 유지하며 모든 참조, 연산 시 동일하게 적용
-				: 셔플 변수를 실제 값으로 변환하여 참조, 연산 직전에 복제 변수와 비교
+				: Maintains replica variable of TDATA type for verification
+				: Verifies replica before operations
 
-		- 예외상황 발생 시 assert() 를 호출하고자 한다면 본 헤더를 #include 하기 전 상단에 아래의 #define 을 선언할 것
+		- Define macro prior to inclusion to enable assert() on exceptions
 
 			SW_MSDT_ASSERT
 
-		- 아래의 #define 은 MSDT 의 내부 동작을 확인할 목적으로 사용되며 대부분의 경우는 필요 없고 보안성을 낮추므로 실제 적용 시에는 반드시 제거, 비활성화 되어야 함
+		- Debug options for verifying MSDT internal operations; disable in production
 
 			SW_MSDT_TEST
 
-	Copyrightⓒ 2002~2010 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2010 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -53,19 +53,19 @@
 //	DEFINE
 ///////////////////////////////////////////////////////////////////
 
-enum EF_MSDT_ALLOCTICKTERM						// 메모리 할당 간격
+enum EF_MSDT_ALLOCTICKTERM						// Memory allocation interval
 {
-	EV_MSDT_ALTT_VERYFAST		= (1*1000),		// 극도의 보안이 요구되는 경우
-	EV_MSDT_ALTT_FAST			= (5*1000),		// 보안이 우선되는 경우
-	EV_MSDT_ALTT_MEDIUM			= (10*1000),	// 일반적인 경우
-	EV_MSDT_ALTT_SLOW			= (30*1000),	// 성능이 우선되는 경우
-	EV_MSDT_ALTT_VERYSLOW		= (60*1000),	// 극도의 성능이 요구되는 경우
+	EV_MSDT_ALTT_VERYFAST		= (1*1000),		// Maximum security
+	EV_MSDT_ALTT_FAST			= (5*1000),		// High security
+	EV_MSDT_ALTT_MEDIUM			= (10*1000),	// Medium security (default)
+	EV_MSDT_ALTT_SLOW			= (30*1000),	// High performance
+	EV_MSDT_ALTT_VERYSLOW		= (60*1000),	// Maximum performance
 };
 
-enum EF_MSDT_EXCEPTIONCODE						// 예외 코드 (참고 : http://msdn.microsoft.com/en-us/library/het71c37.aspx)
+enum EF_MSDT_EXCEPTIONCODE						// Exception codes
 {
 	EV_MSDT_ECCD_NONE			= 0xE0000000,	// N/A
-	EV_MSDT_ECCD_ALLOCFAIL		= 0xE0010000,	// 메모리 할당 실패
+	EV_MSDT_ECCD_ALLOCFAIL		= 0xE0010000,	// Memory allocation failed
 };
 
 #if defined(PRE_MEMORY_SHUFFLE)
@@ -109,7 +109,7 @@ class CMemoryShuffleDataType;
 // TYPE : CLASS
 // NAME : CMemoryShuffleBaseUnit
 //*---------------------------------------------------------------
-// DESC : 메모리 셔플 기본단위 클래스 (기본)
+// DESC : Memory shuffle base unit class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<typename TDATA>
@@ -136,7 +136,7 @@ private:
 // TYPE : CLASS
 // NAME : CMemoryShuffleAllocator
 //*---------------------------------------------------------------
-// DESC : 메모리 셔플의 동적 메모리 관리를 담당하는 할당자 클래스
+// DESC : Memory shuffle dynamic allocator class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<typename TDATA>
@@ -180,7 +180,7 @@ private:
 public:
 	volatile mutable long m_Lock;
 
-	// 오류 체크용 변수
+	// Verification variable
 #if defined(SW_MSDT_ERRORCHECK_ORIGINVALUE)
 	TDATA m_OriginalValue;
 #endif	// SW_MSDT_ERRORCHECK_ORIGINVALUE
@@ -192,13 +192,13 @@ public:
 // TYPE : CLASS
 // NAME : CMemoryShuffleSyncAuto
 //*---------------------------------------------------------------
-// DESC : 메모리 셔플 데이터 타입 연산 시 동기를 보장해주는 클래스
+// DESC : Memory shuffle synchronization wrapper class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<typename TALLOC, typename TUNIT>
 class CMemoryShuffleSyncAuto
 {
-//	DISABLE_COPY_ASSIGN(CMemoryShuffleSyncAuto)	// 객체간 복사, 대입 금지
+	// Prevent copy and assignment
 
 public:
 	CMemoryShuffleSyncAuto(TALLOC* pAlloc);
@@ -207,7 +207,7 @@ public:
 	TUNIT* Lock();
 
 private:
-	// 객체간 복사, 대입 금지
+	// Prevent copy and assignment
 	CMemoryShuffleSyncAuto(const CMemoryShuffleSyncAuto<TALLOC, TUNIT>& pSyncAuto) : m_Alloc(pSyncAuto.m_Alloc)		{ MSDT_ASSERT(0); /* "Can't be Called!" */ }
 #pragma warning (disable:4100)
 	CMemoryShuffleSyncAuto& operator=(const CMemoryShuffleSyncAuto<TALLOC, TUNIT>& pSyncAuto)						{ MSDT_ASSERT(0); /* "Can't be Called!" */ return(*this); }
@@ -224,7 +224,7 @@ private:
 // TYPE : CLASS
 // NAME : CMemoryShuffleDataType
 //*---------------------------------------------------------------
-// DESC : 메모리 셔플 데이터 타입 클래스
+// DESC : Memory shuffle data type class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<typename TDATA>
@@ -244,10 +244,10 @@ public:
 	TDATA operator=(const TDATA& pData);
 	CMemoryShuffleDataType<TDATA>& operator=(const CMemoryShuffleDataType<TDATA>& pMsdt);
 
-	TDATA operator++();			// ++V (선치)
-	TDATA operator++(int);		// V++ (후치)
-	TDATA operator--();			// --V (선치)
-	TDATA operator--(int);		// V-- (후치)
+	TDATA operator++();			// Prefix ++
+	TDATA operator++(int);		// Postfix ++
+	TDATA operator++();			// Prefix ++
+	TDATA operator++(int);		// Postfix ++
 
 	TDATA operator+=(const TDATA& pData);
 	TDATA operator-=(const TDATA& pData);
@@ -262,7 +262,7 @@ public:
 	void SetAllocTickTerm(unsigned long pTickTerm);
 
 #if defined(SW_MSDT_TEST)
-	__forceinline const CMemoryShuffleBaseUnit<TDATA>* GetPtr() const { return(m_Allocator.m_Unit); }		// 테스트를 위한 임시 메서드 !!! - 실제 사용 시엔 반드시 제거 요망
+	__forceinline const CMemoryShuffleBaseUnit<TDATA>* GetPtr() const { return(m_Allocator.m_Unit); }		// Debug method
 #endif	// SW_MSDT_TEST
 
 private:
@@ -280,7 +280,7 @@ private:
 // TYPE : CLASS
 // NAME : CMemoryShuffleDataType
 //*---------------------------------------------------------------
-// DESC : 메모리 셔플 데이터 타입 클래스 (포인터 사용 금지)
+// DESC : Memory shuffle data type class (pointers prohibited)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<typename TDATA>
@@ -289,7 +289,7 @@ class CMemoryShuffleDataType<TDATA*>
 
 public:
 	CMemoryShuffleDataType() {
-		char aCompileError[-1];		// 컴파일 시점 에러 유발
+		char aCompileError[-1];		// Compile-time error trigger
 	}
 };
 
@@ -298,7 +298,7 @@ public:
 // TYPE : CLASS
 // NAME : CMemoryShuffleDataType
 //*---------------------------------------------------------------
-// DESC : 메모리 셔플 데이터 타입 클래스 (포인터 사용 금지)
+// DESC : Memory shuffle data type class (pointers prohibited)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<typename TDATA>
@@ -307,7 +307,7 @@ class CMemoryShuffleDataType<const TDATA*>
 
 public:
 	CMemoryShuffleDataType() {
-		char aCompileError[-1];		// 컴파일 시점 에러 유발
+		char aCompileError[-1];		// Compile-time error trigger
 	}
 };
 
@@ -316,7 +316,7 @@ public:
 // TYPE : CLASS
 // NAME : CMemoryShuffleDataType
 //*---------------------------------------------------------------
-// DESC : 메모리 셔플 데이터 타입 클래스 (참조 사용 금지)
+// DESC : Memory shuffle data type class (references prohibited)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<typename TDATA>
@@ -325,7 +325,7 @@ class CMemoryShuffleDataType<TDATA&>
 
 public:
 	CMemoryShuffleDataType() {
-		char aCompileError[-1];		// 컴파일 시점 에러 유발
+		char aCompileError[-1];		// Compile-time error trigger
 	}
 };
 
@@ -334,7 +334,7 @@ public:
 // TYPE : CLASS
 // NAME : CMemoryShuffleDataType
 //*---------------------------------------------------------------
-// DESC : 메모리 셔플 데이터 타입 클래스 (참조 사용 금지)
+// DESC : Memory shuffle data type class (references prohibited)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<typename TDATA>
@@ -343,10 +343,10 @@ class CMemoryShuffleDataType<const TDATA&>
 
 public:
 	CMemoryShuffleDataType() {
-		char aCompileError[-1];		// 컴파일 시점 에러 유발
+		char aCompileError[-1];		// Compile-time error trigger
 	}
 };
 
 
-#include "MEMORYSHUFFLEDATATYPE.INL"	// P.S.> 'export' 예약어가 지원되는 컴파일러에서 제거
+#include "MEMORYSHUFFLEDATATYPE.INL"	// Implementation include
 

@@ -6,12 +6,12 @@
 
   <PropertyGroup>
     <ProjectRootDir>$(MSBuildThisFileDirectory)</ProjectRootDir>
-    <!-- Direct all intermediate build garbage to folder Build in project root -->
-    <IntDir>$(ProjectRootDir)Build\Intermediate\$(MSBuildProjectName)\$(Configuration)\</IntDir>
-    <!-- Direct static library outputs to Build\Lib in project root -->
-    <OutDir Condition="'$(ConfigurationType)'!='Application'">$(ProjectRootDir)Build\Lib\$(Configuration)\</OutDir>
-    <!-- Application output goes to Output\ and Build\ -->
-    <OutDir Condition="'$(ConfigurationType)'=='Application'">$(ProjectRootDir)Output\$(Configuration)\</OutDir>
+    <!-- Direct all intermediate build garbage to folder Build in project root, separated by Platform and Configuration -->
+    <IntDir>$(ProjectRootDir)Build\Intermediate\$(Platform)\$(MSBuildProjectName)\$(Configuration)\</IntDir>
+    <!-- Direct static library outputs to Build\Lib in project root, separated by Platform and Configuration -->
+    <OutDir Condition="'$(ConfigurationType)'!='Application'">$(ProjectRootDir)Build\Lib\$(Platform)\$(Configuration)\</OutDir>
+    <!-- Application output goes to Output\ and Build\, separated by Platform and Configuration -->
+    <OutDir Condition="'$(ConfigurationType)'=='Application'">$(ProjectRootDir)Output\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
 
   <ItemDefinitionGroup>
@@ -23,7 +23,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectRootDir)Build\Lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectRootDir)Build\Lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>

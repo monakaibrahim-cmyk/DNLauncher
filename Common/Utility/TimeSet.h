@@ -3,37 +3,37 @@
 	<< TIME SET >>
 
 	FILE : TIMESET.H, TIMESET.CPP
-	DESC : 시간 관리 클래스
+	DESC : Time management class
 	INIT BUILT DATE : 2007. 04. 22
 	LAST BUILT DATE : 2008. 05. 29
 
 	P.S.>
-		- tm 구조체 구조
-			int tm_sec          : 초 (0 ~ 59) (*)
-			int tm_min          : 분 0 에서 59 까지의 범위를 갖는 분(minute) (*)
-			int tm_hour         : 시 0 에서 23까지의 범위를 갖는 시(hours) (*)
-			int tm_mday         : 일 (한달주기, 1 ~ 31) (*)
-			int tm_mon          : 월 (0 ~ 11) (*)
-			int tm_year         : 년 (1900년 이후) (*)
-			int tm_wday         : 일 (한주주기, 0 ~ 6)
-			int tm_yday			: 일 (한해주기, 0 ~ 365)
-			int tm_isdst		: 일광 절약 시간제 (서머타임) 플래그
+		- tm structure layout
+			int tm_sec          : Seconds (0 ~ 59) (*)
+			int tm_min          : Minutes (0 ~ 59) (*)
+			int tm_hour         : Hours (0 ~ 23) (*)
+			int tm_mday         : Day of month (1 ~ 31) (*)
+			int tm_mon          : Month (0 ~ 11, Jan=0) (*)
+			int tm_year         : Year (years since 1900) (*)
+			int tm_wday         : Day of week (0 ~ 6, Sun=0)
+			int tm_yday         : Day of year (0 ~ 365)
+			int tm_isdst        : Daylight saving time flag
 
-			P.S.> 데이터 멤버 설명 뒤에 (*) 가 붙는 멤버만이 __time32_t, __time64_t 로 변환 시 영향을 주고 나머지는 무관
+			// P.S.> Only members marked (*) affect __time32_t / __time64_t conversion
 
-		- DBTIMESTAMP 구조체 구조
-			SHORT year			: 년 (A.D. 이후 0 ~ 9999)
-			USHORT month		: 월 (1 ~ 12)
-			USHORT day			: 일 (1 ~ 31)
-			USHORT hour			: 시 (0 ~ 23)
-			USHORT minute		: 분 (0 ~ 59) 
-			USHORT second		: 초 (0 ~ 59) 
-			ULONG fraction		: 정밀도 (1/10억 초까지 정밀도를 표현, 0 ~ 999,999,999)
+		- DBTIMESTAMP structure layout
+			SHORT year          : Year (0 ~ 9999)
+			USHORT month        : Month (1 ~ 12)
+			USHORT day          : Day (1 ~ 31)
+			USHORT hour         : Hour (0 ~ 23)
+			USHORT minute       : Minute (0 ~ 59)
+			USHORT second       : Second (0 ~ 59)
+			ULONG fraction      : Precision fraction (0 ~ 999,999,999)
 
-		- __time32_t 정밀도		: 1970-01-01 00:00:00 ~ 2038-01-18 12:14:07
-		- __time64_t 정밀도		: 1970-01-01 00:00:00 ~ 2999-12-31 23:59:59
+		- __time32_t range: 1970-01-01 00:00:00 ~ 2038-01-18 12:14:07
+		- __time64_t range: 1970-01-01 00:00:00 ~ 2999-12-31 23:59:59
 
-	Copyrightⓒ 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -54,9 +54,9 @@
 //	DEFINE
 ///////////////////////////////////////////////////////////////////
 
-#define DF_TM_YEAR_EPOCH		(1900)					// tm 구조체 년도 구분 값
-#define DF_TIME32_MAX			(0x7FFFFFFF)			// __time32_t 데이터형의 최대값
-#define DF_TIME64_MAX			(0x00000007933FF16F)	// __time64_t 데이터형의 최대값
+#define DF_TM_YEAR_EPOCH		(1900)					// tm structure base year
+#define DF_TIME32_MAX			(0x7FFFFFFF)			// __time32_t max value
+#define DF_TIME64_MAX			(0x00000007933FF16F)	// __time64_t max value
 
 
 ///////////////////////////////////////////////////////////////////
@@ -67,13 +67,13 @@
 // TYPE : CLASS
 // NAME : CTimeSet
 //*---------------------------------------------------------------
-// DESC : 시간 관리 클래스
+// DESC : Time management class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CTimeSet
 {
 public:
-	// SYSTEMTIME::wDayOfWeek 의 값순서와 동일해야 함
+	// Must match SYSTEMTIME::wDayOfWeek value order
 	enum EF_DAYOFWEEK { EV_DAYOFWEEK_SUN=0, EV_DAYOFWEEK_MON, EV_DAYOFWEEK_TUE, EV_DAYOFWEEK_WEN, EV_DAYOFWEEK_THU, EV_DAYOFWEEK_FRI, EV_DAYOFWEEK_SAT };
 public:
 	CTimeSet();
@@ -116,11 +116,11 @@ public:
 	VOID Set(const SYSTEMTIME& stTime);
 	VOID Set(const DBTIMESTAMP& stTime);
 
-	DWORD GetTimeTo(EF_DAYOFWEEK eDayOfWeek, WORD wHour, WORD wMinute, WORD wSecond);	// 최대차이 : 주 (단위:1/1000초)
-	DWORD GetTimeTo(WORD wHour, WORD wMinute, WORD wSecond);	// 최대차이 : 일 (단위:1/1000초)
-	DWORD GetTimeTo(WORD wMinute, WORD wSecond);	// 최대차이 : 시간 (단위:1/1000초)
+	DWORD GetTimeTo(EF_DAYOFWEEK eDayOfWeek, WORD wHour, WORD wMinute, WORD wSecond);	// Max difference: Week (ms)
+	DWORD GetTimeTo(WORD wHour, WORD wMinute, WORD wSecond);	// Max difference: Day (ms)
+	DWORD GetTimeTo(WORD wMinute, WORD wSecond);	// Max difference: Hour (ms)
 
-	INT CompareFileTime(const FILETIME& stFileTime1, const FILETIME& stFileTime2);	// stFileTime1 와 stFileTime2 중 어느쪽이 큰지 비교 (-1:첫번째큼 / 0:같음 / 1:두번째큼)
+	INT CompareFileTime(const FILETIME& stFileTime1, const FILETIME& stFileTime2);	// Compare FILETIME values (-1: first is greater, 0: equal, 1: second is greater)
 	BOOL CheckIntegrity();
 
 	VOID AddSecond(INT64 ui64Second);	// 20100728
@@ -147,9 +147,9 @@ public:
 	static EF_DAYOFWEEK CalculateDayOfWeek(WORD wYear, WORD wMonth, WORD wDay);	// 20100728
 
 private:
-	SYSTEMTIME m_stLocalTime;		// 실제 현재 시간을 유지하는 변수
+	SYSTEMTIME m_stLocalTime;		// Current local time
 	TIMESTAMP_STRUCT m_DBTimeStampStruct;
-	DBTIMESTAMP m_stDbTimeStamp;	// 필요할 때만 사용하는 임시변수
+	DBTIMESTAMP m_stDbTimeStamp;	// Temporary DBTIMESTAMP variable
 	DBDATE m_DBDate;
 };
 

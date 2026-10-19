@@ -3,15 +3,15 @@
 	<< MEMORY MAP >>
 
 	FILE : MEMORYMAP.H, MEMORYMAP.CPP
-	DESC : Memory Map 관리 클래스
+	DESC : Memory-mapped file management class
 	INIT BUILT DATE : 2005. 12. 11
 	LAST BUILT DATE : 2005. 12. 11
 
 	P.S.> 
-		- 일반적으로 존재하는 파일에 접근하여 읽기만 할 목적으로 제작된 메모리 맵
-		- 물리적인 파일을 새로 만들거나 크기가 0인 경우 CMemoryMap::Open 의 ::CreateFileMapping 에서 에러가 발생할 수 있으므로 파일크기 확인
+		- Read-only memory map for accessing existing files
+		- If creating a new file or file size is 0, CreateFileMapping may fail; check file size
 
-	Copyrightⓒ 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -39,7 +39,7 @@
 // TYPE : CLASS
 // NAME : CMemoryMap
 //*---------------------------------------------------------------
-// DESC : Memory Map 관리 클래스
+// DESC : Memory-mapped file management class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CMemoryMap

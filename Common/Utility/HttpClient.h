@@ -3,16 +3,16 @@
 	<< HTTP CLIENT >>
 
 	FILE : HTTPCLIENT.H, HTTPCLIENT.CPP
-	DESC : WININET 라이브러리를 이용한 HTTP CLIENT 클래스
+	DESC : HTTP client class using WinINet API
 	INIT BUILT DATE : 2006. 02. 20
 	LAST BUILT DATE : 2006. 02. 21
 
 	P.S.>
-		- One-Request,One-Response / Keep-Alive 방식의 연결,송수신 모드 지원
-		- One-Request,One-Response : 특정 URL의 HTTP 자원을 한번에 요청하여 받는 형식 (Open() → RecvResponse() → Close())
-		- Keep-Alive : 특정 HTTP서버에 일단 접속한 후 매번 다른 자원을 요청하여 받는 형식 (Open() → SendRequest() → RecvResponse() → Close())
+		- Supports One-Request,One-Response and Keep-Alive connection modes
+		- One-Request,One-Response : Request and receive single HTTP resource (Open() -> RecvResponse() -> Close())
+		- Keep-Alive : Connect to server and request multiple resources (Open() -> SendRequest() -> RecvResponse() -> Close())
 
-	Copyrightⓒ 2002~2007 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2007 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -45,29 +45,29 @@
 // TYPE : CLASS
 // NAME : CHttpClient
 //*---------------------------------------------------------------
-// DESC : Http Client 클래스
+// DESC : HTTP client class
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 class CHttpClient
 {
 public:
 	enum EF_HTTP_CONNECTION_TYPE {
-		EV_HTTP_CONNECTION_NONE			= 0,	// 초기값
-		EV_HTTP_CONNECTION_ONEREQONERSP	= 1,	// HTTP 연결방식 : One-Req,One-Rsp
-		EV_HTTP_CONNECTION_KEEPALIVE	= 2,	// HTTP 연결방식 : Keep-Alive
+		EV_HTTP_CONNECTION_NONE			= 0,	// Initial value
+		EV_HTTP_CONNECTION_ONEREQONERSP	= 1,	// HTTP mode: One-Req, One-Rsp
+		EV_HTTP_CONNECTION_KEEPALIVE	= 2,	// HTTP mode: Keep-Alive
 	};
 
 public:
 	CHttpClient();
 	~CHttpClient();
 
-	// One-Req,One-Rsp / Keep-Alive 공용 메서드
+	// Shared methods for One-Req,One-Rsp and Keep-Alive
 	BOOL Open(
-		LPCTSTR lpszHttpServerAddressUrl,	// One-Req,One-Rsp : URL 자원경로만 사용 / Keep-Alive : 서버주소 (URL, DOT-DECIMAL)
+		LPCTSTR lpszHttpServerAddressUrl,	// One-Req,One-Rsp : URL path / Keep-Alive : Server host (URL or dot-decimal IP)
 		EF_HTTP_CONNECTION_TYPE eHttpConnectionMode = EV_HTTP_CONNECTION_ONEREQONERSP,
-		INTERNET_PORT wHttpServerPortNumber = DF_DEFAULT_HTTP_PORTNUMBER,	// Keep-Alive 일 경우만 사용
-		LPCTSTR lpszUserName = NULL,		// Keep-Alive 일 경우만 사용
-		LPCTSTR lpszPassword = NULL			// Keep-Alive 일 경우만 사용
+		INTERNET_PORT wHttpServerPortNumber = DF_DEFAULT_HTTP_PORTNUMBER,	// Used only in Keep-Alive mode
+		LPCTSTR lpszUserName = NULL,		// Used only in Keep-Alive mode
+		LPCTSTR lpszPassword = NULL			// Used only in Keep-Alive mode
 		);	
 	VOID Close();
 	BOOL IsOpen();
@@ -75,12 +75,12 @@ public:
 	INT RecvDownFile(LPCTSTR lpszFileName, LPBINDSTATUSCALLBACK pCallBack);
 	DWORD SetOption(DWORD dwMaxConnCount, DWORD dwTimout);
 
-	// One-Req,One-Rsp 전용 메서드
+	// One-Req,One-Rsp dedicated methods
 
-	// Keep-Alive 전용 메서드
+	// Keep-Alive dedicated methods
 	BOOL ReOpen();
 	INT SendRequest(LPCTSTR lpszUrl, BOOL bCheckResultDataLength = FALSE, BOOL bAsyncRequest = FALSE);	
-	INT SendRequsetPostA(LPCTSTR lpszUrl, LPCSTR szPostData); //Ansi용 Post
+	INT SendRequsetPostA(LPCTSTR lpszUrl, LPCSTR szPostData); // Post request (ANSI)
 	INT SendRequestGet(LPCTSTR lpszUrl);	
 
 	LONG m_RefCount;
@@ -92,16 +92,16 @@ private:
 	VOID Finalize();
 
 private:
-	// One-Req,One-Rsp / Keep-Alive 공용 멤버변수
-	HINTERNET m_hInternet;				// InternetOpen() 의 핸들을 가짐
-	HINTERNET m_hInternetConnection;	// One-Req,One-Rsp : InternetOpenUrl() / Keep-Alive : InternetConnect() 의 핸들을 가짐
-	HINTERNET m_hHttpRequest;			// Keep-Alive 방식에서만 사용됨
+	// Shared member variables for One-Req,One-Rsp and Keep-Alive
+	HINTERNET m_hInternet;				// Handle from InternetOpen()
+	HINTERNET m_hInternetConnection;	// One-Req,One-Rsp: InternetOpenUrl() handle / Keep-Alive: InternetConnect() handle
+	HINTERNET m_hHttpRequest;			// Used only in Keep-Alive mode
 
 	EF_HTTP_CONNECTION_TYPE m_eHttpConnectionMode;
 
-	// One-Req,One-Rsp 전용 멤버변수
+	// One-Req,One-Rsp member variables
 
-	// Keep-Alive 전용 멤버변수
+	// Keep-Alive member variables
 	TCHAR m_szHttpServerAddress[MAX_PATH];
 	INTERNET_PORT m_wHttpServerPortNumber;
 	TCHAR m_szUserName[MAX_PATH];

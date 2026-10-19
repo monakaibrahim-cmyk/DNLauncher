@@ -1,4 +1,4 @@
-// DnAutoUpdateDlg.h : 헤더 파일
+// DnAutoUpdateDlg.h : header file
 //
 
 #pragma once
@@ -6,14 +6,14 @@
 #define WM_NOTIFYICON_MSG	WM_USER+1
 #define WM_NOTIFYICON_HIDE	WM_USER+2
 
-// CDnAutoUpdateDlg 대화 상자
+// CDnAutoUpdateDlg dialog
 class CDnAutoUpdateDlg : public CDialog
 {
-	// 생성입니다.
+// Construction
 public:
-	CDnAutoUpdateDlg(CWnd* pParent = NULL);	// 표준 생성자입니다.
+	CDnAutoUpdateDlg(CWnd* pParent = NULL);	// standard constructor
 
-	// 대화 상자 데이터입니다.
+// Dialog Data
 	enum { IDD = IDD_DNAUTOUPDATE_DIALOG };
 	BOOL			m_bShowWindow;
 	BOOL			m_bShowTrayTooltip;
@@ -33,11 +33,11 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
-	// 구현입니다.
+// Implementation
 protected:
 	HICON m_hIcon;
 
-	// 생성된 메시지 맵 함수
+	// Generated message map functions
 	virtual BOOL OnInitDialog();
 	afx_msg void OnClose();
 	afx_msg void OnPaint();

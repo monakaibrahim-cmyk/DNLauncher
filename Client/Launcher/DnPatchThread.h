@@ -60,24 +60,24 @@ enum FirstPatchReturn
 	FPR_MAX
 };
 
-#define WM_STATUS_MSG							WM_APP+101	// 패치 상태 메세지
+#define WM_STATUS_MSG							WM_APP+101	// Patch status message
 
 enum DownloadPatchState
 {
 	PATCH_NONE = 0,
-	PATCH_CHECK_VERSION,			// 버전 체크
-	PATCH_CHECK_VERSION_FAILED,		// 버전 체크 실패
-	PATCH_DOWNLOAD_DATA,			// 패치 데이터 다운로드
-	PATCH_DOWNLOAD_DATA_FAILED,		// 패치 데이터 다운로드 실패
-	PATCH_MD5_CHECK,				// 패치 데이터 유효성 검사
-	PATCH_MD5_CHECK_FAILED,			// 패치 데이터 유효성 검사 실패
-	PATCH_APPLY_PAK_FILE,			// 패치 데이터 설치
-	PATCH_APPLY_PAK_FILE_FAILED,	// 패치 데이터 설치 실패
-	PATCH_APPLY_PAK_FILE_END,		// 패치 데이터 설치 완료
-	PATCH_COMPLETE,					// 패치 완료
-	PATCH_LAUNCHER,					// 런처 패치
-	PATCH_FAILED,					// 패치 실패
-	PATCH_TERMINATE					// 패치 취소
+	PATCH_CHECK_VERSION,			// Checking version
+	PATCH_CHECK_VERSION_FAILED,		// Version check failed
+	PATCH_DOWNLOAD_DATA,			// Downloading patch data
+	PATCH_DOWNLOAD_DATA_FAILED,		// Download patch data failed
+	PATCH_MD5_CHECK,				// Checking patch file MD5 checksum
+	PATCH_MD5_CHECK_FAILED,			// Patch file MD5 checksum verification failed
+	PATCH_APPLY_PAK_FILE,			// Applying patch to PAK archive
+	PATCH_APPLY_PAK_FILE_FAILED,	// Applying patch to PAK archive failed
+	PATCH_APPLY_PAK_FILE_END,		// Finished applying patch to PAK archive
+	PATCH_COMPLETE,					// Patch complete
+	PATCH_LAUNCHER,					// Launcher self-update patch
+	PATCH_FAILED,					// Patch failed
+	PATCH_TERMINATE					// Patch thread terminated
 };
 
 struct stDownloadInfoUpdateData
@@ -144,25 +144,25 @@ public:
 	void		TerminateThread()			{ m_bTerminateThread = true; }
 	BOOL		IsThreadEnd()				{ return m_bTerminateThread; }
 
-	FirstPatchReturn BegineModulePatch();									// FirstPatch( 모듈 & 런처 파일) 시작.
-	int			ParsingModuleList();										// 모듈 패치에 필요한 정보 파싱.
-	int			ChangeModuleFiles(int nVer);								// 모듈 파일 적용.
-	BOOL		DownLoadModulePatch( int nVersion );						// 모듈파일 다운로드.
-	BOOL		PatchLauncherFiles( int nVersion );							// 런처 다운로드 & 적용.
-	BOOL		ProcessFullVersionPatch();									// 풀 버전 패치 프로세스
-	void		ProcessRebootLauncher();									// 런처 다시 실행.
-	BOOL		SaveModuleVersionToPak( int nVersion );						// Pak파일에 Version.cfg 저장.
-	BOOL		SaveModuleVersionFile( CString& szFilePath, int nVersion ); // Version.cfg 저장.
+	FirstPatchReturn BegineModulePatch();									// Begin FirstPatch (module & launcher patch)
+	int			ParsingModuleList();										// Parse module list
+	int			ChangeModuleFiles(int nVer);								// Replace module files
+	BOOL		DownLoadModulePatch( int nVersion );						// Download module patch files
+	BOOL		PatchLauncherFiles( int nVersion );							// Download and apply launcher update
+	BOOL		ProcessFullVersionPatch();									// Process full version patch
+	void		ProcessRebootLauncher();									// Restart launcher
+	BOOL		SaveModuleVersionToPak( int nVersion );						// Save Version.cfg to PAK archive
+	BOOL		SaveModuleVersionFile( CString& szFilePath, int nVersion ); // Save Version.cfg to file
 	BOOL		SaveModuleVersionFileWithOutPakSave( CString& szFilePath, int nVersion );
 	void		CloseThread();
 
 private:
-	HWND		m_hWnd;								// 윈도우 핸들
-	BOOL		m_bTerminateThread;					// 쓰레드 종료 플래그
-	CString		m_strFirstPatchURLPath;				// PatchURL/FirstPatch/ 경로 저장.
-	CString		m_strPatchListFile;					// 클라이언트 패치 경로
-	std::vector<std::string>	m_vecCopyList;		// 카피 파일 리스트
-	std::vector<std::string>	m_vecDeleteList;	// 삭제 파일 리스트
+	HWND		m_hWnd;								// Window handle
+	BOOL		m_bTerminateThread;					// Thread cancellation flag
+	CString		m_strFirstPatchURLPath;				// FirstPatch base URL endpoint
+	CString		m_strPatchListFile;					// Patch list file path
+	std::vector<std::string>	m_vecCopyList;		// Files to copy
+	std::vector<std::string>	m_vecDeleteList;	// Files to delete
 };
 
 
@@ -178,48 +178,48 @@ public:
 	void TerminateThread() { m_bTerminateThread = true; }
 
 private:
-	PatchReturn BeginPatch();				// 패치 진행 함수
+	PatchReturn BeginPatch();				// Begin patch execution
 
 	// Download
-	BOOL DownLoadPatch( int nVersion );						// 다운로드		 프로세스
+	BOOL DownLoadPatch( int nVersion );						// Download patch files
 
 #ifdef _USE_SPLIT_COMPRESS_FILE
 	HRESULT URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR strFilePath, LPCTSTR strFileName, 
-						BOOL bSplitDownload = FALSE, DWORD dwAlreadyDownloadSize = 0, DWORD dwRemainDownloadFileSize = 0 );		// 실제 이어받기 다운로드 프로세스
+						BOOL bSplitDownload = FALSE, DWORD dwAlreadyDownloadSize = 0, DWORD dwRemainDownloadFileSize = 0 );		// Download patch file over HTTP
 	FileCheck CheckPatchFile( HINTERNET hInternetSession, LPCTSTR strFileName,
-							CFile& file, DWORD& dwDownloadFileSize, BOOL bSplitDownload = FALSE );								// 다운로드 전에 파일 체크
+							CFile& file, DWORD& dwDownloadFileSize, BOOL bSplitDownload = FALSE );								// Verify patch file
 #else // _USE_SPLIT_COMPRESS_FILE
-	HRESULT URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR strFilePath, LPCTSTR strFileName );	// 실제 이어받기 다운로드 프로세스
+	HRESULT URLDownload( LPCTSTR strPatchFileUrl, LPCTSTR strFilePath, LPCTSTR strFileName );	// Download patch file over HTTP
 	FileCheck CheckPatchFile( HINTERNET hInternetSession, LPCTSTR strFileName,
-							CFile& file, DWORD& dwDownloadFileSize );							// 다운로드 전에 파일 체크
+							CFile& file, DWORD& dwDownloadFileSize );							// Verify patch file
 #endif // _USE_SPLIT_COMPRESS_FILE
 
-	DWORD GetDownloadFileSize( HINTERNET hInternetSession, CString strHttpPath );				// 다운받을 파일의 사이즈 구해오는 함수
-	BOOL GetMD5Checksum();																		// 다운받은 파일의 유효성 검사 (MD5)
+	DWORD GetDownloadFileSize( HINTERNET hInternetSession, CString strHttpPath );				// Query download file size via HTTP header
+	BOOL GetMD5Checksum();																		// Verify downloaded file integrity via MD5 checksum
 
 	// Apply Packing File
-	PatchReturn PreApplyPakPatch();									// Pak파일 적용 이전 준비작업 (패치리스트 셋팅, 패킹파일 얻어오기)
-	PatchReturn ApplyPakPatch();									// Pak파일 적용 프로세스
-	PatchReturn ApplyDeleteList( CEtPackingFile& PatchSource );		// 삭제 리스트 Pak파일 적용
-	PatchReturn ApplyPatchList( CEtPackingFile& PatchSource );		// 패치 리스트 Pak파일 적용
-	PatchReturn ApplyCopyList( CEtPackingFile& PatchSource );		// 복사 리스트 Pak파일 적용
-	PatchReturn GetPackingFile();									// 리소스 패킹 파일을 찾고 정보를 가져옴
-	BOOL LoadPatchList();											// 패치 리스트를 읽어 패치 정보를 셋팅
+	PatchReturn PreApplyPakPatch();									// Pre-process patch files (index sorting, space reservation)
+	PatchReturn ApplyPakPatch();									// Apply patch to PAK archives
+	PatchReturn ApplyDeleteList( CEtPackingFile& PatchSource );		// Delete files from PAK archive
+	PatchReturn ApplyPatchList( CEtPackingFile& PatchSource );		// Patch files in PAK archive
+	PatchReturn ApplyCopyList( CEtPackingFile& PatchSource );		// Copy files to PAK archive
+	PatchReturn GetPackingFile();									// Open destination PAK archive
+	BOOL LoadPatchList();											// Parse patch list file
 	PatchReturn PatchFileExist( int nPatchFileCount, CEtPackingFile& PatchSource, SPackingFileInfo* pFileInfo, BOOL& bPatch );
 	PatchReturn PatchFileSuitableSpace( CEtPackingFile& PatchSource, SPackingFileInfo* pFileInfo, BOOL& bPatch );
 	void PatchFileReserve( int nPatchFileCount, SPackingFileInfo* pFileInfo );
 
-	void SendStatusMsg( DownloadPatchState nID );				// 다이얼로그로 다운로드상태 값 전달
+	void SendStatusMsg( DownloadPatchState nID );				// Post status message to dialog window
 
-	BOOL ProcessFullVersionPatch();								// 풀 버전 패치 프로세스
-	BOOL SaveVersionFile( CString& szFilePath, int nVersion );	// 패치 완료 후 Version.cfg 파일 갱신
-	BOOL SaveNewVersionToPak( int nVersion );					// Version.cfg파일 Pak파일 안에 넣기
+	BOOL ProcessFullVersionPatch();								// Process full version patch
+	BOOL SaveVersionFile( CString& szFilePath, int nVersion );	// Save updated Version.cfg file
+	BOOL SaveNewVersionToPak( int nVersion );					// Write updated Version.cfg into PAK archive
 
 	void RecordFileExceptionLog( CFileException& e );
 
 #ifdef _USE_RTPATCH
-	BOOL ExportFile( CEtPackingFile& PakFile, const char* pExportFileName, const char* pCreateFilePath );	// pak파일내 파일 추출 하기
-	PatchReturn ApplyRTPatch( CEtPackingFile& PatchSource, CEtPackingFile& RTPatchSource );					// 기존 pak파일을 RTPatch적용된 pak파일로 만든다
+	BOOL ExportFile( CEtPackingFile& PakFile, const char* pExportFileName, const char* pCreateFilePath );	// Extract file from PAK archive
+	PatchReturn ApplyRTPatch( CEtPackingFile& PatchSource, CEtPackingFile& RTPatchSource );					// Apply RTPatch binary diff to PAK archive
 	static LPVOID CALLBACK EXPORT RTPatchCALLBACK( UINT Id, LPVOID Param );
 #endif // _USE_RTPATCH
 #ifdef _FIRST_PATCH
@@ -236,28 +236,28 @@ private:
 private:
 	HINTERNET	m_hHttpConnection;		// Http Connection Handle
 
-	DWORD		m_dwTempFileLength;		// 다운 받은 파일의 양
-	DWORD		m_dwDownloadFileLength;	// 다운 받아야할 파일의 양
-	DWORD		m_dwTotalFileLength;	// 총 파일의 양
-	DWORD		m_dwTotalBytes;			// 총 받은 파일의 양
+	DWORD		m_dwTempFileLength;		// Downloaded temporary file length
+	DWORD		m_dwDownloadFileLength;	// Current file downloaded length
+	DWORD		m_dwTotalFileLength;	// Current file total length
+	DWORD		m_dwTotalBytes;			// Cumulative downloaded bytes
 
-	CString		m_strPatchFileUrl;		// Http 패치 파일 주소
-	CString		m_strPatchFileLocal;	// 로컬의 파일 위치 (다운로드 완료시 .tmp -> .pak)
-	CString		m_strPatchFile;			// 패치 파일 (pak파일)
-	CString		m_strPatchListFile;		// 패치 리스트 파일
+	CString		m_strPatchFileUrl;		// Remote patch file URL
+	CString		m_strPatchFileLocal;	// Local temporary file path (.tmp -> .pak)
+	CString		m_strPatchFile;			// Final patch file path (.pak)
+	CString		m_strPatchListFile;		// Patch list file path
 
 	float		m_fRate;				// Download Rate
 	float		m_fPercent;				// Download Percent
 
-	DownloadPatchState m_emDownPatchState;	// 현재 다운로드 진행 상태
+	DownloadPatchState m_emDownPatchState;	// Current download patch state
 	
-	HWND		m_hWnd;					// 윈도우 핸들
-	BOOL		m_bTerminateThread;		// 쓰레드 종료 플래그
+	HWND		m_hWnd;					// Dialog window handle
+	BOOL		m_bTerminateThread;		// Thread cancellation flag
 
-	std::vector<CEtPackingFile*>	m_vecPackingFile;		// 패킹 파일 리스트
-	std::vector<std::string>		m_vecDeleteList;		// 삭제 파일 리스트
-	std::vector<std::string>		m_vecPatchList;			// 패치 파일 리스트
-	std::vector<std::string>		m_vecCopyList;			// 복사 파일 리스트
+	std::vector<CEtPackingFile*>	m_vecPackingFile;		// Target PAK archives
+	std::vector<std::string>		m_vecDeleteList;		// Files to delete
+	std::vector<std::string>		m_vecPatchList;			// Files to patch
+	std::vector<std::string>		m_vecCopyList;			// Files to copy
 	struct stFileIndexSet
 	{
 		DWORD m_dwPakFileNum;
@@ -265,18 +265,17 @@ private:
 		DWORD m_dwReserveFileIndex;
 	};
 
-	std::vector<stFileIndexSet>		m_vecReserveIndex;		// 예약된 패치 파일 인덱스
+	std::vector<stFileIndexSet>		m_vecReserveIndex;		// Reserved file indices in PAK archives
 
-
-	int			m_nCurPatchCount;		// 현재 패치수 (파일 패킹 시 프로그래스바 정보에 사용)
-	int			m_nTotalPatchCount;		// 총 패치수 (파일 패킹 시 프로그래스바 정보에 사용)
+	int			m_nCurPatchCount;		// Current patch count
+	int			m_nTotalPatchCount;		// Total patch count
 
 #ifdef _USE_RTPATCH
-	std::string	m_strRTPatchTempFolder;		// RTPatch 임시 폴더
+	std::string	m_strRTPatchTempFolder;		// RTPatch temporary folder
 #endif // _USE_RTPATCH
 
 #ifdef _USE_SPLIT_COMPRESS_FILE
-	HINSTANCE	hUnrarDLL;					// UnrarDLL 헨들
+	HINSTANCE	hUnrarDLL;					// Unrar DLL handle
 
 	HANDLE (WINAPI *OpenArchiveEx)( RAROpenArchiveDataEx* pArchiveData );
 	int    (WINAPI *CloseArchive)( HANDLE hArcData );

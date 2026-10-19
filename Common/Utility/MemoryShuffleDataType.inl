@@ -4,7 +4,7 @@
 //	INCLUDE
 ///////////////////////////////////////////////////////////////////
 
-//#include "MEMORYSHUFFLEDATATYPE.H"	// P.S.> 'export' 예약어가 지원되는 컴파일러에서 사용
+//#include "MEMORYSHUFFLEDATATYPE.H"	// Note: Used in compilers supporting the 'export' keyword
 #include <WINDOWS.H>
 #include <BASETSD.H>
 #include <NEW>			// placement new
@@ -14,8 +14,8 @@
 //	DEFINE
 ///////////////////////////////////////////////////////////////////
 
-#define DF_MSDT_LOCKSIGN		(0x6A035984)	// 동기 체크 상수 (P.S.> 절대 0 으로 지정해선 않됨)	
-#define FIX_VIOLATION_BY_FREE // new 로 생성한 객체를 free() 로 제거하면서 생기는 메모리영역 침범 수정.
+#define DF_MSDT_LOCKSIGN		(0x6A035984)	// Synchronization check constant (Note: Must never be 0)	
+#define FIX_VIOLATION_BY_FREE // Fix heap corruption caused by mixing new with free().
 
 #define SAFE_DELETE(p)       { if(p) { delete (p);     (p)=NULL; } }
 
@@ -27,7 +27,7 @@
 // TYPE : CLASS
 // NAME : CMemoryShuffleDervUnit
 //*---------------------------------------------------------------
-// DESC : 메모리 셔플 기본단위 클래스 (파생)
+// DESC : Memory shuffle basic unit class (derived)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<typename TDATA>
@@ -58,7 +58,7 @@ private:
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleBaseUnit::CMemoryShuffleBaseUnit
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -74,7 +74,7 @@ inline CMemoryShuffleBaseUnit<TDATA>::CMemoryShuffleBaseUnit() : m_LastTick(0)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleBaseUnit::~CMemoryShuffleBaseUnit
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -90,9 +90,9 @@ inline CMemoryShuffleBaseUnit<TDATA>::~CMemoryShuffleBaseUnit()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleBaseUnit::GetLastTick
 //*---------------------------------------------------------------
-// DESC : 동적 메모리가 마지막 셔플링된 시점을 반환
+// DESC : Returns tick when dynamic memory was last shuffled
 // PARM : N/A
-// RETV : 기존 셔플링 시점
+// RETV : Last shuffle tick count
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -106,8 +106,8 @@ inline unsigned long CMemoryShuffleBaseUnit<TDATA>::GetLastTick() const
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleBaseUnit::SetLastTick
 //*---------------------------------------------------------------
-// DESC : 동적 메모리가 마지막 셔플링된 시점을 지정
-// PARM :	1 . pLastTick - 신규 셔플링 시점
+// DESC : Sets tick when dynamic memory was last shuffled
+// PARM :	1 . pLastTick - New shuffle tick count
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -124,7 +124,7 @@ inline void CMemoryShuffleBaseUnit<TDATA>::SetLastTick(unsigned long pLastTick)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDervUnit::CMemoryShuffleDervUnit
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -140,7 +140,7 @@ inline CMemoryShuffleDervUnit<TDATA>::CMemoryShuffleDervUnit()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDervUnit::~CMemoryShuffleDervUnit
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -156,9 +156,9 @@ inline CMemoryShuffleDervUnit<TDATA>::~CMemoryShuffleDervUnit()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDervUnit::GetValue
 //*---------------------------------------------------------------
-// DESC : 기존 보유값을 반환
+// DESC : Returns current stored value
 // PARM : N/A
-// RETV : 기존 보유값
+// RETV : Current stored value
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -176,8 +176,8 @@ inline TDATA CMemoryShuffleDervUnit<TDATA>::GetValue() const
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDervUnit::SetValue
 //*---------------------------------------------------------------
-// DESC : 신규 대입값을 지정
-// PARM :	1 . pData - 신규 대입값
+// DESC : Sets new assigned value
+// PARM :	1 . pData - New assigned value
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -192,21 +192,21 @@ inline void CMemoryShuffleDervUnit<TDATA>::SetValue(TDATA pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDervUnit::GetXor
 //*---------------------------------------------------------------
-// DESC : 특정값을 변환키를 사용하여 XOR 연산함
-// PARM :	1 . pIn - 변환할 특정값을 가진 변수
-//			2 . pOut - 변환 결과를 출력할 변수
-//			2 . pSize - 특정값의 크기
-//			3 . pKey - 변환키
+// DESC : XOR transforms specific value using transformation key
+// PARM :	1 . pIn - Variable holding value to transform
+//			2 . pOut - Output variable for converted result
+//			2 . pSize - Size of value
+//			3 . pKey - Transformation key
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
 inline void CMemoryShuffleDervUnit<TDATA>::GetXor(char const * pIn, char* pOut, unsigned int pSize, unsigned int pKey) const
 {
-	// P.S.> 추후 필요한 경우에 pKey 를 변환하거나 XOR 방식을 바꾸는 방법도 있을 수 있을 것임
+	// Note: Key transformation or alternative XOR scheme can be introduced if needed
 
-	unsigned int const * aIn = reinterpret_cast<unsigned int const *>(pIn);	// ++ 연산에 l-value 가 필요하므로 임시 변수를 완전히 없앨 수는 없음 (C2105)
-	unsigned int* aOut = reinterpret_cast<unsigned int*>(pOut);				// ++ 연산에 l-value 가 필요하므로 임시 변수를 완전히 없앨 수는 없음 (C2105)
+	unsigned int const * aIn = reinterpret_cast<unsigned int const *>(pIn);	// Temporary pointer needed for ++ operator l-value (C2105)
+	unsigned int* aOut = reinterpret_cast<unsigned int*>(pOut);				// Temporary pointer needed for ++ operator l-value (C2105)
 	unsigned int aQtSize = pSize >> 2;
 	for (; aQtSize ; --aQtSize) {
 		*aOut++ = ((*aIn++) ^ pKey);
@@ -227,7 +227,7 @@ inline void CMemoryShuffleDervUnit<TDATA>::GetXor(char const * pIn, char* pOut, 
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::CMemoryShuffleAllocator
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -235,7 +235,7 @@ inline void CMemoryShuffleDervUnit<TDATA>::GetXor(char const * pIn, char* pOut, 
 /* export */ template<typename TDATA>
 inline CMemoryShuffleAllocator<TDATA>::CMemoryShuffleAllocator() : m_TickTerm(0), m_Unit(NULL), m_Lock(DF_MSDT_LOCKSIGN)
 {
-	// 오류 체크용 변수
+	// Variable for error verification
 #if defined(SW_MSDT_ERRORCHECK_ORIGINVALUE)
 	m_OriginalValue = TDATA();
 #endif	// SW_MSDT_ERRORCHECK_ORIGINVALUE
@@ -246,7 +246,7 @@ inline CMemoryShuffleAllocator<TDATA>::CMemoryShuffleAllocator() : m_TickTerm(0)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::~CMemoryShuffleAllocator
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -262,7 +262,7 @@ inline CMemoryShuffleAllocator<TDATA>::~CMemoryShuffleAllocator()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::IsOpen
 //*---------------------------------------------------------------
-// DESC : 할당자 사용가능 여부 반환
+// DESC : Returns whether allocator is available
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -278,12 +278,12 @@ inline bool CMemoryShuffleAllocator<TDATA>::IsOpen() const
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::Create
 //*---------------------------------------------------------------
-// DESC : 동적 메모리를 최초로 생성
+// DESC : Initial creation of dynamic memory
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
 // P.S.>
-//		- 본 메서드는 기존에 할당받은 동적 메모리가 없고 동기화가 필요없는 상황에서 호출됨을 전제함
+//		- Assumes no existing dynamic allocation and no synchronization needed
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
 inline bool CMemoryShuffleAllocator<TDATA>::Create()
@@ -297,11 +297,11 @@ inline bool CMemoryShuffleAllocator<TDATA>::Create()
 		MSDT_RETURN(false);
 	}
 
-	m_Unit = new (aUnit) CMemoryShuffleDervUnit<TDATA>;		// placement new 는 std::bad_alloc 을 발생시키지 않으므로 결과적으로 예외를 발생시키지 않음 ?
+	m_Unit = new (aUnit) CMemoryShuffleDervUnit<TDATA>;		// placement new does not throw std::bad_alloc
 	MSDT_ASSERT(NULL != m_Unit);
 
 //#if defined(SW_MSDT_ERRORCHECK_ORIGINVALUE)
-	m_Unit->SetValue(TDATA());	// 0 초기화 함
+	m_Unit->SetValue(TDATA());	// Initialize with default/zero value
 //#endif	// SW_MSDT_ERRORCHECK_ORIGINVALUE
 
 	SetTickTerm();
@@ -314,12 +314,12 @@ inline bool CMemoryShuffleAllocator<TDATA>::Create()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::Create
 //*---------------------------------------------------------------
-// DESC : 동적 메모리를 최초로 생성하고 특정 값으로 초기화
-// PARM :	1 . pData - 초기화에 사용할 값
+// DESC : Create dynamic memory initially and initialize with specific value
+// PARM :	1 . pData - Value for initialization
 // RETV : N/A
 // PRGM : B4nFter
 // P.S.>
-//		- 본 메서드는 기존에 할당받은 동적 메모리가 없고 동기화가 필요없는 상황에서 호출됨을 전제함
+//		- Assumes no existing dynamic allocation and no synchronization needed
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
 inline bool CMemoryShuffleAllocator<TDATA>::Create(const TDATA& pData)
@@ -342,12 +342,12 @@ inline bool CMemoryShuffleAllocator<TDATA>::Create(const TDATA& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::Create
 //*---------------------------------------------------------------
-// DESC : 동적 메모리를 최초로 생성하고 특정 객체로 초기화
-// PARM :	1 . pMsdt - 초기화에 사용할 객체
+// DESC : Create dynamic memory initially and initialize with specific object
+// PARM :	1 . pMsdt - Object for initialization
 // RETV : N/A
 // PRGM : B4nFter
 // P.S.>
-//		- 본 메서드는 기존에 할당받은 동적 메모리가 없고 동기화가 필요없는 상황에서 호출됨을 전제함
+//		- Assumes no existing dynamic allocation and no synchronization needed
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
 inline bool CMemoryShuffleAllocator<TDATA>::Create(const CMemoryShuffleDataType<TDATA>& pMsdt)
@@ -370,7 +370,7 @@ inline bool CMemoryShuffleAllocator<TDATA>::Create(const CMemoryShuffleDataType<
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::Release
 //*---------------------------------------------------------------
-// DESC : 기존의 동적 메모리를 해제하고 할당자를 사용불가로 지정
+// DESC : Free existing dynamic memory and mark allocator unavailable
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -379,7 +379,7 @@ inline bool CMemoryShuffleAllocator<TDATA>::Create(const CMemoryShuffleDataType<
 inline void CMemoryShuffleAllocator<TDATA>::Release()
 {
 	if (m_Unit) {
-//		m_Unit->~TDATA();	// placement new 사용으로 인한 명시적인 소멸자 호출 (소멸자가 없는 TDATA 에 대해 컴파일 오류 발생)
+//		m_Unit->~TDATA();	// Explicit destructor call for placement new
 		
 #ifdef FIX_VIOLATION_BY_FREE
 		SAFE_DELETE( m_Unit );
@@ -398,8 +398,8 @@ inline void CMemoryShuffleAllocator<TDATA>::Release()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::Shuffle
 //*---------------------------------------------------------------
-// DESC : 동적 메모리를 지정된 시간 간격에 따라 다른 동적 메모리로 변환
-// PARM :	1 . pUnit - 메모리 셔플링을 수행할 기본단위 객체
+// DESC : Relocate dynamic memory to new allocation at specified time intervals
+// PARM :	1 . pUnit - Unit object to perform memory shuffling on
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -408,22 +408,22 @@ inline bool CMemoryShuffleAllocator<TDATA>::Shuffle(CMemoryShuffleBaseUnit<TDATA
 {
 	MSDT_ASSERT(NULL != pUnit);
 
-	// P.S.> 본 메서드에 진입한 시기에는 CMemoryShuffleAllocator<TDATA> 객체의 동기가 보장되어야 함
+	// Note: Synchronization of CMemoryShuffleAllocator<TDATA> must be guaranteed upon entry
 
 	CMemoryShuffleDervUnit<TDATA>* aUnit1 = static_cast<CMemoryShuffleDervUnit<TDATA>*>(pUnit);
 	
-	unsigned long aCurTick = ::GetTickCount();	// 해상도가 낮아도 무관 ?
+	unsigned long aCurTick = ::GetTickCount();	// Resolution of GetTickCount is sufficient
 	if (m_TickTerm < ((aCurTick >= aUnit1->GetLastTick())?(aCurTick - aUnit1->GetLastTick()):(ULONG_MAX - aUnit1->GetLastTick() + aCurTick))) {
 		TDATA aData = aUnit1->GetValue();
 
-		char* aUnit2 = static_cast<char*>(malloc(sizeof(CMemoryShuffleDervUnit<TDATA>)));	// 메모리 해제 이후에 다시 할당받으면 같은 주소가 될 가능성이 있으므로 이를 방지하기 위해 할당을 우선 받음
+		char* aUnit2 = static_cast<char*>(malloc(sizeof(CMemoryShuffleDervUnit<TDATA>)));	// Allocate new block before freeing old to prevent reuse of same address
 		if (!aUnit2) {
 			m_TickTerm = 0;
-			::RaiseException(EV_MSDT_ECCD_ALLOCFAIL, 0, 0, NULL);	// 할당에 실패하면 즉시 확인하는 것이 좋으므로 예외를 발생시킴
+			::RaiseException(EV_MSDT_ECCD_ALLOCFAIL, 0, 0, NULL);	// Raise exception immediately on allocation failure
 			MSDT_RETURN(false);
 		}
 
-//		aUnit1->~TDATA();	// placement new 사용으로 인한 명시적인 소멸자 호출 (소멸자가 없는 TDATA 에 대해 컴파일 오류 발생)
+//		aUnit1->~TDATA();	// Explicit destructor call for placement new
 		
 #ifdef FIX_VIOLATION_BY_FREE
 		SAFE_DELETE( aUnit1 );
@@ -431,7 +431,7 @@ inline bool CMemoryShuffleAllocator<TDATA>::Shuffle(CMemoryShuffleBaseUnit<TDATA
 		free(reinterpret_cast<char*>(aUnit1));
 #endif
 		
-		aUnit1 = new (aUnit2) CMemoryShuffleDervUnit<TDATA>;	// placement new 는 std::bad_alloc 을 발생시키지 않으므로 결과적으로 예외를 발생시키지 않음 ?
+		aUnit1 = new (aUnit2) CMemoryShuffleDervUnit<TDATA>;	// placement new does not throw std::bad_alloc
 		MSDT_ASSERT(NULL != aUnit1);
 
 		aUnit1->SetValue(aData);
@@ -448,7 +448,7 @@ inline bool CMemoryShuffleAllocator<TDATA>::Shuffle(CMemoryShuffleBaseUnit<TDATA
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::GetTickTerm
 //*---------------------------------------------------------------
-// DESC : 기존 메모리 셔플링 간격 반환
+// DESC : Returns current memory shuffling interval
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -464,8 +464,8 @@ inline unsigned long CMemoryShuffleAllocator<TDATA>::GetTickTerm() const
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::SetTickTerm
 //*---------------------------------------------------------------
-// DESC : 신규 메모리 셔플링 간격 지정
-// PARM :	1 . pTickTerm - 메모리 셔플링 간격
+// DESC : Sets new memory shuffling interval
+// PARM :	1 . pTickTerm - Memory shuffling interval
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -482,7 +482,7 @@ inline void CMemoryShuffleAllocator<TDATA>::SetTickTerm(unsigned long pTickTerm)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::Lock
 //*---------------------------------------------------------------
-// DESC : 할당자를 잠금상태로 변환
+// DESC : Acquire lock on allocator
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -500,7 +500,7 @@ inline CMemoryShuffleBaseUnit<TDATA>* CMemoryShuffleAllocator<TDATA>::Lock()
 	CMemoryShuffleDervUnit<TDATA>* aUnit = const_cast<CMemoryShuffleDervUnit<TDATA>*>(static_cast<CMemoryShuffleDervUnit<TDATA>*>(m_Unit));
 	MSDT_ASSERT(NULL != aUnit);
 
-	m_Unit = NULL;	// 반드시 지정할 필요는 없으나 보안성을 다소나마 높히기 위함
+	m_Unit = NULL;	// Cleared during lock to enhance security against dangling reads
 
 	return aUnit;
 }
@@ -510,15 +510,15 @@ inline CMemoryShuffleBaseUnit<TDATA>* CMemoryShuffleAllocator<TDATA>::Lock()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleAllocator::Unlock
 //*---------------------------------------------------------------
-// DESC : 할당자의 잠금상태를 해제
-// PARM :	1 . pUnit - 잠금상태를 해제하는데 사용할 기본단위 객체
+// DESC : Release lock on allocator
+// PARM :	1 . pUnit - Unit object used to restore state upon release
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
 inline void CMemoryShuffleAllocator<TDATA>::Unlock(const CMemoryShuffleBaseUnit<TDATA>* pUnit) const
 {
-	MSDT_ASSERT(NULL == m_Unit);				// Lock 시 m_Unit 를 NULL 지정 시 체크
+	MSDT_ASSERT(NULL == m_Unit);				// Verify m_Unit was NULL during lock state
 	MSDT_ASSERT(NULL != pUnit);
 
 	if (!pUnit) {
@@ -526,7 +526,7 @@ inline void CMemoryShuffleAllocator<TDATA>::Unlock(const CMemoryShuffleBaseUnit<
 	}
 
 
-	m_Unit = const_cast<CMemoryShuffleDervUnit<TDATA>*>(static_cast<const CMemoryShuffleDervUnit<TDATA>*>(pUnit));	// 이전처럼 포인터 교체 자체의 원자성이 보장 (InterlockedExchangePointer) 되는 것이 아니므로 동기 해제 전에 포인터를 교체해야 함
+	m_Unit = const_cast<CMemoryShuffleDervUnit<TDATA>*>(static_cast<const CMemoryShuffleDervUnit<TDATA>*>(pUnit));	// Update pointer before releasing lock to ensure atomicity across threads
 
 	long aLock = InterlockedExchange(&m_Lock, DF_MSDT_LOCKSIGN);
 	MSDT_ASSERT(DF_MSDT_LOCKSIGN != aLock);
@@ -539,8 +539,8 @@ inline void CMemoryShuffleAllocator<TDATA>::Unlock(const CMemoryShuffleBaseUnit<
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleSyncAuto::CMemoryShuffleSyncAuto
 //*---------------------------------------------------------------
-// DESC : 생성자
-// PARM :	1 . pAlloc - TALLOC 클래스 객체포인터
+// DESC : Constructor
+// PARM :	1 . pAlloc - Pointer to TALLOC class instance
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -555,7 +555,7 @@ inline CMemoryShuffleSyncAuto<TALLOC, TUNIT>::CMemoryShuffleSyncAuto(TALLOC* pAl
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleSyncAuto::~CMemoryShuffleSyncAuto
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -575,7 +575,7 @@ inline CMemoryShuffleSyncAuto<TALLOC, TUNIT>::~CMemoryShuffleSyncAuto()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleSyncAuto::Lock
 //*---------------------------------------------------------------
-// DESC : 보유한 할당자를 잠금상태로 변환
+// DESC : Acquire lock on owned allocator
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -591,7 +591,7 @@ inline TUNIT* CMemoryShuffleSyncAuto<TALLOC, TUNIT>::Lock()
 		MSDT_RETURN(NULL);
 	}
 
-	// P.S.> 본 메서드에서 LOCK 된 이후에는 동기가 보장되며 경쟁상태 발생 시 대기중인 스레드의 LOCK 시도에 의해 CPU 점유율이 증가할 수 있으므로 최대한 신속한 처리 후 UNLOCK 이 요구됨
+	// Note: Hold lock for minimum duration to prevent CPU spin during contention
 
 	if (!m_Alloc->Shuffle(m_Unit)) {
 		MSDT_RETURN(NULL);
@@ -607,7 +607,7 @@ inline TUNIT* CMemoryShuffleSyncAuto<TALLOC, TUNIT>::Lock()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::CMemoryShuffleDataType
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -616,7 +616,7 @@ inline TUNIT* CMemoryShuffleSyncAuto<TALLOC, TUNIT>::Lock()
 inline CMemoryShuffleDataType<TDATA>::CMemoryShuffleDataType()
 {
 	if (!m_Allocator.Create()) {
-		::RaiseException(EV_MSDT_ECCD_ALLOCFAIL, 0, 0, NULL);	// 생성자에서 할당에 실패하면 별도의 오류조치가 불가능하므로 예외를 발생시킴
+		::RaiseException(EV_MSDT_ECCD_ALLOCFAIL, 0, 0, NULL);	// Raise exception on allocation failure in constructor
 	}
 }
 
@@ -625,8 +625,8 @@ inline CMemoryShuffleDataType<TDATA>::CMemoryShuffleDataType()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::CMemoryShuffleDataType
 //*---------------------------------------------------------------
-// DESC : 생성자
-// PARM :	1 . pData - 초기화에 사용할 값
+// DESC : Constructor
+// PARM :	1 . pData - Value for initialization
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -634,7 +634,7 @@ inline CMemoryShuffleDataType<TDATA>::CMemoryShuffleDataType()
 inline CMemoryShuffleDataType<TDATA>::CMemoryShuffleDataType(const TDATA& pData)
 {
 	if (!m_Allocator.Create(pData)) {
-		::RaiseException(EV_MSDT_ECCD_ALLOCFAIL, 0, 0, NULL);	// 생성자에서 할당에 실패하면 별도의 오류조치가 불가능하므로 예외를 발생시킴
+		::RaiseException(EV_MSDT_ECCD_ALLOCFAIL, 0, 0, NULL);	// Raise exception on allocation failure in constructor
 	}
 }
 
@@ -643,8 +643,8 @@ inline CMemoryShuffleDataType<TDATA>::CMemoryShuffleDataType(const TDATA& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::CMemoryShuffleDataType
 //*---------------------------------------------------------------
-// DESC : 생성자
-// PARM :	1 . pMsdt - 초기화에 사용할 객체
+// DESC : Constructor
+// PARM :	1 . pMsdt - Object for initialization
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -652,7 +652,7 @@ inline CMemoryShuffleDataType<TDATA>::CMemoryShuffleDataType(const TDATA& pData)
 inline CMemoryShuffleDataType<TDATA>::CMemoryShuffleDataType(const CMemoryShuffleDataType<TDATA>& pMsdt)
 {
 	if (!m_Allocator.Create(pMsdt)) {
-		::RaiseException(EV_MSDT_ECCD_ALLOCFAIL, 0, 0, NULL);	// 생성자에서 할당에 실패하면 별도의 오류조치가 불가능하므로 예외를 발생시킴
+		::RaiseException(EV_MSDT_ECCD_ALLOCFAIL, 0, 0, NULL);	// Raise exception on allocation failure in constructor
 	}
 }
 
@@ -661,7 +661,7 @@ inline CMemoryShuffleDataType<TDATA>::CMemoryShuffleDataType(const CMemoryShuffl
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::~CMemoryShuffleDataType
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -677,7 +677,7 @@ inline CMemoryShuffleDataType<TDATA>::~CMemoryShuffleDataType()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::GetAllocator
 //*---------------------------------------------------------------
-// DESC : 할당자 객체 참조 반환
+// DESC : Returns reference to allocator object
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -693,7 +693,7 @@ inline CMemoryShuffleAllocator<TDATA>& CMemoryShuffleDataType<TDATA>::GetAllocat
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::GetAllocTickTerm
 //*---------------------------------------------------------------
-// DESC : 기존 메모리 셔플링 간격 반환
+// DESC : Returns current memory shuffling interval
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -709,8 +709,8 @@ inline unsigned long CMemoryShuffleDataType<TDATA>::GetAllocTickTerm() const
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::SetAllocTickTerm
 //*---------------------------------------------------------------
-// DESC : 신규 메모리 셔플링 간격 지정
-// PARM :	1 . pTickTerm - 메모리 셔플링 간격
+// DESC : Sets new memory shuffling interval
+// PARM :	1 . pTickTerm - Memory shuffling interval
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -725,9 +725,9 @@ inline void CMemoryShuffleDataType<TDATA>::SetAllocTickTerm(unsigned long pTickT
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator TDATA
 //*---------------------------------------------------------------
-// DESC : 형변환 연산자 구현
+// DESC : Conversion operator implementation
 // PARM : N/A
-// RETV : 현재 보유값
+// RETV : Current stored value
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -748,9 +748,9 @@ inline CMemoryShuffleDataType<TDATA>::operator TDATA const ()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator=
 //*---------------------------------------------------------------
-// DESC : 대입 연산자 구현
-// PARM :	1 . pData - 연산 대입값
-// RETV : 연산 결과값
+// DESC : Assignment operator implementation
+// PARM :	1 . pData - Assignment operand
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -777,9 +777,9 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator=(const TDATA& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator=
 //*---------------------------------------------------------------
-// DESC : 대입 연산자 구현
-// PARM :	1 . pMsdt - 연산 대입객체
-// RETV : 객체 참조반환
+// DESC : Assignment operator implementation
+// PARM :	1 . pMsdt - Assignment object operand
+// RETV : Object reference return
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -808,9 +808,9 @@ inline CMemoryShuffleDataType<TDATA>& CMemoryShuffleDataType<TDATA>::operator=(c
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator++
 //*---------------------------------------------------------------
-// DESC : ++ (선치) 증감 연산자 구현
+// DESC : ++ (prefix) increment operator implementation
 // PARM : N/A
-// RETV : 연산 결과값
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -840,12 +840,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator++()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator++
 //*---------------------------------------------------------------
-// DESC : ++ (선치) 증감 연산자 구현 (bool 타입에 특화됨)
+// DESC : ++ (prefix) increment operator (specialized for bool)
 // PARM : N/A
-// RETV : 연산 결과값
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 bool 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for bool; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline bool CMemoryShuffleDataType<bool>::operator++()
@@ -861,9 +861,9 @@ inline bool CMemoryShuffleDataType<bool>::operator++()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator++
 //*---------------------------------------------------------------
-// DESC : ++ (후치) 증감 연산자 구현
+// DESC : ++ (postfix) increment operator implementation
 // PARM : N/A
-// RETV : 연산 결과값
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -893,12 +893,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator++(int)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator++
 //*---------------------------------------------------------------
-// DESC : ++ (후치) 증감 연산자 구현 (bool 타입에 특화됨)
+// DESC : ++ (postfix) increment operator (specialized for bool)
 // PARM : N/A
-// RETV : 연산 결과값
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 bool 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for bool; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline bool CMemoryShuffleDataType<bool>::operator++(int)
@@ -914,9 +914,9 @@ inline bool CMemoryShuffleDataType<bool>::operator++(int)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator--
 //*---------------------------------------------------------------
-// DESC : -- (선치) 증감 연산자 구현
+// DESC : -- (prefix) decrement operator implementation
 // PARM : N/A
-// RETV : 연산 결과값
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -946,12 +946,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator--()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator--
 //*---------------------------------------------------------------
-// DESC : -- (선치) 증감 연산자 구현 (bool 타입에 특화됨)
+// DESC : -- (prefix) decrement operator (specialized for bool)
 // PARM : N/A
-// RETV : 연산 결과값
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 bool 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for bool; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline bool CMemoryShuffleDataType<bool>::operator--()
@@ -967,9 +967,9 @@ inline bool CMemoryShuffleDataType<bool>::operator--()
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator--
 //*---------------------------------------------------------------
-// DESC : -- (후치) 증감 연산자 구현
+// DESC : -- (postfix) decrement operator implementation
 // PARM : N/A
-// RETV : 연산 결과값
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -999,12 +999,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator--(int)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator--
 //*---------------------------------------------------------------
-// DESC : -- (후치) 증감 연산자 구현 (bool 타입에 특화됨)
+// DESC : -- (postfix) decrement operator (specialized for bool)
 // PARM : N/A
-// RETV : 연산 결과값
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 bool 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for bool; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline bool CMemoryShuffleDataType<bool>::operator--(int)
@@ -1020,9 +1020,9 @@ inline bool CMemoryShuffleDataType<bool>::operator--(int)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator+=
 //*---------------------------------------------------------------
-// DESC : += 복합 대입 연산자 구현
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : += compound assignment operator implementation
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -1052,12 +1052,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator+=(const TDATA& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator+=
 //*---------------------------------------------------------------
-// DESC : += 복합 대입 연산자 구현 (bool 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : += compound assignment operator (specialized for bool)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 bool 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for bool; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline bool CMemoryShuffleDataType<bool>::operator+=(const bool& pData)
@@ -1073,9 +1073,9 @@ inline bool CMemoryShuffleDataType<bool>::operator+=(const bool& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator-=
 //*---------------------------------------------------------------
-// DESC : -= 복합 대입 연산자 구현
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : -= compound assignment operator implementation
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -1105,12 +1105,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator-=(const TDATA& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator-=
 //*---------------------------------------------------------------
-// DESC : -= 복합 대입 연산자 구현 (bool 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : -= compound assignment operator (specialized for bool)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 bool 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for bool; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline bool CMemoryShuffleDataType<bool>::operator-=(const bool& pData)
@@ -1126,9 +1126,9 @@ inline bool CMemoryShuffleDataType<bool>::operator-=(const bool& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator*=
 //*---------------------------------------------------------------
-// DESC : *= 복합 대입 연산자 구현
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : *= compound assignment operator implementation
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -1158,12 +1158,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator*=(const TDATA& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator*=
 //*---------------------------------------------------------------
-// DESC : *= 복합 대입 연산자 구현 (bool 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : *= compound assignment operator (specialized for bool)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 bool 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for bool; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline bool CMemoryShuffleDataType<bool>::operator*=(const bool& pData)
@@ -1179,9 +1179,9 @@ inline bool CMemoryShuffleDataType<bool>::operator*=(const bool& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator/=
 //*---------------------------------------------------------------
-// DESC : /= 복합 대입 연산자 구현
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : /= compound assignment operator implementation
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -1211,12 +1211,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator/=(const TDATA& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator/=
 //*---------------------------------------------------------------
-// DESC : /= 복합 대입 연산자 구현 (bool 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : /= compound assignment operator (specialized for bool)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 bool 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for bool; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline bool CMemoryShuffleDataType<bool>::operator/=(const bool& pData)
@@ -1232,9 +1232,9 @@ inline bool CMemoryShuffleDataType<bool>::operator/=(const bool& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator%=
 //*---------------------------------------------------------------
-// DESC : %= 복합 대입 연산자 구현
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : %= compound assignment operator implementation
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -1264,12 +1264,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator%=(const TDATA& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator%=
 //*---------------------------------------------------------------
-// DESC : %= 복합 대입 연산자 구현 (bool 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : %= compound assignment operator (specialized for bool)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 bool 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for bool; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline bool CMemoryShuffleDataType<bool>::operator%=(const bool& pData)
@@ -1284,12 +1284,12 @@ inline bool CMemoryShuffleDataType<bool>::operator%=(const bool& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator%=
 //*---------------------------------------------------------------
-// DESC : %= 복합 대입 연산자 구현 (float 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : %= compound assignment operator (specialized for float)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline float CMemoryShuffleDataType<float>::operator%=(const float& pData)
@@ -1304,12 +1304,12 @@ inline float CMemoryShuffleDataType<float>::operator%=(const float& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator%=
 //*---------------------------------------------------------------
-// DESC : %= 복합 대입 연산자 구현 (double 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : %= compound assignment operator (specialized for double)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline double CMemoryShuffleDataType<double>::operator%=(const double& pData)
@@ -1324,12 +1324,12 @@ inline double CMemoryShuffleDataType<double>::operator%=(const double& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator%=
 //*---------------------------------------------------------------
-// DESC : %= 복합 대입 연산자 구현 (long double 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : %= compound assignment operator (specialized for long double)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline long double CMemoryShuffleDataType<long double>::operator%=(const long double& pData)
@@ -1345,9 +1345,9 @@ inline long double CMemoryShuffleDataType<long double>::operator%=(const long do
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator&=
 //*---------------------------------------------------------------
-// DESC : &= 복합 대입 연산자 구현
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : &= compound assignment operator implementation
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -1377,12 +1377,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator&=(const TDATA& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator&=
 //*---------------------------------------------------------------
-// DESC : &= 복합 대입 연산자 구현 (float 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : &= compound assignment operator (specialized for float)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline float CMemoryShuffleDataType<float>::operator&=(const float& pData)
@@ -1397,12 +1397,12 @@ inline float CMemoryShuffleDataType<float>::operator&=(const float& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator&=
 //*---------------------------------------------------------------
-// DESC : &= 복합 대입 연산자 구현 (double 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : &= compound assignment operator (specialized for double)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline double CMemoryShuffleDataType<double>::operator&=(const double& pData)
@@ -1417,12 +1417,12 @@ inline double CMemoryShuffleDataType<double>::operator&=(const double& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator&=
 //*---------------------------------------------------------------
-// DESC : &= 복합 대입 연산자 구현 (long double 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : &= compound assignment operator (specialized for long double)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline long double CMemoryShuffleDataType<long double>::operator&=(const long double& pData)
@@ -1438,9 +1438,9 @@ inline long double CMemoryShuffleDataType<long double>::operator&=(const long do
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator|=
 //*---------------------------------------------------------------
-// DESC : |= 복합 대입 연산자 구현
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : |= compound assignment operator implementation
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -1470,12 +1470,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator|=(const TDATA& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator|=
 //*---------------------------------------------------------------
-// DESC : |= 복합 대입 연산자 구현 (float 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : |= compound assignment operator (specialized for float)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline float CMemoryShuffleDataType<float>::operator|=(const float& pData)
@@ -1490,12 +1490,12 @@ inline float CMemoryShuffleDataType<float>::operator|=(const float& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator|=
 //*---------------------------------------------------------------
-// DESC : |= 복합 대입 연산자 구현 (double 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : |= compound assignment operator (specialized for double)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline double CMemoryShuffleDataType<double>::operator|=(const double& pData)
@@ -1510,12 +1510,12 @@ inline double CMemoryShuffleDataType<double>::operator|=(const double& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator|=
 //*---------------------------------------------------------------
-// DESC : |= 복합 대입 연산자 구현 (long double 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : |= compound assignment operator (specialized for long double)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline long double CMemoryShuffleDataType<long double>::operator|=(const long double& pData)
@@ -1531,9 +1531,9 @@ inline long double CMemoryShuffleDataType<long double>::operator|=(const long do
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator^=
 //*---------------------------------------------------------------
-// DESC : ^= 복합 대입 연산자 구현
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : ^= compound assignment operator implementation
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 /* export */ template<typename TDATA>
@@ -1563,12 +1563,12 @@ inline TDATA CMemoryShuffleDataType<TDATA>::operator^=(const TDATA& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator^=
 //*---------------------------------------------------------------
-// DESC : ^= 복합 대입 연산자 구현 (float 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : ^= compound assignment operator (specialized for float)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline float CMemoryShuffleDataType<float>::operator^=(const float& pData)
@@ -1583,12 +1583,12 @@ inline float CMemoryShuffleDataType<float>::operator^=(const float& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator^=
 //*---------------------------------------------------------------
-// DESC : ^= 복합 대입 연산자 구현 (double 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : ^= compound assignment operator (specialized for double)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline double CMemoryShuffleDataType<double>::operator^=(const double& pData)
@@ -1603,12 +1603,12 @@ inline double CMemoryShuffleDataType<double>::operator^=(const double& pData)
 // TYPE : FUNCTION
 // NAME : CMemoryShuffleDataType::operator^=
 //*---------------------------------------------------------------
-// DESC : ^= 복합 대입 연산자 구현 (long double 타입에 특화됨)
-// PARM :	1 . pData - 연산 인자값
-// RETV : 연산 결과값
+// DESC : ^= compound assignment operator (specialized for long double)
+// PARM :	1 . pData - Operation argument value
+// RETV : Operation result
 // PRGM : B4nFter
 // P.S.>
-//		- 원래 실수형 데이터 타입에서 지원하지 않는 연산이므로 기본값만 반환 (연산 자체를 사용하지 않도록 할 것)
+//		- Operation unsupported for floating-point; returns default value
 //*---------------------------------------------------------------
 /* export */ template<>
 inline long double CMemoryShuffleDataType<long double>::operator^=(const long double& pData)

@@ -111,7 +111,7 @@ public:
 
 // Operations
 public:
-	// Note : wfopen()를 이용해서 유니코드로 작성된 HTML문서를 분석한다.
+	// Note : Parse Unicode HTML document using wfopen().
 	UINT ReadFile( const wchar_t *filename );
 	UINT ReadFile( const char *filename );
 	// parses an HTML document from the specified string

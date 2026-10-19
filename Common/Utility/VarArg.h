@@ -3,11 +3,11 @@
 	<< VARIABLE-ARGUMENT >>
 
 	FILE : VARARG.H
-	DESC : 가변 인자들로 문자열을 구성해주는 클래스
+	DESC : Variable-argument string formatter class
 	INIT BUILT DATE : 2007. 09. 06
 	LAST BUILT DATE : 2007. 09. 07
 
-	Copyrightⓒ 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
+	Copyright (c) 2002~2009 B4nFter (b4nfter@gmail.com) and Co-Writers. All Rights Reserved.
 
 *///===============================================================
 
@@ -42,13 +42,13 @@
 // TYPE : CLASS
 // NAME : CVarArgA
 //*---------------------------------------------------------------
-// DESC : 가변 인자들로 문자열을 구성해주는 클래스 (멀티바이트)
+// DESC : Variable-argument string formatter class (ANSI/Multibyte)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<DWORD TP_MSGSIZE>
 class CVarArgA
 {
-//	DISABLE_COPY_ASSIGN(CVarArgA)	// 객체간 복사, 대입 금지
+//	DISABLE_COPY_ASSIGN(CVarArgA)	// Prevent copy and assignment
 
 public:
 	explicit CVarArgA(const CHAR* lpFormat, ...);
@@ -65,13 +65,13 @@ private:
 // TYPE : CLASS
 // NAME : CVarArgW
 //*---------------------------------------------------------------
-// DESC : 가변 인자들로 문자열을 구성해주는 클래스 (유니코드)
+// DESC : Variable-argument string formatter class (Unicode)
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<DWORD TP_MSGSIZE>
 class CVarArgW
 {
-//	DISABLE_COPY_ASSIGN(CVarArgW)	// 객체간 복사, 대입 금지
+//	DISABLE_COPY_ASSIGN(CVarArgW)	// Prevent copy and assignment
 
 public:
 	explicit CVarArgW(const WCHAR* lpFormat, ...);
@@ -92,9 +92,9 @@ private:
 // TYPE : FUNCTION
 // NAME : CVarArgA::CVarArgA
 //*---------------------------------------------------------------
-// DESC : 생성자
-// PARM :	1 . lpFormat - 출력 포맷
-//			2 . ... - 가변인자
+// DESC : Constructor
+// PARM :	1 . lpFormat - Format string
+//			2 . ... - Variable arguments
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -115,9 +115,9 @@ CVarArgA<TP_MSGSIZE>::CVarArgA(const CHAR* lpFormat, ...)
 // TYPE : FUNCTION
 // NAME : CVarArgA::operator CHAR*
 //*---------------------------------------------------------------
-// DESC : 객체를 CHAR* 형으로 치환
+// DESC : Conversion operator to CHAR*
 // PARM : N/A
-// RETV : 텍스트 버퍼 포인터
+// RETV : Pointer to text buffer
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<DWORD TP_MSGSIZE>
@@ -131,9 +131,9 @@ inline CVarArgA<TP_MSGSIZE>::operator const CHAR*() const
 // TYPE : FUNCTION
 // NAME : CVarArgA::GetMsg
 //*---------------------------------------------------------------
-// DESC : 객체의 텍스트 버퍼 반환
+// DESC : Returns text buffer pointer
 // PARM : N/A
-// RETV : 텍스트 버퍼 포인터
+// RETV : Pointer to text buffer
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<DWORD TP_MSGSIZE>
@@ -147,9 +147,9 @@ inline const CHAR* CVarArgA<TP_MSGSIZE>::GetMsg() const
 // TYPE : FUNCTION
 // NAME : CVarArgW::CVarArgW
 //*---------------------------------------------------------------
-// DESC : 생성자
-// PARM :	1 . lpFormat - 출력 포맷
-//			2 . ... - 가변인자
+// DESC : Constructor
+// PARM :	1 . lpFormat - Format string
+//			2 . ... - Variable arguments
 // RETV : N/A
 // PRGM : B4nFter
 //*---------------------------------------------------------------
@@ -170,9 +170,9 @@ CVarArgW<TP_MSGSIZE>::CVarArgW(const WCHAR* lpFormat, ...)
 // TYPE : FUNCTION
 // NAME : CVarArgW::operator WCHAR*
 //*---------------------------------------------------------------
-// DESC : 객체를 WCHAR* 형으로 치환
+// DESC : Conversion operator to WCHAR*
 // PARM : N/A
-// RETV : 텍스트 버퍼 포인터
+// RETV : Pointer to text buffer
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<DWORD TP_MSGSIZE>
@@ -186,9 +186,9 @@ inline CVarArgW<TP_MSGSIZE>::operator const WCHAR*() const
 // TYPE : FUNCTION
 // NAME : CVarArgW::GetMsg
 //*---------------------------------------------------------------
-// DESC : 객체의 텍스트 버퍼 반환
+// DESC : Returns text buffer pointer
 // PARM : N/A
-// RETV : 텍스트 버퍼 포인터
+// RETV : Pointer to text buffer
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 template<DWORD TP_MSGSIZE>

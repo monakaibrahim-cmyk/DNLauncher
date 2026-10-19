@@ -33,7 +33,6 @@ BOOL ClientDeleteFile( LPCTSTR FineName )
 	return TRUE;
 }
 
-
 CHttpDownload::CHttpDownload()
 : m_hHttpConnection( NULL )
 , m_dwTempFileLength( 0 )
@@ -74,7 +73,7 @@ int CHttpDownload::DownloadFile( HINTERNET hInternetSession, CString strHttpPath
 	m_strHttpPath = strHttpPath;
 	m_strLocalPath = strLocalPath + L".tmp";
 
-	// 다운 받을 파일 크기 구하기
+	// Query remote file size
 	DWORD dwDownloadFileSize = GetDownloadFileSize( hInternetSession, m_strHttpPath );
 
 	if( dwDownloadFileSize == 0 )
@@ -82,7 +81,7 @@ int CHttpDownload::DownloadFile( HINTERNET hInternetSession, CString strHttpPath
 
 	TRACE( L"Download File Size = %d\n", dwDownloadFileSize );
 
-	// 다운 완료된 파일이 있을 경우 유효성 검사
+	// Check if destination file already exists and matches size
 	CFile file;
 	CFileException e;
 
@@ -93,18 +92,18 @@ int CHttpDownload::DownloadFile( HINTERNET hInternetSession, CString strHttpPath
 			m_dwTotalFileLength = dwDownloadFileSize;
 			m_dwTotalBytes = dwDownloadFileSize;
 			m_fPercent = 100.0f;
-			return HTTPDOWNLOAD_ALREADY_DOWNLOAD;		// 이미 다 받아진 파일이 있음
+			return HTTPDOWNLOAD_ALREADY_DOWNLOAD;		// File already completely downloaded
 		}
 		else
-			ClientDeleteFile( strLocalPath );			// 받았으나 서버의 파일 정보와 상이할 경우 삭제 후 다시 받음
+			ClientDeleteFile( strLocalPath );			// Incomplete or mismatched size: delete and re-download
 	}
 	
-	// 기존 다운받던 tmp 파일 체크
+	// Check for existing partial .tmp download
 	FILE* fp;
 	fp = _wfopen( m_strLocalPath, _T("r") );
 	UINT uiFileModeFlag = CFile::modeCreate | CFile::modeWrite | CFile::shareDenyWrite;
 
-	if( fp != NULL )	// 다운받던 tmp파일이 있을 경우
+	if( fp != NULL )	// Existing .tmp file found, resume download
 	{
 		fclose( fp );
 		uiFileModeFlag |= CFile::modeNoTruncate;
@@ -119,7 +118,7 @@ int CHttpDownload::DownloadFile( HINTERNET hInternetSession, CString strHttpPath
 
 	if( m_dwTempFileLength < dwDownloadFileSize )
 	{
-		// Http 열기
+		// Connect via HTTP with Range header for resuming
 		CString strAddHeader;
 		strAddHeader.Format( L"Range:bytes=%d-\nCache-Control:no-cache\nPragma:no-cache", m_dwTempFileLength );
 
@@ -136,14 +135,14 @@ int CHttpDownload::DownloadFile( HINTERNET hInternetSession, CString strHttpPath
 		DWORD dwBufferSize = MAX_PATH;
 		DWORD dwIndex = 0;
 
-		// 다운받아야 할 파일 크기 구하기
+		// Query remaining content length
 		if( HttpQueryInfo( m_hHttpConnection, HTTP_QUERY_CONTENT_LENGTH, (LPVOID)&szBuffer, &dwBufferSize, &dwIndex ) != FALSE )
 		{
 			m_dwDownloadFileLength = (DWORD)_wtoi( szBuffer );
 			m_dwTotalFileLength = m_dwTempFileLength + m_dwDownloadFileLength;
 		}
 
-		// 다운로드 시작 (이어받기)
+		// Begin download (resume supported)
 		if( m_dwDownloadFileLength > 0 )
 		{
 			DWORD dwRead, dwSize;
@@ -195,7 +194,7 @@ int CHttpDownload::DownloadFile( HINTERNET hInternetSession, CString strHttpPath
 	file.Close();
 
 	TRACE( L"--- MD5 Check Start... ---\n" );
-	// 올바르게 다운로드 되었는지 MD5 Check
+	// Perform MD5 verification on completed download
 	if( !GetMD5Checksum() )
 	{
 		ClientDeleteFile( m_strLocalPath );
@@ -203,7 +202,7 @@ int CHttpDownload::DownloadFile( HINTERNET hInternetSession, CString strHttpPath
 	}
 	TRACE( L"--- MD5 Check End! ---\n" );
 
-	// 정리 tmp -> 원래 파일명
+	// Rename .tmp to destination file
 	CString strNewLocalPath = m_strLocalPath.Left( m_strLocalPath.GetLength() - 4 );
 	CFile::Rename( m_strLocalPath, strNewLocalPath );
 
@@ -227,7 +226,7 @@ DWORD CHttpDownload::GetDownloadFileSize( HINTERNET hInternetSession, CString st
 	DWORD dwIndex = 0;
 	DWORD dwFileSize = 0;
 
-	// 다운받아야 할 파일 크기 구하기
+	// Query remote content length
 	if( HttpQueryInfo( m_hHttpConnection, HTTP_QUERY_CONTENT_LENGTH, (LPVOID)&szBuffer, &dwBufferSize, &dwIndex ) != FALSE )
 		dwFileSize = (DWORD)_wtoi( szBuffer );
 
@@ -272,6 +271,6 @@ BOOL CHttpDownload::GetMD5Checksum()
 	strDownloadChecksum = strDownloadChecksum.Left( nIndex - 1 );
 
 	CString strLocalChecksum = CMD5Checksum::GetMD5( m_strLocalPath );
-	// MD5 비교
+	// Compare MD5 checksums
 	return wcscmp( strLocalChecksum, strDownloadChecksum ) == 0 ? TRUE : FALSE;
 }

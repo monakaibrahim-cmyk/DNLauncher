@@ -30,7 +30,7 @@ CFileSet::FILEBOMTYPEDAT CFileSet::m_stBomTypeDat[EV_BT_NONE] = {
 // TYPE : FUNCTION
 // NAME : CFileSet::CFileSet
 //*---------------------------------------------------------------
-// DESC : 생성자
+// DESC : Constructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -45,7 +45,7 @@ CFileSet::CFileSet()
 // TYPE : FUNCTION
 // NAME : CFileSet::~CFileSet
 //*---------------------------------------------------------------
-// DESC : 소멸자
+// DESC : Destructor
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -60,12 +60,12 @@ CFileSet::~CFileSet()
 // TYPE : FUNCTION
 // NAME : CFileSet::Reset
 //*---------------------------------------------------------------
-// DESC : 파일관련 자원 초기화
+// DESC : Initialize file-related resources
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
 // P.S.>
-//		- 핸들을 닫는것이 아니므로 주의
+//		- Note: Does not close handle
 //*---------------------------------------------------------------
 VOID CFileSet::Reset()
 {
@@ -78,12 +78,12 @@ VOID CFileSet::Reset()
 // TYPE : FUNCTION
 // NAME : CFileSet::Open
 //*---------------------------------------------------------------
-// DESC : 파일을 열고 자원을 할당
-// PARM :	1 . lpszFileName - 파일의 이름을 포함한 절대/상대 경로
-//			2 . bIsReadOnly - 읽기전용 여부
-//			3 . bIsAppend - 파일에 데이터를 추가하는 것으로 할지 여부 (bIsReadOnly == FALSE 일 때만 유효)
-//			4 . bIsReadShare - 읽기공유 여부
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Open file and allocate resources
+// PARM :	1 . lpszFileName - File name including absolute/relative path
+//			2 . bIsReadOnly - Read-only flag
+//			3 . bIsAppend - Append data to file (valid only if bIsReadOnly == FALSE)
+//			4 . bIsReadShare - Read share flag
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::Open(LPCTSTR lpszFileName, BOOL bIsReadOnly, BOOL bIsAppend, BOOL bIsReadShare)
@@ -141,15 +141,15 @@ DWORD CFileSet::Open(LPCTSTR lpszFileName, BOOL bIsReadOnly, BOOL bIsAppend, BOO
 // TYPE : FUNCTION
 // NAME : CFileSet::Open
 //*---------------------------------------------------------------
-// DESC : 파일을 열고 자원을 할당
-// PARM :	1 . lpszFileName - 파일의 이름을 포함한 절대/상대 경로
-//			2 . dwDesiredAccess - 접근모드
-//			3 . dwShareMode - 공유모드
-//			4 . dwCreationDisposition - 생성계획
-//			5 . dwFlagsAndAttributes - 플래그, 속성 (다수지정 가능)
-//			6 . lpSecurityAttributes - 보안속성
-//			7 . hTemplateFile - 템플릿 파일 핸들
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Open file and allocate resources
+// PARM :	1 . lpszFileName - File name including absolute/relative path
+//			2 . dwDesiredAccess - Access mode
+//			3 . dwShareMode - Share mode
+//			4 . dwCreationDisposition - Creation disposition
+//			5 . dwFlagsAndAttributes - Flags and attributes (multiple can be specified)
+//			6 . lpSecurityAttributes - Security attributes
+//			7 . hTemplateFile - Template file handle
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::Open(
@@ -189,7 +189,7 @@ DWORD CFileSet::Open(
 // TYPE : FUNCTION
 // NAME : CFileSet::Close
 //*---------------------------------------------------------------
-// DESC : 파일핸들을 닫고 객체자원 정리
+// DESC : Close file handle and clean up object resources
 // PARM : N/A
 // RETV : N/A
 // PRGM : B4nFter
@@ -207,9 +207,9 @@ VOID CFileSet::Close()
 // TYPE : FUNCTION
 // NAME : CFileSet::Flush
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 쓰기버퍼의 데이터를 즉시 처리하고 비움
+// DESC : Immediately flush write buffer of currently accessed file to disk
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::Flush()
@@ -227,9 +227,9 @@ BOOL CFileSet::Flush()
 // TYPE : FUNCTION
 // NAME : CFileSet::IsOpen
 //*---------------------------------------------------------------
-// DESC : 파일객체가 현재 열려있는지 여부 반환
+// DESC : Returns whether file object is currently open
 // PARM : N/A
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::IsOpen() const
@@ -242,10 +242,10 @@ BOOL CFileSet::IsOpen() const
 // TYPE : FUNCTION
 // NAME : CFileSet::GetFullPath
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 전체경로를 구함
-// PARM :	1 . lpszBuffer - 문자열 출력버퍼
-//			2 . nBufferSize - 문자열 출력버퍼의 크기 
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Get full path of currently accessed file
+// PARM :	1 . lpszBuffer - String output buffer
+//			2 . nBufferSize - String output buffer size 
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::GetFullPath(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
@@ -263,7 +263,7 @@ BOOL CFileSet::GetFullPath(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 		return FALSE;
 	}
 
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	return (_tcsncpy_s(lpszBuffer, nBufferSize, m_szFileFullPath, _TRUNCATE)?(TRUE):(FALSE));
 #else	// #if	(_MSC_VER >= 1400)
 	return (_tcsncpy(lpszBuffer, m_szFileFullPath, nBufferSize)?(TRUE):(FALSE));
@@ -275,10 +275,10 @@ BOOL CFileSet::GetFullPath(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 // TYPE : FUNCTION
 // NAME : CFileSet::GetDrive
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 드라이브를 구함
-// PARM :	1 . lpszBuffer - 문자열 출력버퍼
-//			2 . nBufferSize - 문자열 출력버퍼의 크기 
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Get drive letter of currently accessed file
+// PARM :	1 . lpszBuffer - String output buffer
+//			2 . nBufferSize - String output buffer size 
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::GetDrive(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
@@ -296,7 +296,7 @@ BOOL CFileSet::GetDrive(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 		return FALSE;
 	}
 
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	return (!_tsplitpath_s(m_szFileFullPath, lpszBuffer, nBufferSize, NULL, 0, NULL, 0, NULL, 0)?(TRUE):(FALSE));
 #else	// #if	(_MSC_VER >= 1400)
 	return (!_tsplitpath(m_szFileFullPath, lpszBuffer, NULL, NULL, NULL)?(TRUE):(FALSE));
@@ -308,10 +308,10 @@ BOOL CFileSet::GetDrive(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 // TYPE : FUNCTION
 // NAME : CFileSet::GetPath
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 경로를 구함
-// PARM :	1 . lpszBuffer - 문자열 출력버퍼
-//			2 . nBufferSize - 문자열 출력버퍼의 크기 
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Get directory path of currently accessed file
+// PARM :	1 . lpszBuffer - String output buffer
+//			2 . nBufferSize - String output buffer size 
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::GetPath(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
@@ -329,7 +329,7 @@ BOOL CFileSet::GetPath(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 		return FALSE;
 	}
 
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	return (!_tsplitpath_s(m_szFileFullPath, NULL, 0, lpszBuffer, nBufferSize, NULL, 0, NULL, 0)?(TRUE):(FALSE));
 #else	// #if	(_MSC_VER >= 1400)
 	return (!_tsplitpath(m_szFileFullPath, NULL, lpszBuffer, NULL, NULL)?(TRUE):(FALSE));
@@ -341,10 +341,10 @@ BOOL CFileSet::GetPath(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 // TYPE : FUNCTION
 // NAME : CFileSet::GetName
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 이름을 구함 (확장자 제외)
-// PARM :	1 . lpszBuffer - 문자열 출력버퍼
-//			2 . nBufferSize - 문자열 출력버퍼의 크기 
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Get name of currently accessed file (excluding extension)
+// PARM :	1 . lpszBuffer - String output buffer
+//			2 . nBufferSize - String output buffer size 
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::GetName(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
@@ -362,7 +362,7 @@ BOOL CFileSet::GetName(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 		return FALSE;
 	}
 
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	return (!_tsplitpath_s(m_szFileFullPath, NULL, 0, NULL, 0, lpszBuffer, nBufferSize, NULL, 0)?(TRUE):(FALSE));
 #else	// #if	(_MSC_VER >= 1400)
 	return (!_tsplitpath(m_szFileFullPath, NULL, NULL, lpszBuffer, NULL)?(TRUE):(FALSE));
@@ -374,10 +374,10 @@ BOOL CFileSet::GetName(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 // TYPE : FUNCTION
 // NAME : CFileSet::GetExt
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 확장자를 구함
-// PARM :	1 . lpszBuffer - 문자열 출력버퍼
-//			2 . nBufferSize - 문자열 출력버퍼의 크기 
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Get extension of currently accessed file
+// PARM :	1 . lpszBuffer - String output buffer
+//			2 . nBufferSize - String output buffer size 
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::GetExt(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
@@ -395,7 +395,7 @@ BOOL CFileSet::GetExt(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 		return FALSE;
 	}
 
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	return (!_tsplitpath_s(m_szFileFullPath, NULL, 0, NULL, 0, NULL, 0, lpszBuffer, nBufferSize)?(TRUE):(FALSE));
 #else	// #if	(_MSC_VER >= 1400)
 	return (!_tsplitpath(m_szFileFullPath, NULL, NULL, NULL, lpszBuffer)?(TRUE):(FALSE));
@@ -407,10 +407,10 @@ BOOL CFileSet::GetExt(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 // TYPE : FUNCTION
 // NAME : CFileSet::GetTitle
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 이름 + 확장자를 구함
-// PARM :	1 . lpszBuffer - 문자열 출력버퍼
-//			2 . nBufferSize - 문자열 출력버퍼의 크기 
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Get file name + extension of currently accessed file
+// PARM :	1 . lpszBuffer - String output buffer
+//			2 . nBufferSize - String output buffer size 
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::GetTitle(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
@@ -430,7 +430,7 @@ BOOL CFileSet::GetTitle(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 
 	TCHAR szFileName[MAX_PATH] = { _T('\0'), };
 	TCHAR szExtName[MAX_PATH] = { _T('\0'), };
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	INT iRetVal = _tsplitpath_s(m_szFileFullPath, NULL, 0, NULL, 0, szFileName, _countof(szFileName), szExtName, _countof(szExtName));
 #else	// #if	(_MSC_VER >= 1400)
 	INT iRetVal = _tsplitpath(m_szFileFullPath, NULL, NULL, szFileName, szExtName);
@@ -439,7 +439,7 @@ BOOL CFileSet::GetTitle(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 		return FALSE;
 	}
 
-#if	(_MSC_VER >= 1400)	// VS.NET 2005 이상
+#if	(_MSC_VER >= 1400)	// VS.NET 2005 and above
 	iRetVal = _stprintf_s(lpszBuffer, nBufferSize, _T("%s%s"), szFileName, szExtName);
 #else	// #if	(_MSC_VER >= 1400)
 	iRetVal = _sntprintf(lpszBuffer, nBufferSize, _T("%s%s"), szFileName, szExtName);
@@ -456,17 +456,17 @@ BOOL CFileSet::GetTitle(/*out*/ LPTSTR lpszBuffer, DWORD nBufferSize) const
 // TYPE : FUNCTION
 // NAME : CFileSet::Seek
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 특정 위치에 파일포인터를 위치시킴
-// PARM :	1 . dwMoveMethod - 파일포인터 이동방법
+// DESC : Move file pointer to specific position in currently accessed file
+// PARM :	1 . dwMoveMethod - File pointer move method
 /*
-				FILE_BEGIN : 파일의 특정위치를 파일의 처음부터 찾음
-				FILE_CURRENT : 파일의 특정위치를 파일의 현재 위치부터 찾음
-				FILE_END : 파일의 특정위치를 파일의 끝부터 찾음
+				FILE_BEGIN : Seek from beginning of file
+				FILE_CURRENT : Seek from current file position
+				FILE_END : Seek from end of file
 */
-//			2 . lOffsetLow - 파일포인터를 이동시킬 상대위치 (하위 LONG)
-//			3 . lOffsetHigh - 파일포인터를 이동시킬 상대위치 (상위 LONG)
-//			4 . lpu64Offset - 이동된 파일포인터의 위치값
-// RETV : NOERROR - 성공 / 그외 - 실패
+//			2 . lOffsetLow - File pointer target offset (low LONG)
+//			3 . lOffsetHigh - File pointer target offset (high LONG)
+//			4 . lpu64Offset - Resulting file pointer offset
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::Seek(DWORD dwMoveMethod, LONG lOffsetLow, LONG lOffsetHigh, ULONGLONG* lpu64Offset)
@@ -504,9 +504,9 @@ DWORD CFileSet::Seek(DWORD dwMoveMethod, LONG lOffsetLow, LONG lOffsetHigh, ULON
 // TYPE : FUNCTION
 // NAME : CFileSet::SetLength
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 크기를 특정 수치만큼 강제조정
-// PARM :	1 . dwFileLength - 조정할 파일의 크기
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Resize currently accessed file to specified size
+// PARM :	1 . dwFileLength - Target file size
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::SetLength(ULONGLONG dwFileLength)
@@ -533,9 +533,9 @@ DWORD CFileSet::SetLength(ULONGLONG dwFileLength)
 // TYPE : FUNCTION
 // NAME : CFileSet::GetLength
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 크기를 얻어옴
-// PARM :	1 . dwFileLength - 얻은 파일의 크기
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Get size of currently accessed file
+// PARM :	1 . dwFileLength - Received file size
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::GetLength(/*out*/ ULONGLONG& dwFileLength) const
@@ -561,10 +561,10 @@ DWORD CFileSet::GetLength(/*out*/ ULONGLONG& dwFileLength) const
 // TYPE : FUNCTION
 // NAME : CFileSet::Read
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 현재 파일포인터부터 데이터를 읽음
-// PARM :	1 . lpBuffer - 데이터를 읽을 버퍼포인터
-//			2 . nBufferSize - 버퍼의 크기
-// RETV : NOERROR - 성공 / ERROR_HANDLE_EOF - 파일읽기종료 / 그외 - 실패
+// DESC : Read data starting from current file pointer position
+// PARM :	1 . lpBuffer - Buffer pointer to receive data
+//			2 . nBufferSize - Buffer size
+// RETV : NOERROR - Success / ERROR_HANDLE_EOF - End of file / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::Read(/*out*/ LPVOID lpBuffer, /*int,out*/ DWORD& nBufferSize)
@@ -593,10 +593,10 @@ DWORD CFileSet::Read(/*out*/ LPVOID lpBuffer, /*int,out*/ DWORD& nBufferSize)
 // TYPE : FUNCTION
 // NAME : CFileSet::Write
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 현재 파일포인터부터 데이터를 기록
-// PARM :	1 . lpBuffer - 기록할 데이터를 가진 버퍼포인터
-//			2 . nBufferSize - 버퍼의 크기
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Write data starting from current file pointer position
+// PARM :	1 . lpBuffer - Buffer pointer containing data to write
+//			2 . nBufferSize - Buffer size
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::Write(LPCVOID lpBuffer, /*int,out*/ DWORD& nBufferSize)
@@ -625,10 +625,10 @@ DWORD CFileSet::Write(LPCVOID lpBuffer, /*int,out*/ DWORD& nBufferSize)
 // TYPE : FUNCTION
 // NAME : CFileSet::LockRange
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 특정 위치를 다른 프로세스들이 접근하지 못하도록 배타적 잠김을 설정
-// PARM :	1 . uOffset - 파일의 시작위치로 부터의 상대위치
-//			2 . uNumberOfBytes - 잠김을 수행할 바이트 수
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Lock byte range of currently accessed file for exclusive access
+// PARM :	1 . uOffset - Relative offset from start of file
+//			2 . uNumberOfBytes - Bytes to lock
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::LockRange(ULONGLONG uOffset, ULONGLONG uNumberOfBytes)
@@ -653,13 +653,13 @@ DWORD CFileSet::LockRange(ULONGLONG uOffset, ULONGLONG uNumberOfBytes)
 // TYPE : FUNCTION
 // NAME : CFileSet::SkipBOM
 //*---------------------------------------------------------------
-// DESC : 문서파일의 인코딩형태를 나타내는 BOM (Byte Order Mark) 가 존재하면 넘김
+// DESC : Skip BOM (Byte Order Mark) if present in document file
 // PARM : N/A
-// RETV : BOM 타입 (EV_BT_NONE 이면 속해있지 않음)
+// RETV : BOM type (EV_BT_NONE if none present)
 // PRGM : B4nFter
 // P.S.>
-//		- 필연적으로 파일포인터는 맨 앞으로 이동되고 이후에 BOM의 크기만큼 이동, 최종적으로 파일포인터는 BOM 뒤에 위치
-//		- BOM이 없는 경우 파일포인터는 맨 앞으로 이동
+//		- File pointer moves to start, then skips BOM length, ending up immediately after BOM
+//		- If BOM is not present, file pointer is moved to beginning of file
 //*---------------------------------------------------------------
 CFileSet::EF_BOMTYPE CFileSet::SkipBOM()
 {
@@ -697,9 +697,9 @@ CFileSet::EF_BOMTYPE CFileSet::SkipBOM()
 // TYPE : FUNCTION
 // NAME : CFileSet::WriteBOM
 //*---------------------------------------------------------------
-// DESC : 파일의 맨 앞에 특정 BOM (Byte Order Mark) 을 남김
-// PARM :	1 . eBomType - 쓰기를 원하는 BOM 타입
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Write specified BOM (Byte Order Mark) at the beginning of the file
+// PARM :	1 . eBomType - BOM type to write
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::WriteBOM(CFileSet::EF_BOMTYPE eBomType)
@@ -736,10 +736,10 @@ DWORD CFileSet::WriteBOM(CFileSet::EF_BOMTYPE eBomType)
 // TYPE : FUNCTION
 // NAME : CFileSet::UnlockRange
 //*---------------------------------------------------------------
-// DESC : 이전에 Lock 되었던 파일의 특정 위치의 배타적 잠김을 해제
-// PARM :	1 . uOffset - 파일의 시작위치로 부터의 상대위치
-//			2 . uNumberOfBytes - 잠김해제를 수행할 바이트 수
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Unlock byte range of file that was previously locked
+// PARM :	1 . uOffset - Relative offset from start of file
+//			2 . uNumberOfBytes - Bytes to unlock
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::UnlockRange(ULONGLONG uOffset, ULONGLONG uNumberOfBytes)
@@ -764,9 +764,9 @@ DWORD CFileSet::UnlockRange(ULONGLONG uOffset, ULONGLONG uNumberOfBytes)
 // TYPE : FUNCTION
 // NAME : CFileSet::GetPosition
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 파일포인터 위치를 얻어옴
-// PARM :	1 . u64FilePositon - 파일포인터 위치를 얻어올 변수
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Get current file pointer position
+// PARM :	1 . u64FilePositon - Variable to receive file pointer position
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::GetPosition(/*out*/ ULONGLONG& u64FilePositon) const
@@ -793,11 +793,11 @@ DWORD CFileSet::GetPosition(/*out*/ ULONGLONG& u64FilePositon) const
 // TYPE : FUNCTION
 // NAME : CFileSet::GetTime
 //*---------------------------------------------------------------
-// DESC : 현재 접근중인 파일의 파일시간을 얻어옴
-// PARM :	1 . lpstCreateFileTime - 생성시간
-//			2 . lpstAccessFileTime - 마지막 접근시간
-//			3 . lpstWriteFileTime - 마지막 기록시간
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Get timestamps of currently accessed file
+// PARM :	1 . lpstCreateFileTime - Creation time
+//			2 . lpstAccessFileTime - Last access time
+//			3 . lpstWriteFileTime - Last write time
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::GetTime(/*out*/ LPFILETIME lpstCreateFileTime, /*out*/ LPFILETIME lpstAccessFileTime, /*out*/ LPFILETIME lpstWriteFileTime) const
@@ -829,12 +829,12 @@ DWORD CFileSet::GetTime(/*out*/ LPFILETIME lpstCreateFileTime, /*out*/ LPFILETIM
 // TYPE : FUNCTION
 // NAME : CFileSet::GetTime
 //*---------------------------------------------------------------
-// DESC : 특정 경로의 파일의 파일시간을 얻어옴 (정적 메서드)
-// PARM :	1 . lpszFileName - 파일의 이름을 포함한 절대/상대 경로
-//			2 . lpstCreateFileTime - 생성시간
-//			3 . lpstAccessFileTime - 마지막 접근시간
-//			4 . lpstWriteFileTime - 마지막 기록시간
-// RETV : NOERROR - 성공 / 그외 - 실패
+// DESC : Get file timestamps of specified file path (static method)
+// PARM :	1 . lpszFileName - File name including absolute/relative path
+//			2 . lpstCreateFileTime - Creation time
+//			3 . lpstAccessFileTime - Last access time
+//			4 . lpstWriteFileTime - Last write time
+// RETV : NOERROR - Success / otherwise - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::GetTime(LPCTSTR lpszFileName, /*out*/ LPFILETIME lpstCreateFileTime, /*out*/ LPFILETIME lpstAccessFileTime, /*out*/ LPFILETIME lpstWriteFileTime)
@@ -868,16 +868,16 @@ DWORD CFileSet::GetTime(LPCTSTR lpszFileName, /*out*/ LPFILETIME lpstCreateFileT
 // TYPE : FUNCTION
 // NAME : CFileSet::GetVersion
 //*---------------------------------------------------------------
-// DESC : 특정 경로의 파일의 버전정보를 얻어옴 (정적 메서드)
-// PARM :	1 . lpszFileName - 파일의 이름을 포함한 절대/상대 경로
-//			2 . dwFileVersion1 - 버전정보 1
-//			3 . dwFileVersion2 - 버전정보 2
-//			4 . dwFileVersion3 - 버전정보 3
-//			5 . dwFileVersion4 - 버전정보 4
-// RETV : NOERROR - 성공 / 그외 - 실패 (파일 바이너리에 버전 리소스가 없으면 ERROR_RESOURCE_TYPE_NOT_FOUND (1813L) 반환)
+// DESC : Get version info of specified file path (static method)
+// PARM :	1 . lpszFileName - File name including absolute/relative path
+//			2 . dwFileVersion1 - Version info 1
+//			3 . dwFileVersion2 - Version info 2
+//			4 . dwFileVersion3 - Version info 3
+//			5 . dwFileVersion4 - Version info 4
+// RETV : NOERROR - Success / otherwise - Failure (returns ERROR_RESOURCE_TYPE_NOT_FOUND (1813L) if no version resource in binary)
 // PRGM : B4nFter
 // P.S.>
-//		- 파일 바이너리에 버전 리소스가 이미 존재해야 함
+//		- Version resource must already exist in file binary
 //*---------------------------------------------------------------
 DWORD CFileSet::GetVersion(LPCTSTR lpszFileName, DWORD& dwFileVersion1, DWORD& dwFileVersion2, DWORD& dwFileVersion3, DWORD& dwFileVersion4)
 {
@@ -885,7 +885,7 @@ DWORD CFileSet::GetVersion(LPCTSTR lpszFileName, DWORD& dwFileVersion1, DWORD& d
 	DWORD dwFileVersionInfoSize = ::GetFileVersionInfoSize(lpszFileName, &dwHandle);
 	if (0 == dwFileVersionInfoSize)
 	{
-		return (::GetLastError());	// Version Resource가 없으면 ERROR_RESOURCE_TYPE_NOT_FOUND (1813L)
+		return (::GetLastError());	// Returns ERROR_RESOURCE_TYPE_NOT_FOUND (1813L) if no version resource
 	}
 
 	std::auto_ptr<BYTE>	aVerBuf(NEW BYTE[dwFileVersionInfoSize]);
@@ -925,9 +925,9 @@ DWORD CFileSet::GetVersion(LPCTSTR lpszFileName, DWORD& dwFileVersion1, DWORD& d
 // TYPE : FUNCTION
 // NAME : CFileSet::GetAttributes
 //*---------------------------------------------------------------
-// DESC : 특정 경로의 파일의 속성정보를 가져옴 (정적 메서드)
-// PARM :	1 . lpszFileName - 파일의 이름을 포함한 절대/상대 경로
-// RETV : 파일의 속성 : 성공 / INVALID_FILE_ATTRIBUTES : 실패
+// DESC : Get attributes of specified file path (static method)
+// PARM :	1 . lpszFileName - File name including absolute/relative path
+// RETV : File attributes : Success / INVALID_FILE_ATTRIBUTES : Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 DWORD CFileSet::GetAttributes(LPCTSTR lpszFileName)
@@ -941,9 +941,9 @@ DWORD CFileSet::GetAttributes(LPCTSTR lpszFileName)
 // TYPE : FUNCTION
 // NAME : CFileSet::SetAttributes
 //*---------------------------------------------------------------
-// DESC : 특정 경로의 파일의 속성을 지정 (정적 메서드)
-// PARM :	1 . lpszFileName - 파일의 이름을 포함한 절대/상대 경로
-//			2 . dwFileAttributes - 파일 속성
+// DESC : Set attributes of specified file path (static method)
+// PARM :	1 . lpszFileName - File name including absolute/relative path
+//			2 . dwFileAttributes - File attributes
 /*
 				FILE_ATTRIBUTE_READONLY             0x00000001
 				FILE_ATTRIBUTE_HIDDEN               0x00000002
@@ -960,7 +960,7 @@ DWORD CFileSet::GetAttributes(LPCTSTR lpszFileName)
 				FILE_ATTRIBUTE_NOT_CONTENT_INDEXED  0x00002000
 				FILE_ATTRIBUTE_ENCRYPTED            0x00004000
 */
-// RETV : TRUE - 성공 / FALSE - 실패
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::SetAttributes(LPCTSTR lpszFileName, DWORD dwFileAttributes)
@@ -974,11 +974,11 @@ BOOL CFileSet::SetAttributes(LPCTSTR lpszFileName, DWORD dwFileAttributes)
 // TYPE : FUNCTION
 // NAME : CFileSet::Remove
 //*---------------------------------------------------------------
-// DESC : 특정 경로의 파일을 제거 (정적 메서드)
-// PARM :	1 . lpszSrcFileName - 원본 파일
-//			2 . lpszTgtFileName - 목적 파일
-//			3 . pIsFailIfExist - 기존에 파일이 있으면 실패로 처리할지 여부 (TRUE:실패 / FALSE:성공(덮어씀))
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Delete file at specified path (static method)
+// PARM :	1 . lpszSrcFileName - Source file
+//			2 . lpszTgtFileName - Target file
+//			3 . pIsFailIfExist - Fail if file exists (TRUE: fail / FALSE: overwrite)
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::Copy(LPCTSTR lpszSrcFileName, LPCTSTR lpszTgtFileName, BOOL pIsFailIfExist)
@@ -994,9 +994,9 @@ BOOL CFileSet::Copy(LPCTSTR lpszSrcFileName, LPCTSTR lpszTgtFileName, BOOL pIsFa
 // TYPE : FUNCTION
 // NAME : CFileSet::Remove
 //*---------------------------------------------------------------
-// DESC : 특정 경로의 파일을 제거 (정적 메서드)
-// PARM :	1 . lpszFileName - 파일의 이름을 포함한 절대/상대 경로
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Delete file at specified path (static method)
+// PARM :	1 . lpszFileName - File name including absolute/relative path
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::Remove(LPCTSTR lpszFileName)
@@ -1011,10 +1011,10 @@ BOOL CFileSet::Remove(LPCTSTR lpszFileName)
 // TYPE : FUNCTION
 // NAME : CFileSet::Rename
 //*---------------------------------------------------------------
-// DESC : 특정 경로의 파일의 이름과 경로를 변경 (정적 메서드)
-// PARM :	1 . lpszOldFileName - 이전 파일의 이름을 포함한 절대/상대 경로
-//			2 . lpszNewFileName - 신규 파일의 이름을 포함한 절대/상대 경로
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Rename and move file at specified path (static method)
+// PARM :	1 . lpszOldFileName - Source file name including absolute/relative path
+//			2 . lpszNewFileName - New file path (relative or absolute)
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::Rename(LPCTSTR lpszOldFileName, LPCTSTR lpszNewFileName)
@@ -1030,12 +1030,12 @@ BOOL CFileSet::Rename(LPCTSTR lpszOldFileName, LPCTSTR lpszNewFileName)
 // TYPE : FUNCTION
 // NAME : CFileSet::GetTempName
 //*---------------------------------------------------------------
-// DESC : 특정 경로와 접두사, 숫자를 기준으로 임시파일 이름을 생성 (정적 메서드)
-// PARM :	1 . lpPathName - 기준 경로
-//			2 . lpPrefixString - 기준 파일 접두사
-//			3 . uUnique - 기준 숫자
-//			4 . lpTempFileName - 임시 파일이름을 얻어올 버퍼
-// RETV : TRUE - 성공 / FALSE - 실패
+// DESC : Generate temporary file name based on path, prefix, and number (static method)
+// PARM :	1 . lpPathName - Base directory path
+//			2 . lpPrefixString - File prefix string
+//			3 . uUnique - Base number
+//			4 . lpTempFileName - Buffer to receive temporary file name
+// RETV : TRUE - Success / FALSE - Failure
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 BOOL CFileSet::GetTempName(LPCTSTR lpPathName, LPCTSTR lpPrefixString, UINT uUnique, /*out*/ LPTSTR lpTempFileName)
@@ -1060,9 +1060,9 @@ BOOL CFileSet::GetTempName(LPCTSTR lpPathName, LPCTSTR lpPrefixString, UINT uUni
 // TYPE : FUNCTION
 // NAME : CFileSet::GetBomTypeDat
 //*---------------------------------------------------------------
-// DESC : 특정 BOM 타입에 대한 정보를 얻음
-// PARM :	1 . pBomType - 특정 BOM 타입에 대한 EF_BOMTYPE 열거형 값
-// RETV : 특정 BOM 타입에 대한 정보 포인터
+// DESC : Get information for specified BOM type
+// PARM :	1 . pBomType - EF_BOMTYPE enum value for specified BOM type
+// RETV : Pointer to BOM type information
 // PRGM : B4nFter
 //*---------------------------------------------------------------
 CFileSet::LPFILEBOMTYPEDAT CFileSet::GetBomTypeDat(EF_BOMTYPE pBomType)

@@ -4965,10 +4965,10 @@ void CSkinProgress::OnSize
 /*--- END FUNCTION HEADER ----------------------------------------------------*/
 void CSkinProgress::OnTimer
 ( // On a Timer event
-  UINT nIDEvent
+  UINT_PTR nIDEvent
 )
 {
-  if(nIDEvent == (UINT)(UINT_PTR) this) // Use object's unique address as timer identifier
+  if(nIDEvent == (UINT_PTR) this) // Use object's unique address as timer identifier
   {
 // A..... Refresh the text and the progress bar
     RefreshPanes(); // Refresh the whole stuff, each 500 ms or 20 ms if in dCSP_TIMED_REDRAW mode

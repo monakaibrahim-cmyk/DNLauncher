@@ -78,26 +78,26 @@ private:
 
 
 //------------------------------------------------------------------------------
-// 예외의 원인에 대한 문자열을 반환한다.
+// Returns exception cause description string.
 const char* GetFaultReason(EXCEPTION_POINTERS* pExPtrs);
 
-// 레지스터 스트링을 얻는다.
+// Gets register state string.
 const char* GetRegisterString(EXCEPTION_POINTERS* pExPtrs);
 
-// 사용자 정보를 반환한다.
+// Returns user information.
 const char* GetUserInfo();
 
-// 윈도우즈 버전을 반환한다.
+// Returns Windows version.
 const char* GetOSInfo();
 
-// CPU 정보를 반환한다.
+// Returns CPU information.
 std::string GetCpuInfo();
 std::string GetCpuInfoFromRegistry();
 
-// 메모리 정보를 반환한다.
+// Returns memory information.
 const char* GetMemoryInfo();
 
-// 윈도우즈 버전을 알아낸다.
+// Detects Windows version.
 bool GetWinVersion(char* pszVersion, int *nVersion, char* pszMajorMinorBuild);
 
 //------------------------------------------------------------------------------

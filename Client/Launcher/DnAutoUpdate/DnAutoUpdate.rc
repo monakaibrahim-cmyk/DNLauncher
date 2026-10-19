@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 한국어 resources
+// Korean resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
 #ifdef _WIN32
@@ -48,8 +48,8 @@ BEGIN
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)\r\n"
     "LANGUAGE 18, 1\r\n"
     "#pragma code_page(949)\r\n"
-    "#include ""res\\DnAutoUpdate.rc2""  // Microsoft Visual C++ 이외의 다른 도구에서 편집한 리소스입니다.\r\n"
-    "#include ""afxres.rc""     // 표준 구성 요소입니다.\r\n"
+    "#include ""res\\DnAutoUpdate.rc2""  // Resources edited in tools other than Microsoft Visual C++.\r\n"
+    "#include ""afxres.rc""     // Standard components.\r\n"
     "#endif\r\n"
     "\0"
 END
@@ -109,13 +109,13 @@ BEGIN
     BEGIN
         BLOCK "041203b5"
         BEGIN
-            VALUE "CompanyName", "TODO: <회사 이름>"
-            VALUE "FileDescription", "TODO: <파일 설명>"
+            VALUE "CompanyName", "TODO: <Company name>"
+            VALUE "FileDescription", "TODO: <File description>"
             VALUE "FileVersion", "1.0.0.1"
             VALUE "InternalName", "DnAutoUpdate.exe"
-            VALUE "LegalCopyright", "TODO: (c) <회사 이름>.  All rights reserved."
+            VALUE "LegalCopyright", "TODO: (c) <Company name>.  All rights reserved."
             VALUE "OriginalFilename", "DnAutoUpdate.exe"
-            VALUE "ProductName", "TODO: <제품 이름>"
+            VALUE "ProductName", "TODO: <Product name>"
             VALUE "ProductVersion", "1.0.0.1"
         END
     END
@@ -160,7 +160,7 @@ BEGIN
     END
 END
 
-#endif    // 한국어 resources
+#endif    // Korean resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -178,8 +178,8 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
 LANGUAGE 18, 1
 #pragma code_page(949)
-#include "res\DnAutoUpdate.rc2"  // Microsoft Visual C++ 이외의 다른 도구에서 편집한 리소스입니다.
-#include "afxres.rc"     // 표준 구성 요소입니다.
+#include "res\DnAutoUpdate.rc2"  // Resources edited in tools other than Microsoft Visual C++.
+#include "afxres.rc"     // Standard components.
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

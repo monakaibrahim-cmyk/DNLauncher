@@ -33,38 +33,28 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Setup VCPKG
         uses: lukka/run-vcpkg@v11
         with:
           vcpkgJsonGlob: vcpkg.json
-          vcpkgGitCommitId: 1460b31b08c42cc2e9ac2c79f45ec8707e2675e2
 
-      - name: Cache vcpkg binary packages
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/.vcpkg-binary-cache
-          key: vcpkg-${{ matrix.platform }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', 'triplets/**', 'vcpkg/triplets/**') }}
-          restore-keys: |
-            vcpkg-${{ matrix.platform }}-
-
-      - name: Install Dependencies
-        shell: pwsh
+      - name: Install dependencies
         env:
           VCPKG_DEFAULT_TRIPLET: ${{ matrix.platform == 'Win32' && 'x86-windows' || 'x64-windows' }}
-          VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}/.vcpkg-binary-cache,readwrite
-        run: vcpkg install --triplet $env:VCPKG_DEFAULT_TRIPLET
+        run: |
+          vcpkg install --triplet $env:VCPKG_DEFAULT_TRIPLET
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
       - name: Build solution
-        id: build
         run: |
           $ErrorActionPreference = 'Stop'
           $logFile = "build-${{ matrix.platform }}.log"
 
-          # Capture MSBuild output while preserving the actual exit code.
           & msbuild.exe DNLauncher.sln `
             /t:Build `
             /p:Configuration=Release `
@@ -76,10 +66,8 @@ jobs:
             "/flp:logfile=$logFile;verbosity=normal"
 
           $exitCode = $LASTEXITCODE
-
           if ($exitCode -ne 0) {
-            Write-Error "MSBuild failed for ${{ matrix.platform }} with exit code $exitCode."
-            exit $exitCode
+            throw "MSBuild failed for ${{ matrix.platform }} with exit code $exitCode."
           }
 
       - name: Upload build log

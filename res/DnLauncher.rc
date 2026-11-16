@@ -1,0 +1,336 @@
+﻿// Reconstructed Resource Script for DNLauncher.exe (Phase 1)
+#include <windows.h>
+#include "resource.h"
+
+#ifndef IDC_STATIC
+#define IDC_STATIC (-1)
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources (LANG_ENGLISH, SUBLANG_ENGLISH_US = 1033)
+/////////////////////////////////////////////////////////////////////////////
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+IDI_LAUNCHER_MAIN       ICON                    "assets/ico/icon_50.ico"
+
+5018                    BITMAP                  "assets/bmp/5018.bmp"
+5019                    BITMAP                  "assets/bmp/5019.bmp"
+
+1067                    JPG                     "assets/jpg/1067.jpg"
+1068                    JPG                     "assets/jpg/1068.jpg"
+1069                    JPG                     "assets/jpg/1069.jpg"
+1070                    JPG                     "assets/jpg/1070.jpg"
+5001                    JPG                     "assets/jpg/5001.jpg"
+5002                    JPG                     "assets/jpg/5002.jpg"
+5003                    JPG                     "assets/jpg/5003.jpg"
+5004                    JPG                     "assets/jpg/5004.jpg"
+5005                    JPG                     "assets/jpg/5005.jpg"
+5006                    JPG                     "assets/jpg/5006.jpg"
+5007                    JPG                     "assets/jpg/5007.jpg"
+5008                    JPG                     "assets/jpg/5008.jpg"
+5009                    JPG                     "assets/jpg/5009.jpg"
+5010                    JPG                     "assets/jpg/5010.jpg"
+5011                    JPG                     "assets/jpg/5011.jpg"
+5012                    JPG                     "assets/jpg/5012.jpg"
+5013                    JPG                     "assets/jpg/5013.jpg"
+5014                    JPG                     "assets/jpg/5014.jpg"
+5015                    JPG                     "assets/jpg/5015.jpg"
+5020                    JPG                     "assets/jpg/5020.jpg"
+5021                    JPG                     "assets/jpg/5021.jpg"
+5022                    JPG                     "assets/jpg/5022.jpg"
+5023                    JPG                     "assets/jpg/5023.jpg"
+5024                    JPG                     "assets/jpg/5024.jpg"
+5025                    JPG                     "assets/jpg/5025.jpg"
+5026                    JPG                     "assets/jpg/5026.jpg"
+5027                    JPG                     "assets/jpg/5027.jpg"
+5028                    JPG                     "assets/jpg/5028.jpg"
+5029                    JPG                     "assets/jpg/5029.jpg"
+5030                    JPG                     "assets/jpg/5030.jpg"
+5031                    JPG                     "assets/jpg/5031.jpg"
+5034                    JPG                     "assets/jpg/5034.jpg"
+5035                    JPG                     "assets/jpg/5035.jpg"
+5036                    JPG                     "assets/jpg/5036.jpg"
+15001                   JPG                     "assets/jpg/15001.jpg"
+15002                   JPG                     "assets/jpg/15002.jpg"
+15003                   JPG                     "assets/jpg/15003.jpg"
+15004                   JPG                     "assets/jpg/15004.jpg"
+15005                   JPG                     "assets/jpg/15005.jpg"
+15006                   JPG                     "assets/jpg/15006.jpg"
+15007                   JPG                     "assets/jpg/15007.jpg"
+15008                   JPG                     "assets/jpg/15008.jpg"
+15009                   JPG                     "assets/jpg/15009.jpg"
+15010                   JPG                     "assets/jpg/15010.jpg"
+15011                   JPG                     "assets/jpg/15011.jpg"
+15012                   JPG                     "assets/jpg/15012.jpg"
+15013                   JPG                     "assets/jpg/15013.jpg"
+15014                   JPG                     "assets/jpg/15014.jpg"
+15015                   JPG                     "assets/jpg/15015.jpg"
+15020                   JPG                     "assets/jpg/15020.jpg"
+15021                   JPG                     "assets/jpg/15021.jpg"
+15022                   JPG                     "assets/jpg/15022.jpg"
+15023                   JPG                     "assets/jpg/15023.jpg"
+15024                   JPG                     "assets/jpg/15024.jpg"
+15025                   JPG                     "assets/jpg/15025.jpg"
+5000                    PNG                     "assets/png/5000.png"
+15000                   PNG                     "assets/png/15000.png"
+17000                   XML                     "assets/xml/17000.xml"
+17001                   XML                     "assets/xml/17001.xml"
+17002                   XML                     "assets/xml/17002.xml"
+
+100 DIALOGEX 0, 0, 320, 200
+STYLE 0x92000048
+EXSTYLE 0x00040000
+FONT 9, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "Cancel", 3000, "Button", 0x50010000, 256, 16, 50, 14
+    CONTROL         "Start", 3001, "Button", 0x50010000, 256, 41, 50, 14
+    CONTROL         "Option", 3002, "Button", 0x50010000, 256, 66, 50, 14
+    CONTROL         "Close", 3003, "Button", 0x50010000, 256, 91, 50, 14
+    CONTROL         "Minimum", 3004, "Button", 0x50010000, 256, 116, 50, 14
+    CONTROL         "Version", 7000, "Static", 0x50020000, 7, 7, 70, 8, 0x00000020
+    CONTROL         "File Name", 7001, "Static", 0x50020000, 7, 25, 70, 8, 0x00000020
+    CONTROL         "File Size", 7002, "Static", 0x50020000, 7, 43, 70, 8, 0x00000020
+    CONTROL         "Time Left", 7003, "Static", 0x50020000, 7, 61, 70, 8, 0x00000020
+    CONTROL         "File Count", 7004, "Static", 0x50020000, 7, 79, 70, 8, 0x00000020
+    CONTROL         "Download Percentage", 7005, "Static", 0x50020000, 7, 97, 70, 8, 0x00000020
+    CONTROL         "Download State", 7006, "Static", 0x50020000, 7, 115, 70, 8, 0x00000020
+    CONTROL         "Direct Start", 7007, "Static", 0x50020000, 7, 133, 70, 8, 0x00000020
+    CONTROL         "Static Progress Download", 7008, "Static", 0x5002000C, 7, 151, 80, 8
+    CONTROL         "Static Progress Count", 7009, "Static", 0x5002000C, 7, 169, 68, 8
+    CONTROL         "Direct Game Start", 7019, "Button", 0x50010003, 234, 141, 72, 10
+    CONTROL         "Static File Name", 7029, "Static", 0x50020000, 7, 25, 70, 8, 0x00000020
+    CONTROL         "Static File Size", 7030, "Static", 0x50020000, 7, 43, 70, 8, 0x00000020
+    CONTROL         "Static Time Left", 7031, "Static", 0x50020000, 7, 61, 70, 8, 0x00000020
+    CONTROL         "Static Current Info", 7032, "Static", 0x50020000, 7, 61, 70, 8, 0x00000020
+    CONTROL         "HomePage Link", 7033, "Static", 0x50020100, 234, 171, 70, 8, 0x00000020
+    CONTROL         "Total File", 7034, "Static", 0x50020100, 214, 171, 70, 8, 0x00000020
+    CONTROL         "Current File", 7035, "Static", 0x50020100, 224, 171, 70, 8, 0x00000020
+    CONTROL         "Select Language", 7038, "Static", 0x50020002, 7, 61, 70, 8, 0x00000020
+    CONTROL         "ENG", 7036, "Button", 0x50010000, 256, 116, 50, 14
+    CONTROL         "VNM", 7037, "Button", 0x50010000, 256, 116, 50, 14
+    CONTROL         "DX9", 3005, "Button", 0x50010000, 197, 42, 50, 14
+    CONTROL         "DX11", 3006, "Button", 0x50010000, 197, 63, 50, 14
+END
+
+200 DIALOGEX 0, 0, 184, 134
+STYLE 0x80800048
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "", 7010, "ComboBox", 0x50210003, 83, 54, 83, 23, 0x00004000
+    CONTROL         "", 7011, "ComboBox", 0x50210003, 83, 13, 83, 16, 0x00004000
+    CONTROL         "WindowMode", 7012, "Static", 0x50020000, 16, 35, 58, 14, 0x00002000
+    CONTROL         "Graphic Quality", 7013, "Static", 0x50020000, 16, 56, 64, 11, 0x00002000
+    CONTROL         "Resolution", 7014, "Static", 0x50020000, 16, 15, 64, 9, 0x00002000
+    CONTROL         "Ok", 7015, "Button", 0x50018C00, 34, 107, 56, 17
+    CONTROL         "Cancel", 7016, "Button", 0x50018C00, 97, 107, 54, 17
+    CONTROL         "Texture Quality", 7020, "Static", 0x50020000, 16, 76, 64, 11, 0x00002000
+    CONTROL         "", 7021, "ComboBox", 0x50210003, 83, 74, 83, 23, 0x00004000
+    CONTROL         "Option", 7017, "Button", 0x50000007, 8, 0, 167, 129
+    CONTROL         "", 7022, "Button", 0x50010003, 15, 91, 10, 13, 0x00002000
+    CONTROL         "VSync", 7023, "Static", 0x50020000, 31, 93, 53, 14, 0x00002000
+    CONTROL         "", 7039, "ComboBox", 0x50210003, 83, 33, 83, 16, 0x00004000
+END
+
+17010 DIALOGEX 0, 0, 395, 97
+STYLE 0x80C000C8
+CAPTION "Dragon Nest Launcher"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "Progress bar", 17011, "Static", 0x50020000, 34, 57, 328, 16
+    CONTROL         "Dragon Nest First Patch", 17012, "Static", 0x50020021, 80, 17, 214, 24
+END
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "CompanyName", "EYEDENTITY GAMES. Inc."
+            VALUE "FileDescription", "DragonNest Launcher"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "DnLauncher.exe"
+            VALUE "LegalCopyright", "EYEDENTITY GAMES. Inc. All rights reserved."
+            VALUE "OriginalFilename", "DnLauncher.exe"
+            VALUE "ProductName", "DragonNest Launcher"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+#ifndef NO_ADMIN_MANIFEST
+1                       RT_MANIFEST             "assets/manifest/DnLauncher.manifest"
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// Korean resources (LANG_KOREAN, SUBLANG_KOREAN = 1042)
+/////////////////////////////////////////////////////////////////////////////
+LANGUAGE LANG_KOREAN, SUBLANG_KOREAN
+
+101 DIALOGEX 0, 0, 186, 93
+STYLE 0x80C800C8
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "OK", 1, "Button", 0x50010001, 129, 7, 50, 14
+    CONTROL         "Cancel", 2, "Button", 0x50010000, 129, 24, 50, 14
+END
+
+300 DIALOGEX 0, 0, 477, 385
+STYLE 0x80C800C8
+EXSTYLE 0x00000200
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+END
+
+STRINGTABLE
+BEGIN
+    1000     "DragonNest Launcher"
+    1001     "Launcher initialization failed.(E:%d)"
+    1002     "Client is already running."
+    1003     "Your current version of DirectX(%s) is outdated.\n\nPlease install the latest version of DirectX for stable game play."
+    1004     "Unable to load patch config list."
+    1005     "Verifying patch version…"
+    1006     "Failed to verify patch version."
+    1007     "Downloading patch data…"
+    1008     "Failed to download patch data."
+    1009     "Checking patch data…"
+    1010     "Failed to check patch data."
+    1011     "Installing patch data…"
+    1012     "Failed to install patch data."
+    1013     "Client data error. Please reinstall the Game Client."
+    1014     "Patch process completed."
+    1015     "Patch process failed."
+    1016     "Patch process cancelled."
+    1017     "Failed to remove files. Please restart the game launcher."
+    1018     "Failed to copy files."
+    1019     "Unable to load Patch Status List."
+    1020     "Launcher patch failed."
+    1021     "Do you want to cancel the patch process?"
+    1022     "Low"
+    1023     "Average"
+    1024     "High"
+    1025     "Highest"
+    1026     "File Name"
+    1027     "%d hr %d min %d sec"
+    1028     "%d min %d sec"
+    1029     "%d sec"
+    1030     "Time remaining"
+    1031     "File Size"
+    1032     "Dragon Nest"
+    1033     "Window Mode"
+    1034     "Game Options"
+    1035     "Resolution"
+    1036     "Apply"
+    1037     "Cancel"
+    1038     "Graphics Quality"
+    1039     "Start game after patching."
+    1040     "Path is added in Registry."
+    1041     "Path is modified in Registry."
+    1042     "The program is already running."
+    1043     "Exit the launcher?"
+    1044     "You currently do not have enough RAM.\nYou are recommended to have at least 1GB of available RAM for optimal gameplay.\nAny lesser than that may render your game unstable."
+    1045     "Texture Quality"
+    1046     "V-Sync"
+    1047     "DragonNest Launcher Initialize"
+    1048     "Do you really want to exit the game?"
+    1049     "Current Selected Server : "
+    1050     "Click on ""Select Server"" to change server."
+    1052     "Do you really want update?"
+    1053     "Please select your server."
+    1054     "Status"
+    1055     "Official Website"
+    1056     "Progress"
+    1057     "Installation"
+    1058     "Total"
+    1059     "Current"
+    1060     "Choose your language:"
+    1061     "Fullscreen"
+    1062     "Window"
+    1063     "Borderless Window"
+    11000    "DragonNest Launcher"
+    11001    "Lỗi khởi động launcher.(E:%d)"
+    11002    "Game đang chạy."
+    11003    "Phiên bản DirectX(%s) của hệ thống hiện tại đã quá cũ.\n\nHãy cài phiên bản mới hơn phù hợp với trò chơi."
+    11004    "Không thể mở danh sách cấu hình cập nhật."
+    11005    "Đang xác nhận phiên bản cập nhật…"
+    11006    "Lỗi trong việc tải cập nhật."
+    11007    "Đang tải dữ liệu cập nhật…"
+    11008    "Lỗi trong việc tải dữ liệu cập nhật."
+    11009    "Đang kiểm tra dữ liệu cập nhật…"
+    11010    "Lỗi trong khi kiểm tra dữ liệu cập nhật."
+    11011    "Đang cài đặt dữ liệu cập nhật…"
+    11012    "Lỗi trong việc cài đặt dữ liệu."
+    11013    "Dữ liệu bị lỗi. Hãy cài đặt lại game."
+    11014    "Quá trình cập nhật hoàn tất."
+    11015    "Quá trình cập nhật bị lỗi."
+    11016    "Đã dừng quá trình cập nhật."
+    11017    "Lỗi trong việc xóa dữ liệu. Hãy khởi động lại game launcher."
+    11018    "Lỗi trong việc copy dữ liệu."
+    11019    "Không thể mở danh sách tình trạng bản cập nhật."
+    11020    "Lỗi cập nhật launcher."
+    11021    "Bạn có muốn dừng việc cập nhật?"
+    11022    "Thấp"
+    11023    "Trung bình"
+    11024    "Cao"
+    11025    "Cao nhất"
+    11026    "Tên tập tin"
+    11027    "Thời gian còn lại: %d Giờ %d Phút %d Giây"
+    11028    "Thời gian còn lại: %d Phút %d Giây"
+    11029    "Thời gian còn lại: %d Giây"
+    11030    "Thời gian còn lại"
+    11031    "Dung lượng tập tin"
+    11032    "Dragon Nest"
+    11033    "Chế độ cửa sổ"
+    11034    "Tùy chọn"
+    11035    "Độ phân giải"
+    11036    "Áp dụng"
+    11037    "Bỏ"
+    11038    "Chất lương đồ họa"
+    11039    "Ngay lập tức khởi động game sau khi hoàn thành cập nhật"
+    11040    "Bản cập nhật đã được thêm vào Registry."
+    11041    "Bản cập nhật đã được thay đổi trong Registry."
+    11042    "Chương trình đang chạy."
+    11043    "Bạn có muốn thoát khỏi launcher?"
+    11044    "Máy tính của bạn hiện tại không đủ RAM.\nBạn nên có ít nhất 1Gb RAM để đáp ứng với trò chơi.\nKhông thể khởi động với cấu hình thấp hơn."
+    11045    "Chất lượng kiến trúc"
+    11046    "V-Sync"
+    11047    "DragonNest Launcher Initialize"
+    11048    "Bạn có muốn thoát khỏi game không?"
+    11049    "Máy chủ được chọn hiện tại:"
+    11050    "Nhấp chuột vào “Chọn máy chủ” để đổi máy chủ."
+    11052    "Bạn có muốn cấp nhật?"
+    11053    "Hãy chọn máy chủ của bạn."
+    11054    "Tình trạng"
+    11055    "Về trang chủ"
+    11056    "Tiến trình"
+    11057    "Cài đặt"
+    11058    "Tổng"
+    11059    "Hiện tại"
+    11060    "Hãy chọn ngôn ngữ:"
+END
+
+// Standard English MFC resources under LANGUAGE LANG_KOREAN, SUBLANG_KOREAN (1042):
+// Yields 131/131 exact match with VC++ 8.0 afxres.rc; 124/131 with VS 2026 afxres.rc (7 MFC string blocks changed post-VC8).
+#ifndef NO_MFC_AFXRES
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+#include "afxres.rc"
+#endif

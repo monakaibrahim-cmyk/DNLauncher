@@ -1,0 +1,121 @@
+// Microsoft Visual C++ generated resource script for DnAutoUpdate.exe.
+// Reconstructed from DnAutoUpdate.exe (SHA-256: 1CA3F08006220249BDC84FB7E67654046147CC70DE8407B7C3B3A47BBBAE0A3C)
+#pragma code_page(65001)
+
+#include "AutoUpdateResource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+#include "afxres.h"
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Korean resources (LANG_KOREAN, SUBLANG_DEFAULT = 1042)
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+IDR_MAINFRAME           ICON                    "assets/autoupdate/128.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU_TRAY MENU
+BEGIN
+    POPUP "AutoUpdate"
+    BEGIN
+        MENUITEM "Pause",                       ID_MENU_PAUSE
+        MENUITEM "Resume",                      ID_MENU_RESUME
+        MENUITEM "Exit",                        ID_MENU_EXIT
+    END
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DNAUTOUPDATE_DIALOG DIALOGEX 0, 0, 320, 97
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "DragonNest AutoUpdate"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_PROGRESS_DOWNLOAD,"msctls_progress32",WS_BORDER,20,27,278,20
+    LTEXT           "",IDC_STATIC_FILENAME,21,15,166,8
+    PUSHBUTTON      "Pause",IDC_BUTTON_PAUSE,20,63,50,14
+    PUSHBUTTON      "Resume",IDC_BUTTON_RESUME,76,63,50,14
+    PUSHBUTTON      "Exit",IDC_BUTTON_EXIT,248,63,50,14
+    RTEXT           "",IDC_STATIC_SPEED,132,51,166,8
+    LTEXT           "",IDC_STATIC_COUNT,207,15,92,8,0,WS_EX_RIGHT
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041203b5"
+        BEGIN
+            VALUE "CompanyName", "TODO: <회사 이름>"
+            VALUE "FileDescription", "TODO: <파일 설명>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "DnAutoUpdate.exe"
+            VALUE "LegalCopyright", "TODO: (c) <회사 이름>.  All rights reserved."
+            VALUE "OriginalFilename", "DnAutoUpdate.exe"
+            VALUE "ProductName", "TODO: <제품 이름>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x412, 949
+    END
+END
+
+#endif    // Korean resources
+/////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) Manifest (LANG_ENGLISH, SUBLANG_ENGLISH_US = 1033)
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+1                       RT_MANIFEST             "assets/autoupdate/DnAutoUpdate.manifest"
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE 18, 1
+#include "afxres.rc"
+#endif
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
